@@ -8,7 +8,7 @@ namespace InstaBojan.Core.Enums
 {
     public enum Role
     {
-        Admin,
-        User
+        Admin ,
+        User 
     }
 }
