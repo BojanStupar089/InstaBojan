@@ -13,6 +13,7 @@ namespace InstaBojan.Core.Repository.UserRepository
 
         public User GetUserById(int id);
 
+        public User GetUserByUserName(string name);
         public bool AddUser(User user);
 
         public bool UpdateUser(User user);

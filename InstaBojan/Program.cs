@@ -19,7 +19,8 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
 builder.Services.AddDbContext<InstagramStoreContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("BokiInsta")));
 
 //Identity
-builder.Services.AddIdentity<ApplicationUser,IdentityRole>().AddEntityFrameworkStores<InstagramStoreContext>().AddDefaultTokenProviders();
+/*builder.Services.AddIdentity<ApplicationUser,IdentityRole>().AddEntityFrameworkStores<InstagramStoreContext>().AddDefaultTokenProviders();*/
+
 
 
 //Authentication

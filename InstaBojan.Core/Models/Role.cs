@@ -4,11 +4,11 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace InstaBojan.Core.Enums
+namespace InstaBojan.Core.Models
 {
     public enum Role
     {
-        Admin ,
-        User 
+        Admin,
+        User
     }
 }

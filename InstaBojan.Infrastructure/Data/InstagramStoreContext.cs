@@ -1,4 +1,5 @@
 ﻿using InstaBojan.Core.Models;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -9,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace InstaBojan.Infrastructure.Data
 {
-    public class InstagramStoreContext:IdentityDbContext<ApplicationUser>
+    public class InstagramStoreContext:DbContext
     {
 
 
@@ -17,6 +18,13 @@ namespace InstaBojan.Infrastructure.Data
         { }
 
 
+        public DbSet<User> Users { get; set; }
+
+        public new async Task<int> SaveChanges() { 
+        
+             return await base.SaveChangesAsync();
+        
+        }
 
      
 
