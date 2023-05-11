@@ -1,5 +1,6 @@
 ﻿using InstaBojan.Core.Models;
 using InstaBojan.Core.Repository.UserRepository;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
@@ -73,6 +74,31 @@ namespace InstaBojan.Controllers.AuthControllers
 
         }
 
+        // da proveris imas 2 metode 
+
+
+
+       [Authorize(Roles = "ADMIN")]
+        [HttpGet("test-admin-authorization")]
+        public async Task<IActionResult> TestAuth()
+        {
+            return Ok("Success");
+        }
+
+        [Authorize(Roles = "USER")]
+        [HttpGet("test-regular-authorization")]
+        public async Task<IActionResult> TestRegAuth()
+        {
+            return Ok("Success");
+        }
+        
+        
+        
+        
+        
+        
+        
+        
         private string GenerateToken(User user)
         {
 
