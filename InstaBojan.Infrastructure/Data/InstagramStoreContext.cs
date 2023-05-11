@@ -18,10 +18,10 @@ namespace InstaBojan.Infrastructure.Data
 
 
 
-        public DbSet<User> Users {get;set;}
+     
 
-        public DbSet<Post> Posts {get;set;}
+      
 
-        public DbSet<Profile> Profiles {get; set;}
+        
     }
 }

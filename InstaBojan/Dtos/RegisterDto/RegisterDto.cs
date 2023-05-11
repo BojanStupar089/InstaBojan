@@ -13,5 +13,7 @@ namespace InstaBojan.Dtos.RegisterDto
 
         [Required(ErrorMessage = "Password is required")]
         public string Password { get; set; }
+
+       
     }
 }
