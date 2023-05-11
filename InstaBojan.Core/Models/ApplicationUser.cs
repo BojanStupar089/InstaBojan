@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿using InstaBojan.Core.Enums;
+using Microsoft.AspNetCore.Identity;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,9 +10,20 @@ namespace InstaBojan.Core.Models
 {
     public class ApplicationUser:IdentityUser
     {
-         
-        public string? Name { get; set; }
 
-        public string? Password { get; set; }
+        public int Id { get; set; }
+
+        public string Name { get; set; }
+        private string UserName { get; set; }
+        private string Password { get; set; }
+
+        private string Email { get; set; }
+
+        private Role Role { get; set; }
+
+        private Profile Profile { get; set; }
+     
+
+      
     }
 }
