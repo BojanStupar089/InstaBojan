@@ -68,8 +68,9 @@ namespace InstaBojan.Controllers.AuthControllers
         {
             var userExists = await _userManager.FindByNameAsync(registerDto.UserName);
             if (userExists != null)
-                return StatusCode(StatusCodes.Status500InternalServerError, new Core.Security.Response { Status = "Error", Message = "User already exists!" });
+                /* return StatusCode(StatusCodes.Status500InternalServerError, new Core.Security.Response { Status = "Error", Message = "User already exists!" });*/
 
+            return BadRequest("User already exists");
             IdentityUser user = new()
             {
                 Email = registerDto.Email,
@@ -79,10 +80,11 @@ namespace InstaBojan.Controllers.AuthControllers
 
             var passwordHash=BCrypt.Net.BCrypt.HashPassword(registerDto.Password);
             var result = await _userManager.CreateAsync(user,passwordHash);
-            
-            if (!result.Succeeded)
-                return StatusCode(StatusCodes.Status500InternalServerError, new Core.Security.Response { Status = "Error", Message = "User creation failed! Please check user details and try again." });
 
+            if (!result.Succeeded)
+                /*return StatusCode(StatusCodes.Status500InternalServerError, new Core.Security.Response { Status = "Error", Message = "User creation failed! Please check user details and try again." });*/
+                return BadRequest("User creation failed! Please check user details and try again.");
+            
             return Ok(new Core.Security.Response { Status="Success", Message="User created successfully!"});
         }
 
