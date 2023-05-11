@@ -1,6 +1,5 @@
 ﻿using AutoMapper;
 using InstaBojan.Core.Security;
-using InstaBojan.Dtos.LoginDto;
 using InstaBojan.Dtos.RegisterDto;
 
 namespace InstaBojan.Helpers
@@ -10,9 +9,9 @@ namespace InstaBojan.Helpers
 
         public MappingProfile() {
 
-            CreateMap<Login, LoginDto>().ReverseMap();
+           
 
-            CreateMap<Register, RegisterDto>().ReverseMap();
+             
             
             
         }

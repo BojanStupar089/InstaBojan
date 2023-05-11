@@ -1,7 +1,6 @@
 ﻿using Azure;
 using InstaBojan.Core.Enums;
 using InstaBojan.Core.Security;
-using InstaBojan.Dtos.LoginDto;
 using InstaBojan.Dtos.RegisterDto;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
@@ -33,10 +32,10 @@ namespace InstaBojan.Controllers.AuthControllers
 
         [HttpPost]
         [Route("login")]
-        public async Task<IActionResult> Login([FromBody] LoginDto loginDto)
+        public async Task<IActionResult> Login([FromBody] Login login)
         {
-            var user = await _userManager.FindByNameAsync(loginDto.UserName);
-            if (user != null && await _userManager.CheckPasswordAsync(user, loginDto.Password))
+            var user = await _userManager.FindByNameAsync(login.UserName);
+            if (user != null && await _userManager.CheckPasswordAsync(user, login.Password))
             {
                 var userRoles = await _userManager.GetRolesAsync(user);
 
@@ -75,7 +74,10 @@ namespace InstaBojan.Controllers.AuthControllers
             {
                 Email = registerDto.Email,
                 SecurityStamp = Guid.NewGuid().ToString(),
-                UserName =registerDto.UserName
+                UserName =registerDto.UserName,
+              
+
+                
             };
 
             var passwordHash=BCrypt.Net.BCrypt.HashPassword(registerDto.Password);

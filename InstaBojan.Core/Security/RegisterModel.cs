@@ -1,4 +1,6 @@
-﻿using System;
+﻿using InstaBojan.Core.Enums;
+using InstaBojan.Core.Models;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
@@ -7,8 +9,9 @@ using System.Threading.Tasks;
 
 namespace InstaBojan.Core.Security
 {
-    public class Register
+    public class RegisterModel
     {
+
         [Required(ErrorMessage = "User Name is required")]
         public string UserName { get; set; }
 
@@ -18,5 +21,17 @@ namespace InstaBojan.Core.Security
 
         [Required(ErrorMessage = "Password is required")]
         public string Password { get; set; }
+
+
+        public int Id { get; set; }
+
+        public string FirstName { get; set; }
+
+        public string LastName { get; set; }
+
+
+        private Role Role { get; set; }
+
+        private Profile Profile { get; set; }
     }
 }

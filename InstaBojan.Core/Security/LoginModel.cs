@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace InstaBojan.Core.Security
 {
-    public class Login
+    public class LoginModel
     {
         [Required(ErrorMessage = "User Name is required")]
         public string UserName { get; set; }
