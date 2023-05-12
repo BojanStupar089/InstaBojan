@@ -21,11 +21,12 @@ namespace InstaBojan.Infrastructure.Data
 
         public DbSet<User> Users { get; set; }
 
-        public new async Task<int> SaveChanges() { 
+       /* public new async Task<int> SaveChanges() { 
         
              return await base.SaveChangesAsync();
         
         }
+       */
 
      
 

@@ -22,6 +22,7 @@ namespace InstaBojan.Infrastructure.Repository.UsersRepository
         public bool AddUser(User user)
         {
             _context.Users.Add(user);
+            _context.SaveChanges();
              return true;
         }
 
