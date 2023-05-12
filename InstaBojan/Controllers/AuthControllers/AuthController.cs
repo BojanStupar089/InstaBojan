@@ -16,7 +16,7 @@ namespace InstaBojan.Controllers.AuthControllers
     public class AuthController : ControllerBase
     {
 
-        private readonly UsersRepository _repository;
+        private readonly IUserRepository _repository;
         public AuthController(UsersRepository repository)
         {
             _repository = repository;
