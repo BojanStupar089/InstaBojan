@@ -24,7 +24,7 @@ namespace InstaBojan.Controllers.AuthControllers
 
 
         [HttpPost("login")]
-        public ActionResult Login(LoginModel loginModel)
+        public IActionResult Login(LoginModel loginModel)
         {
 
             User user = _repository.GetUserByUserName(loginModel.UserName);
@@ -44,7 +44,7 @@ namespace InstaBojan.Controllers.AuthControllers
         }
 
         [HttpPost("register")]
-        public ActionResult Register([FromBody] User regUser)
+        public IActionResult Register([FromBody] User regUser)
         {
 
             var user = _repository.GetUserByUserName(regUser.UserName);

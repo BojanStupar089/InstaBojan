@@ -26,7 +26,7 @@ namespace InstaBojan.Controllers.UsersController
         }
 
         [HttpPost]
-        public IActionResult Add([FromBody] User user) { 
+        public IActionResult AddUser([FromBody] User user) { 
         
         
             usersRepository.AddUser(user);
