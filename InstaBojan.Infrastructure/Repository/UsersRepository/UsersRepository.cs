@@ -4,10 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace InstaBojan.Core.Repository.ProfileRepository
+namespace InstaBojan.Infrastructure.Repository.UsersRepository
 {
-    public  class ProfileRepository
+    internal class UsersRepository
     {
-
     }
 }

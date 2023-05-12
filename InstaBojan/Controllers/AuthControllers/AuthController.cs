@@ -1,5 +1,6 @@
 ﻿using InstaBojan.Core.Models;
 using InstaBojan.Core.Repository.UserRepository;
+using InstaBojan.Core.Security;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -23,12 +24,12 @@ namespace InstaBojan.Controllers.AuthControllers
 
 
         [HttpPost("login")]
-        public ActionResult Login(string username, string password)
+        public ActionResult Login(LoginModel loginModel)
         {
 
-            User user = _repository.GetUserByUserName(username);
+            User user = _repository.GetUserByUserName(loginModel.UserName);
 
-            if (user == null || !user.Password.Equals(password))
+            if (user == null || !user.Password.Equals(loginModel.Password))
             {
 
                 return BadRequest("Wrong credentials");

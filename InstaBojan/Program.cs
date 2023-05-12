@@ -1,5 +1,6 @@
 using InstaBojan.Core.Models;
 using InstaBojan.Infrastructure.Data;
+using InstaBojan.Infrastructure.Repository.UsersRepository;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
@@ -46,14 +47,14 @@ builder.Services.AddDbContext<InstagramStoreContext>(options => options.UseSqlSe
 */
 
 //Add AutoMapper
-//builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
+//builder.Services.AddAutoMapper(typeof(Program));
 
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-
+builder.Services.AddScoped<IUserRepository, UsersRepository>();
 
 
 var app = builder.Build();

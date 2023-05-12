@@ -5,10 +5,11 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace InstaBojan.Core.Repository.UserRepository
+namespace InstaBojan.Infrastructure.Repository.UsersRepository
 {
     public interface IUserRepository
     {
+
         public List<User> GetUsers();
 
         public User GetUserById(int id);

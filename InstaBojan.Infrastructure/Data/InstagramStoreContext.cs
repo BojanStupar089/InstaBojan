@@ -13,6 +13,7 @@ namespace InstaBojan.Infrastructure.Data
     public class InstagramStoreContext:DbContext
     {
 
+       
 
         public InstagramStoreContext(DbContextOptions<InstagramStoreContext> options) : base(options)
         { }
