@@ -10,14 +10,14 @@ namespace InstaBojan.Controllers.UsersController
     [ApiController]
     public class UsersController : ControllerBase
     {
-        private readonly UsersRepository usersRepository;
+        public readonly IUserRepository usersRepository;
 
-        public UsersController(UsersRepository usersRepository)
+        public UsersController(IUserRepository usersRepository)
         {
             this.usersRepository = usersRepository;
         }
 
-        [Authorize(Roles ="USER")]
+       // [Authorize(Roles ="USER")]
         [HttpGet]
         public IActionResult GetUsers()
         {

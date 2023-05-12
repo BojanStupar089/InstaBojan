@@ -25,23 +25,23 @@ builder.Services.AddDbContext<InstagramStoreContext>(options => options.UseSqlSe
 
 
 //Authentication
- /*builder.Services.AddAuthentication(options =>
+/*builder.Services.AddAuthentication(options =>
 {
-    options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
-    options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
-    options.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
+   options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+   options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+   options.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
 }).AddJwtBearer(options =>
 {
-    options.SaveToken = true;
-    options.RequireHttpsMetadata = false;
-    options.TokenValidationParameters = new TokenValidationParameters()
-    {
-        ValidateIssuer = true,
-        ValidateAudience = true,
-        ValidAudience = builder.Configuration["JWT:ValidAudience"],
-        ValidIssuer = builder.Configuration["JWT:ValidIssuer"],
-        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["JWT:Secret"]))
-    };
+   options.SaveToken = true;
+   options.RequireHttpsMetadata = false;
+   options.TokenValidationParameters = new TokenValidationParameters()
+   {
+       ValidateIssuer = true,
+       ValidateAudience = true,
+       ValidAudience = builder.Configuration["JWT:ValidAudience"],
+       ValidIssuer = builder.Configuration["JWT:ValidIssuer"],
+       IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["JWT:Secret"]))
+   };
 });
 
 */
@@ -51,12 +51,12 @@ builder.Services.AddDbContext<InstagramStoreContext>(options => options.UseSqlSe
 //Add AutoMapper
 //builder.Services.AddAutoMapper(typeof(Program));
 
+builder.Services.AddScoped<IUserRepository, UsersRepository>();
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-builder.Services.AddScoped<IUserRepository, UsersRepository>();
 
 
 var app = builder.Build();
