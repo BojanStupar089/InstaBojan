@@ -24,7 +24,7 @@ builder.Services.AddDbContext<InstagramStoreContext>(options => options.UseSqlSe
 
 
 //Authentication
-builder.Services.AddAuthentication(options =>
+ /*builder.Services.AddAuthentication(options =>
 {
     options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
     options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
@@ -43,8 +43,10 @@ builder.Services.AddAuthentication(options =>
     };
 });
 
+*/
+
 //Add AutoMapper
-builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
+//builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
