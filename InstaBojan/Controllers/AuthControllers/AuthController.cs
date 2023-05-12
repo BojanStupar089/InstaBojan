@@ -1,6 +1,6 @@
 ﻿using InstaBojan.Core.Models;
-using InstaBojan.Core.Repository.UserRepository;
 using InstaBojan.Core.Security;
+using InstaBojan.Infrastructure.Repository.UsersRepository;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
