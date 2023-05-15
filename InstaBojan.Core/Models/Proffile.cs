@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace InstaBojan.Core.Models
 {
-   public class Profile
+   public class Proffile
     {
         private int Id { get; set; }
 
@@ -30,9 +30,9 @@ namespace InstaBojan.Core.Models
         private Gender Gender { get; set; }
 
 
-        private List<Profile>? Followers { get; set; }
+        private List<Proffile>? Followers { get; set; }
 
-        private List<Profile>? Following { get; set; }
+        private List<Proffile>? Following { get; set; }
 
 
     }

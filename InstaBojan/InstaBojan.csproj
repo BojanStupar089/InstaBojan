@@ -28,8 +28,4 @@
     <ProjectReference Include="..\InstaBojan.Infrastructure\InstaBojan.Infrastructure.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Dtos\" />
-  </ItemGroup>
-
 </Project>

@@ -1,5 +1,6 @@
 ﻿using InstaBojan.Core.Models;
 using InstaBojan.Core.Security;
+using InstaBojan.Dtos;
 using InstaBojan.Infrastructure.Repository.UsersRepository;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
@@ -48,33 +49,27 @@ namespace InstaBojan.Controllers.AuthControllers
         }
 
         [HttpPost("register")]
-        public IActionResult Register(string firstName,string lastName,string email,string userName,string password)
+        public IActionResult Register([FromBody]UserDto userDto)
         {
 
-            var user = _repository.GetUserByUserName(userName);
-
-            if (user != null)
+            var user = _repository.GetUserByUserName(userDto.UserName);
+            if (user == null)
             {
+                user = new User
+                {
+                    FirstName = userDto.FirstName,
+                    LastName = userDto.LastName,
+                    Email = userDto.Email,
+                    UserName = userDto.UserName,
+                    Password = BCrypt.Net.BCrypt.HashPassword(userDto.Password),
+                    Role = Role.User,
+                };
+                _repository.AddUser(user);
 
-                return BadRequest("User already exists");
+                return Ok();
             }
-
-            user = new User
-            {
-                FirstName = firstName,
-                LastName = lastName,
-                Email =email,
-                UserName = userName,
-                Password = BCrypt.Net.BCrypt.HashPassword(password),
-                Role = Role.User,
-            };
-
-            _repository.AddUser(user);
-
-            // var token = GenerateToken(user);
-
-             return Ok();
-
+            else
+               return BadRequest("Already exists");
            
 
         }

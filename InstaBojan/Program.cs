@@ -12,17 +12,10 @@ using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
-/*builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
-    .AddMicrosoftIdentityWebApi(builder.Configuration.GetSection("AzureAd"));*/
+
 
 //EntityFrameworkCore
 builder.Services.AddDbContext<InstagramStoreContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("BokiInsta")));
-
-//Identity
-/*builder.Services.AddIdentity<ApplicationUser,IdentityRole>().AddEntityFrameworkStores<InstagramStoreContext>().AddDefaultTokenProviders();*/
-
-
 
 //Authentication
 builder.Services.AddAuthentication(options =>
@@ -48,7 +41,7 @@ options.TokenValidationParameters = new TokenValidationParameters()
 
 
 //Add AutoMapper
-//builder.Services.AddAutoMapper(typeof(Program));
+builder.Services.AddAutoMapper(typeof(Program));
 
 builder.Services.AddScoped<IUserRepository, UsersRepository>();
 builder.Services.AddControllers();

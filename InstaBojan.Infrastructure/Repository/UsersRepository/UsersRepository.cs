@@ -23,12 +23,12 @@ namespace InstaBojan.Infrastructure.Repository.UsersRepository
         {
             _context.Users.Add(user);
             _context.SaveChanges();
-             return true;
+            return true;
         }
 
         public bool DeleteUser(int id)
         {
-            var userToDelete=_context.Users.FirstOrDefault(u => u.Id == id);
+            var userToDelete = _context.Users.FirstOrDefault(u => u.Id == id);
             if (userToDelete != null)
             {
                 _context.Users.Remove(userToDelete);
@@ -40,26 +40,25 @@ namespace InstaBojan.Infrastructure.Repository.UsersRepository
 
         public User GetUserById(int id)
         {
-            var user= _context.Users.FirstOrDefault(x => x.Id == id);
-            if (user == null) {
-                throw new ApplicationException("User Not Found ");
+           var user=_context.Users.FirstOrDefault(x=>x.Id== id);
+            if (user != null)
+            {
+
+                return user;
             }
-              return user;
+            else
+                return null;
         }
 
         public User GetUserByUserName(string username)
         {
             var user = _context.Users.FirstOrDefault(x => x.UserName == username);
-           /* if (user == null)
+            if (user != null)
             {
-                throw new Exception("UserName doesn't exist");
+                return user;
             }
-
-            */
-
-            return user;
-                
-                
+            else
+                return null;
         }
 
         public List<User> GetUsers()
