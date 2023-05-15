@@ -78,14 +78,14 @@ namespace InstaBojan.Infrastructure.Repository.UsersRepository
         #region put
         public bool UpdateUser(User user)
         {
-            var userUpd = _context.Users.FirstOrDefault(u=>u.Id==user.Id);
+            var userUpd = _context.Users.FirstOrDefault(u => u.Id == user.Id);
             if (userUpd != null)
             {
-                userUpd.Id=user.Id;
+                userUpd.Id = user.Id;
                 userUpd.FirstName = user.FirstName;
                 userUpd.LastName = user.LastName;
-                userUpd.UserName  = user.UserName;
-                userUpd.Email= user.Email;
+                userUpd.UserName = user.UserName;
+                userUpd.Email = user.Email;
                 userUpd.Password = BCrypt.Net.BCrypt.HashPassword(user.Password);
 
                 _context.Update(userUpd);
@@ -96,6 +96,31 @@ namespace InstaBojan.Infrastructure.Repository.UsersRepository
             return false;
         }
 
+        /*
+        public bool UpdateUser(int id, User user) {
+
+            var userUpd = _context.Users.FirstOrDefault(u => u.Id == id);
+            if (userUpd != null)
+            {
+               
+                userUpd.FirstName = user.FirstName;
+                userUpd.LastName = user.LastName;
+                userUpd.UserName = user.UserName;
+                userUpd.Email = user.Email;
+                userUpd.Password = BCrypt.Net.BCrypt.HashPassword(user.Password);
+
+                _context.Update(userUpd);
+                _context.SaveChanges();
+                return true;
+            }
+
+            return false;
+        }
+        */
+
         #endregion
+
+        
     }
+
 }

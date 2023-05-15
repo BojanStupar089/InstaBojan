@@ -93,17 +93,10 @@ namespace InstaBojan.Controllers.UsersController
 
              var updUser = _mapper.MapUser(userDto);
              usersRepository.UpdateUser(updUser);
-            
 
-           /* user.Id = userr.Id;
-            user.FirstName=userr.FirstName;
-            user.LastName=userr.LastName;
-            user.Email=userr.Email;
-            user.UserName = userr.UserName;
-            user.Password=BCrypt.Net.BCrypt.HashPassword(userr.Password);
-           
-            usersRepository.UpdateUser(user);
-           */
+           // usersRepository.UpdateUser(id, updUser);
+
+          
 
 
           return NoContent();
