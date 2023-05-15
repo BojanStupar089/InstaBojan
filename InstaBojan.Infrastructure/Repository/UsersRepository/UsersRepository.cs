@@ -76,12 +76,19 @@ namespace InstaBojan.Infrastructure.Repository.UsersRepository
         #endregion
 
         #region put
-        public bool UpdateUser(User user)
+        public bool UpdateUser(int id,User user)
         {
-            var userUpd = _context.Users.FirstOrDefault(x => x.Id == user.Id);
+            var userUpd = _context.Users.FirstOrDefault(u=>u.Id==id);
             if (userUpd != null)
             {
-                _context.Entry(user).State = EntityState.Modified;
+
+                userUpd.FirstName = user.FirstName;
+                userUpd.LastName = user.LastName;
+                userUpd.UserName  = user.UserName;
+                userUpd.Email= user.Email;
+                userUpd.Password = BCrypt.Net.BCrypt.HashPassword(user.Password);
+
+                _context.Update(userUpd);
                 _context.SaveChanges();
                 return true;
             }

@@ -1,4 +1,5 @@
-﻿using InstaBojan.Core.Models;
+﻿using BCrypt.Net;
+using InstaBojan.Core.Models;
 using InstaBojan.Dtos;
 using InstaBojan.Helpers;
 using InstaBojan.Infrastructure.Repository.UsersRepository;
@@ -78,7 +79,7 @@ namespace InstaBojan.Controllers.UsersController
         }
 
         [HttpPut("id")]
-        public IActionResult UpdateUser(int id, [FromBody] UserDto userDto)
+        public IActionResult UpdateUser([FromQuery]int id, [FromBody] UserDto userDto)
         {
 
 
@@ -90,11 +91,22 @@ namespace InstaBojan.Controllers.UsersController
                 return NotFound("User doesn't exist");
             }
 
-            var updUser = _mapper.MapUser(userDto);
-            usersRepository.UpdateUser(updUser);
+             var updUser = _mapper.MapUser(userDto);
+             usersRepository.UpdateUser(id, updUser);
+            
+
+           /* user.Id = userr.Id;
+            user.FirstName=userr.FirstName;
+            user.LastName=userr.LastName;
+            user.Email=userr.Email;
+            user.UserName = userr.UserName;
+            user.Password=BCrypt.Net.BCrypt.HashPassword(userr.Password);
+           
+            usersRepository.UpdateUser(user);
+           */
 
 
-            return NoContent();
+          return NoContent();
         }
 
     }
