@@ -19,28 +19,16 @@ namespace InstaBojan.Infrastructure.Repository.UsersRepository
 
             _context = context;
         }
-        public bool AddUser(User user)
-        {
-            _context.Users.Add(user);
-            _context.SaveChanges();
-            return true;
-        }
 
-        public bool DeleteUser(int id)
+        #region get
+        public List<User> GetUsers()
         {
-            var userToDelete = _context.Users.FirstOrDefault(u => u.Id == id);
-            if (userToDelete != null)
-            {
-                _context.Users.Remove(userToDelete);
-                return true;
-            }
-
-            return false;
+            return _context.Users.ToList();
         }
 
         public User GetUserById(int id)
         {
-           var user=_context.Users.FirstOrDefault(x=>x.Id== id);
+            var user = _context.Users.FirstOrDefault(x => x.Id == id);
             if (user != null)
             {
 
@@ -61,21 +49,46 @@ namespace InstaBojan.Infrastructure.Repository.UsersRepository
                 return null;
         }
 
-        public List<User> GetUsers()
-        {
-            return _context.Users.ToList();
-        }
+        #endregion
 
+        #region post
+        public bool AddUser(User user)
+        {
+            _context.Users.Add(user);
+            _context.SaveChanges();
+            return true;
+        }
+        #endregion
+
+        #region delete
+        public bool DeleteUser(int id)
+        {
+            var userToDelete = _context.Users.FirstOrDefault(u => u.Id == id);
+            if (userToDelete != null)
+            {
+                _context.Users.Remove(userToDelete);
+                _context.SaveChanges();
+                return true;
+            }
+
+            return false;
+        }
+        #endregion
+
+        #region put
         public bool UpdateUser(User user)
         {
             var userUpd = _context.Users.FirstOrDefault(x => x.Id == user.Id);
             if (userUpd != null)
             {
                 _context.Entry(user).State = EntityState.Modified;
+                _context.SaveChanges();
                 return true;
             }
 
             return false;
         }
+
+        #endregion
     }
 }
