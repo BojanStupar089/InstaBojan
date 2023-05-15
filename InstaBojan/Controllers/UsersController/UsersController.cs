@@ -9,7 +9,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace InstaBojan.Controllers.UsersController
 {
-    //[Authorize(Roles ="User")]
+    [Authorize(Roles ="User")]
     [Route("api/[controller]")]
     [ApiController]
     public class UsersController : ControllerBase
@@ -96,10 +96,7 @@ namespace InstaBojan.Controllers.UsersController
 
            // usersRepository.UpdateUser(id, updUser);
 
-          
-
-
-          return NoContent();
+            return NoContent();
         }
 
     }

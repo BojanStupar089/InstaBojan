@@ -28,7 +28,7 @@ namespace InstaBojan.Core.Models
 
         public Role Role { get; set; }
 
-       // public Profile Profile { get; set; }
+       
      
 
       
