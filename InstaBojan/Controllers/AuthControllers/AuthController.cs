@@ -67,11 +67,11 @@ namespace InstaBojan.Controllers.AuthControllers
 
             _repository.AddUser(user);
 
-            // var token = GenerateToken(user);
+             var token = GenerateToken(user);
 
-            // return Ok(new { token });
+             return Ok(new { token });
 
-            return Ok();
+           
 
         }
 
