@@ -76,12 +76,12 @@ namespace InstaBojan.Infrastructure.Repository.UsersRepository
         #endregion
 
         #region put
-        public bool UpdateUser(int id,User user)
+        public bool UpdateUser(User user)
         {
-            var userUpd = _context.Users.FirstOrDefault(u=>u.Id==id);
+            var userUpd = _context.Users.FirstOrDefault(u=>u.Id==user.Id);
             if (userUpd != null)
             {
-
+                userUpd.Id=user.Id;
                 userUpd.FirstName = user.FirstName;
                 userUpd.LastName = user.LastName;
                 userUpd.UserName  = user.UserName;

@@ -92,7 +92,7 @@ namespace InstaBojan.Controllers.UsersController
             }
 
              var updUser = _mapper.MapUser(userDto);
-             usersRepository.UpdateUser(id, updUser);
+             usersRepository.UpdateUser(updUser);
             
 
            /* user.Id = userr.Id;
