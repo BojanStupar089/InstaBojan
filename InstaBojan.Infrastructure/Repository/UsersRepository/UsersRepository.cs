@@ -50,10 +50,12 @@ namespace InstaBojan.Infrastructure.Repository.UsersRepository
         public User GetUserByUserName(string username)
         {
             var user = _context.Users.FirstOrDefault(x => x.UserName == username);
-            if (user == null)
+           /* if (user == null)
             {
                 throw new Exception("UserName doesn't exist");
             }
+
+            */
 
             return user;
                 

@@ -27,9 +27,10 @@ namespace InstaBojan.Controllers.AuthControllers
         public IActionResult Login(LoginModel loginModel)
         {
 
-            User user = _repository.GetUserByUserName(loginModel.UserName);
+            var user = _repository.GetUserByUserName(loginModel.UserName);
+            bool isValidPassword = BCrypt.Net.BCrypt.Verify(loginModel.Password, user.Password);
 
-            if (user == null || !user.Password.Equals(loginModel.Password))
+            if (user == null || !isValidPassword)
             {
 
                 return BadRequest("Wrong credentials");
@@ -44,10 +45,10 @@ namespace InstaBojan.Controllers.AuthControllers
         }
 
         [HttpPost("register")]
-        public IActionResult Register([FromBody] User regUser)
+        public IActionResult Register(string firstName,string lastName,string email,string userName,string password)
         {
 
-            var user = _repository.GetUserByUserName(regUser.UserName);
+            var user = _repository.GetUserByUserName(userName);
 
             if (user != null)
             {
@@ -57,12 +58,12 @@ namespace InstaBojan.Controllers.AuthControllers
 
             user = new User
             {
-                FirstName = regUser.FirstName,
-                LastName = regUser.LastName,
-                Email = regUser.Email,
+                FirstName = firstName,
+                LastName = lastName,
+                Email =email,
+                UserName = userName,
+                Password = BCrypt.Net.BCrypt.HashPassword(password),
                 Role = Role.User,
-                UserName = regUser.UserName,
-                Password = BCrypt.Net.BCrypt.HashPassword(regUser.Password)
             };
 
             _repository.AddUser(user);
