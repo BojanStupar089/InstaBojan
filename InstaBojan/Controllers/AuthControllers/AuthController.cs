@@ -17,9 +17,12 @@ namespace InstaBojan.Controllers.AuthControllers
     {
 
         private readonly IUserRepository _repository;
-        public AuthController(IUserRepository repository)
+
+        private IConfiguration _configuration;
+        public AuthController(IUserRepository repository, IConfiguration configuration)
         {
             _repository = repository;
+            _configuration = configuration;
         }
 
 
@@ -68,9 +71,9 @@ namespace InstaBojan.Controllers.AuthControllers
 
             _repository.AddUser(user);
 
-             var token = GenerateToken(user);
+            // var token = GenerateToken(user);
 
-             return Ok(new { token });
+             return Ok();
 
            
 
@@ -80,18 +83,18 @@ namespace InstaBojan.Controllers.AuthControllers
 
 
 
-       [Authorize(Roles = "ADMIN")]
+       [Authorize(Roles = "Admin")]
         [HttpGet("test-admin-authorization")]
         public async Task<IActionResult> TestAuth()
         {
-            return Ok("Success");
+            return Ok("Success Admin");
         }
 
-        [Authorize(Roles = "USER")]
+        [Authorize(Roles = "User")]
         [HttpGet("test-regular-authorization")]
         public async Task<IActionResult> TestRegAuth()
         {
-            return Ok("Success");
+            return Ok("Success User");
         }
         
         
@@ -104,7 +107,7 @@ namespace InstaBojan.Controllers.AuthControllers
         private string GenerateToken(User user)
         {
 
-            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes("super-long-secret-key"));
+            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["Jwt:Secret"]));
             var credentials = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
 
             var token = new JwtSecurityToken(

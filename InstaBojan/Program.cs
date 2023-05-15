@@ -13,8 +13,8 @@ using System.Text;
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
-builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
-    .AddMicrosoftIdentityWebApi(builder.Configuration.GetSection("AzureAd"));
+/*builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+    .AddMicrosoftIdentityWebApi(builder.Configuration.GetSection("AzureAd"));*/
 
 //EntityFrameworkCore
 builder.Services.AddDbContext<InstagramStoreContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("BokiInsta")));
@@ -25,7 +25,7 @@ builder.Services.AddDbContext<InstagramStoreContext>(options => options.UseSqlSe
 
 
 //Authentication
-/*builder.Services.AddAuthentication(options =>
+builder.Services.AddAuthentication(options =>
 {
    options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
    options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
@@ -34,17 +34,16 @@ builder.Services.AddDbContext<InstagramStoreContext>(options => options.UseSqlSe
 {
    options.SaveToken = true;
    options.RequireHttpsMetadata = false;
-   options.TokenValidationParameters = new TokenValidationParameters()
-   {
-       ValidateIssuer = true,
-       ValidateAudience = true,
-       ValidAudience = builder.Configuration["JWT:ValidAudience"],
-       ValidIssuer = builder.Configuration["JWT:ValidIssuer"],
-       IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["JWT:Secret"]))
+options.TokenValidationParameters = new TokenValidationParameters()
+{
+    ValidateIssuer = false,
+    ValidateAudience = false,
+    ValidAudience = null,
+    ValidIssuer = null,
+    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["Jwt:Secret"]))
    };
 });
 
-*/
 
 
 
