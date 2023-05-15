@@ -1,6 +1,7 @@
 using InstaBojan.Core.Models;
 using InstaBojan.Helpers;
 using InstaBojan.Infrastructure.Data;
+using InstaBojan.Infrastructure.Repository.ProfilesRepository;
 using InstaBojan.Infrastructure.Repository.UsersRepository;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -45,6 +46,7 @@ options.TokenValidationParameters = new TokenValidationParameters()
 builder.Services.AddAutoMapper(typeof(Program));
 
 builder.Services.AddScoped<IUserRepository, UsersRepository>();
+builder.Services.AddScoped<IProfilesRepository, ProfilesRepository>();
 builder.Services.AddScoped<ICompanyMapper, CompanyMapper>();
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
