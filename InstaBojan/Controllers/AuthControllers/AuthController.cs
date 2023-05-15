@@ -18,11 +18,11 @@ namespace InstaBojan.Controllers.AuthControllers
 
         private readonly IUserRepository _repository;
 
-        private IConfiguration _configuration;
-        public AuthController(IUserRepository repository, IConfiguration configuration)
+      
+        public AuthController(IUserRepository repository)
         {
             _repository = repository;
-            _configuration = configuration;
+          
         }
 
 
@@ -107,7 +107,7 @@ namespace InstaBojan.Controllers.AuthControllers
         private string GenerateToken(User user)
         {
 
-            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["Jwt:Secret"]));
+            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes("super-long-secret-key"));
             var credentials = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
 
             var token = new JwtSecurityToken(

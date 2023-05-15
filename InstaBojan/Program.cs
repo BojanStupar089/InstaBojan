@@ -40,7 +40,7 @@ options.TokenValidationParameters = new TokenValidationParameters()
     ValidateAudience = false,
     ValidAudience = null,
     ValidIssuer = null,
-    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["Jwt:Secret"]))
+    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes("super-long-secret-key"))
    };
 });
 
