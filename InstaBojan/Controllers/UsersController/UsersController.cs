@@ -9,7 +9,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace InstaBojan.Controllers.UsersController
 {
-    [Authorize(Roles ="User")]
+   // [Authorize(Roles ="User")]
     [Route("api/[controller]")]
     [ApiController]
     public class UsersController : ControllerBase
@@ -81,11 +81,10 @@ namespace InstaBojan.Controllers.UsersController
         }
 
         [HttpPut("{id}")]
-        public IActionResult UpdateUser([FromQuery]int id, [FromBody] UserDto userDto)
+        public IActionResult UpdateUser(int id, [FromBody] UserDto userDto)
         {
 
-
-            var user = usersRepository.GetUserById(id);
+           var user = usersRepository.GetUserById(id);
 
             if (user == null)
             {
@@ -94,9 +93,9 @@ namespace InstaBojan.Controllers.UsersController
             }
 
              var updUser = _mapper.MapUser(userDto);
-             //usersRepository.UpdateUser(updUser);
+            // usersRepository.UpdateUser(updUser);
 
-            usersRepository.UpdateUser(id, updUser);
+           usersRepository.UpdateUser(id, updUser);
 
             return NoContent();
         }

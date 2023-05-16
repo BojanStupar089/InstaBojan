@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace InstaBojan.Infrastructure.Migrations
 {
-    public partial class initProfile : Migration
+    public partial class initRpp : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -15,11 +15,10 @@ namespace InstaBojan.Infrastructure.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    Name = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    ProfilePicture = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    UserFK = table.Column<int>(type: "int", nullable: false),
-                    UserId = table.Column<int>(type: "int", nullable: true),
-                    Birthday = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    ProfileName = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    ProfilePicture = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    UserId = table.Column<int>(type: "int", nullable: false),
+                    Birthday = table.Column<DateTime>(type: "datetime2", nullable: true),
                     Gender = table.Column<string>(type: "nvarchar(max)", nullable: true)
                 },
                 constraints: table =>
@@ -29,7 +28,8 @@ namespace InstaBojan.Infrastructure.Migrations
                         name: "FK_Profiles_Users_UserId",
                         column: x => x.UserId,
                         principalTable: "Users",
-                        principalColumn: "Id");
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -38,16 +38,19 @@ namespace InstaBojan.Infrastructure.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    ProfileId = table.Column<int>(type: "int", nullable: true)
+                    Picture = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    PublisherId = table.Column<int>(type: "int", nullable: false),
+                    Text = table.Column<string>(type: "nvarchar(max)", nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Post", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Post_Profiles_ProfileId",
-                        column: x => x.ProfileId,
+                        name: "FK_Post_Profiles_PublisherId",
+                        column: x => x.PublisherId,
                         principalTable: "Profiles",
-                        principalColumn: "Id");
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -73,10 +76,37 @@ namespace InstaBojan.Infrastructure.Migrations
                         principalColumn: "Id");
                 });
 
+            migrationBuilder.CreateTable(
+                name: "Reaction",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    ReactionName = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    PostId = table.Column<int>(type: "int", nullable: false),
+                    ProfileId = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Reaction", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Reaction_Post_PostId",
+                        column: x => x.PostId,
+                        principalTable: "Post",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_Reaction_Profiles_ProfileId",
+                        column: x => x.ProfileId,
+                        principalTable: "Profiles",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
             migrationBuilder.CreateIndex(
-                name: "IX_Post_ProfileId",
+                name: "IX_Post_PublisherId",
                 table: "Post",
-                column: "ProfileId");
+                column: "PublisherId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_ProfileProfile_FollowingId",
@@ -87,15 +117,28 @@ namespace InstaBojan.Infrastructure.Migrations
                 name: "IX_Profiles_UserId",
                 table: "Profiles",
                 column: "UserId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Reaction_PostId",
+                table: "Reaction",
+                column: "PostId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Reaction_ProfileId",
+                table: "Reaction",
+                column: "ProfileId");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
-                name: "Post");
+                name: "ProfileProfile");
 
             migrationBuilder.DropTable(
-                name: "ProfileProfile");
+                name: "Reaction");
+
+            migrationBuilder.DropTable(
+                name: "Post");
 
             migrationBuilder.DropTable(
                 name: "Profiles");

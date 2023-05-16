@@ -76,7 +76,7 @@ namespace InstaBojan.Infrastructure.Repository.UsersRepository
         #endregion
 
         #region put
-      /*  public bool UpdateUser(User user)
+      /* public bool UpdateUser(User user)
         {
             var userUpd = _context.Users.FirstOrDefault(u => u.Id == user.Id);
             if (userUpd != null)
@@ -99,7 +99,9 @@ namespace InstaBojan.Infrastructure.Repository.UsersRepository
         */
 
         
-        public bool UpdateUser(int id, User user) {
+
+        
+       public bool UpdateUser(int id, User user) {
 
             var userUpd = _context.Users.FirstOrDefault(u => u.Id == id);
             if (userUpd != null)
@@ -118,6 +120,8 @@ namespace InstaBojan.Infrastructure.Repository.UsersRepository
 
             return false;
         }
+
+        
        
 
         #endregion

@@ -19,7 +19,7 @@ namespace InstaBojan.Infrastructure.Repository.UsersRepository
 
         public bool UpdateUser(int id, User user);
 
-        //public bool UpdateUser(User user);
+       // public bool UpdateUser(User user);
 
         public bool DeleteUser(int id);
     }
