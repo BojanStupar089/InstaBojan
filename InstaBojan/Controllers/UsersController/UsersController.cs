@@ -27,12 +27,14 @@ namespace InstaBojan.Controllers.UsersController
         [HttpGet]
         public IActionResult GetUsers()
         {
-
+            var users = usersRepository.GetUsers();
+            if (users == null) return BadRequest("Users are null");
+           
             return Ok(usersRepository.GetUsers());
         }
 
 
-        [HttpGet("id")]
+        [HttpGet("{id}")]
         public IActionResult GetUserById(int id)
         {
 
@@ -48,7 +50,7 @@ namespace InstaBojan.Controllers.UsersController
         }
 
 
-        [HttpDelete("id")]
+        [HttpDelete("{id}")]
         public IActionResult DeleteUser(int id)
         {
 
@@ -78,7 +80,7 @@ namespace InstaBojan.Controllers.UsersController
 
         }
 
-        [HttpPut("id")]
+        [HttpPut("{id}")]
         public IActionResult UpdateUser([FromQuery]int id, [FromBody] UserDto userDto)
         {
 
@@ -92,9 +94,9 @@ namespace InstaBojan.Controllers.UsersController
             }
 
              var updUser = _mapper.MapUser(userDto);
-             usersRepository.UpdateUser(updUser);
+             //usersRepository.UpdateUser(updUser);
 
-           // usersRepository.UpdateUser(id, updUser);
+            usersRepository.UpdateUser(id, updUser);
 
             return NoContent();
         }
