@@ -12,7 +12,7 @@ namespace InstaBojan.Core.Models
         public int Id { get; set; }
         public string ProfileName { get; set; }
         public string ProfilePicture { get; set; }
-    //    public int UserFK { get; set; }
+        public int UserId { get; set; }
         public User User { get; set; }
         public DateTime? Birthday { get; set; }
         public List<Post> Posts { get; set; }

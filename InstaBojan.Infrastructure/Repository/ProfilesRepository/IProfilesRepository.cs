@@ -12,7 +12,7 @@ namespace InstaBojan.Infrastructure.Repository.ProfilesRepository
 
         public List<Profile> GetProfiles();
         public Profile GetProfileById(int id);
-        public Profile GetProfileByName(string name);
+        public Profile GetProfileByProfileName(string profileName);
         public Profile GetProfileByUserId(int userId);
         public Profile GetProfileByUserName(string username);
         public bool AddProfile(Profile profile);

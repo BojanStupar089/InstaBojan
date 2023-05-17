@@ -23,6 +23,8 @@ namespace InstaBojan.Infrastructure.Data
 
         public DbSet<Profile> Profiles { get; set;}
 
+        public DbSet<Post> Posts { get; set; }
+
        /* public new async Task<int> SaveChanges() { 
         
              return await base.SaveChangesAsync();

@@ -10,11 +10,9 @@ namespace InstaBojan.Core.Models
     {
        public int Id { get; set; }
        public string Picture { get; set; }
-       //public int ProfileFk { get; set; }
+       public int ProfileId { get; set; }
        public Profile Publisher { get; set; }
        public string Text { get; set; }
-       public List<Reaction> Reactions {get; set;}
-
-      
+     
     }
 }

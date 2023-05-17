@@ -42,7 +42,7 @@ namespace InstaBojan.Infrastructure.Repository.ProfilesRepository
         
         }
 
-        public Profile GetProfileByName(string name)
+        public Profile GetProfileByProfileName(string name)
         {
             var profile = _context.Profiles.FirstOrDefault(p => p.ProfileName == name);
             if (profile == null) return null;
@@ -99,7 +99,7 @@ namespace InstaBojan.Infrastructure.Repository.ProfilesRepository
 
                 updProfile.ProfileName = profile.ProfileName;
                 updProfile.ProfilePicture = profile.ProfilePicture;
-                updProfile.User.Id = profile.User.Id;   // Ili updProfile.UserFk=profile.UserFk
+                updProfile.UserId = profile.UserId;   // Ili updProfile.UserFk=profile.UserFk
                 updProfile.Birthday= profile.Birthday;
                 updProfile.Posts = profile.Posts;
                 updProfile.Gender = profile.Gender;
