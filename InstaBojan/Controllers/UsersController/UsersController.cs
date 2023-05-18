@@ -1,8 +1,8 @@
 ﻿using BCrypt.Net;
 using InstaBojan.Core.Models;
 using InstaBojan.Dtos;
-using InstaBojan.Helpers;
 using InstaBojan.Infrastructure.Repository.UsersRepository;
+using InstaBojan.Mappers.UserMapper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -15,9 +15,9 @@ namespace InstaBojan.Controllers.UsersController
     public class UsersController : ControllerBase
     {
         public readonly IUserRepository usersRepository;
-        public ICompanyMapper _mapper;
+        public IUserMapper _mapper;
 
-        public UsersController(IUserRepository usersRepository, ICompanyMapper mapper)
+        public UsersController(IUserRepository usersRepository, IUserMapper mapper)
         {
             this.usersRepository = usersRepository;
             this._mapper = mapper;
@@ -28,7 +28,8 @@ namespace InstaBojan.Controllers.UsersController
         public IActionResult GetUsers()
         {
             var users = usersRepository.GetUsers();
-            if (users == null) return BadRequest("Users are null");
+            if (users == null) 
+                return BadRequest("Users are null");
            
             return Ok(usersRepository.GetUsers());
         }

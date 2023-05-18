@@ -1,10 +1,14 @@
 ﻿
+using System.Text.Json.Serialization;
+
 namespace InstaBojan.Dtos
 {
     public class ProfileDto
     {
         public string ProfileName { get; set;}
         public string ProfilePicture { get; set;}
+
+        [JsonIgnore]
         public int UserId { get; set; }
         
         public DateTime BirthDay { get; set;}

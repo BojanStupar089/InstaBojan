@@ -1,22 +1,25 @@
 ﻿using InstaBojan.Dtos;
 using InstaBojan.Helpers;
 using InstaBojan.Infrastructure.Repository.ProfilesRepository;
+using InstaBojan.Mappers.ProfileMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace InstaBojan.Controllers.ProfilesController
 {
+    [Authorize(Roles ="User")]
     [Route("api/[controller]")]
     [ApiController]
     public class ProfilesController : ControllerBase
     {
         private readonly IProfilesRepository _profilesRepository;
-        private readonly ICompanyMapper _companyMapper;
+        private readonly IProfileMapper _profileMapper;
 
-        public ProfilesController(IProfilesRepository profilesRepository, ICompanyMapper companyMapper)
+        public ProfilesController(IProfilesRepository profilesRepository, IProfileMapper profileMapper)
         {
             _profilesRepository = profilesRepository;
-            _companyMapper = companyMapper;
+            _profileMapper = profileMapper;
         }
 
         [HttpGet]
@@ -25,7 +28,7 @@ namespace InstaBojan.Controllers.ProfilesController
            var profiles=_profilesRepository.GetProfiles();
             if (profiles == null) return NotFound();
 
-            var listProfilesDto = _companyMapper.MapListProfilesDto(profiles);
+            var listProfilesDto = _profileMapper.MapListProfilesDto(profiles);
             return Ok(listProfilesDto);
         }
 
@@ -35,7 +38,7 @@ namespace InstaBojan.Controllers.ProfilesController
             var profile= _profilesRepository.GetProfileById(id);
             if(profile == null) return NotFound();
 
-            var profileDto=_companyMapper.MapProfileDto(profile);
+            var profileDto=_profileMapper.MapProfileDto(profile);
             return Ok(profileDto);
 
         }
@@ -46,7 +49,7 @@ namespace InstaBojan.Controllers.ProfilesController
            var profile=_profilesRepository.GetProfileByUserId(userId);
             if( profile == null) return NotFound();
 
-            var profileDto = _companyMapper.MapProfileDto(profile);
+            var profileDto = _profileMapper.MapProfileDto(profile);
             return Ok(profileDto);
         }
 
@@ -56,7 +59,7 @@ namespace InstaBojan.Controllers.ProfilesController
                var profile=_profilesRepository.GetProfileByUserName(username);
             if(profile == null) return NotFound();
 
-            var profileDto= _companyMapper.MapProfileDto(profile);
+            var profileDto= _profileMapper.MapProfileDto(profile);
             return Ok(profileDto);
         }
 
@@ -66,7 +69,7 @@ namespace InstaBojan.Controllers.ProfilesController
             var profile=_profilesRepository.GetProfileByProfileName(profileName);
             if(profile==null) return NotFound();
 
-            var profileDto = _companyMapper.MapProfileDto(profile);
+            var profileDto = _profileMapper.MapProfileDto(profile);
             return Ok(profileDto);
 
         }
@@ -76,7 +79,7 @@ namespace InstaBojan.Controllers.ProfilesController
         {
             if (!ModelState.IsValid) return BadRequest();
            
-           var profile=_companyMapper.MapProfile(profileDto);
+           var profile=_profileMapper.MapProfile(profileDto);
              _profilesRepository.AddProfile(profile);
 
            return Created("api/profiles"+"/"+profile.Id, profileDto);
@@ -98,7 +101,7 @@ namespace InstaBojan.Controllers.ProfilesController
               var updProfile= _profilesRepository.GetProfileById(id);
             if(updProfile == null) return NotFound();
 
-            var updateProfil = _companyMapper.MapProfile(profileDto);
+            var updateProfil = _profileMapper.MapProfile(profileDto);
             _profilesRepository.UpdateProfile(id, updateProfil);
 
             return NoContent();

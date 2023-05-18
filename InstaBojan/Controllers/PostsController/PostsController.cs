@@ -2,24 +2,25 @@
 using InstaBojan.Dtos;
 using InstaBojan.Helpers;
 using InstaBojan.Infrastructure.Repository.PostsRepository;
+using InstaBojan.Mappers.PostMapper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace InstaBojan.Controllers.PostsController
 {
-   // [Authorize(Roles ="User")]
+   [Authorize(Roles ="User")]
     [Route("api/[controller]")]
     [ApiController]
     public class PostsController : ControllerBase
     {
         private readonly IPostsRepository _postsRepository;
-        private readonly ICompanyMapper _companyMapper;
+        private readonly IPostMapper _postMapper;
 
-        public PostsController(IPostsRepository postsRepository,ICompanyMapper companyMapper)
+        public PostsController(IPostsRepository postsRepository,IPostMapper postMapper)
         {
             _postsRepository = postsRepository;
-            _companyMapper = companyMapper;
+            _postMapper = postMapper;
         }
 
         [HttpGet]
@@ -28,7 +29,7 @@ namespace InstaBojan.Controllers.PostsController
            var posts = _postsRepository.GetPosts();
             if (posts == null) return NotFound();
 
-            var listPostsDto=_companyMapper.MapListPostsDto(posts);
+            var listPostsDto=_postMapper.MapListPostsDto(posts);
             return Ok(listPostsDto);
         }
 
@@ -38,7 +39,7 @@ namespace InstaBojan.Controllers.PostsController
            var post= _postsRepository.GetPostById(id);
             if (post == null) return NotFound();
 
-            var postDto = _companyMapper.MapPostDto(post);
+            var postDto = _postMapper.MapPostDto(post);
             return Ok(postDto);
 
         }
@@ -49,7 +50,7 @@ namespace InstaBojan.Controllers.PostsController
 
             if (!ModelState.IsValid) return BadRequest();
               
-            var post=_companyMapper.MapPost(postDto);
+            var post=_postMapper.MapPost(postDto);
             _postsRepository.AddPost(post);
 
             return Created("api/posts" + "/" + post.Id, postDto);
@@ -61,7 +62,7 @@ namespace InstaBojan.Controllers.PostsController
              var updPost=_postsRepository.GetPostById(id);
             if (updPost == null) return NotFound();
 
-            var post=_companyMapper.MapPost(postDto);
+            var post=_postMapper.MapPost(postDto);
             _postsRepository.UpdatePost(id,post);
 
             return NoContent();
