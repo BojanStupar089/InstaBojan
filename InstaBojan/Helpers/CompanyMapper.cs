@@ -60,5 +60,22 @@ namespace InstaBojan.Helpers
 
             return mapper.Map<Core.Models.Profile, ProfileDto>(profile);
         }
+
+        public List<ProfileDto> MapListProfilesDto(List<Core.Models.Profile> profiles)
+        {
+            MapperConfiguration configuration = new MapperConfiguration(cfg => cfg.CreateMap<Core.Models.Profile, ProfileDto>());
+            Mapper mapper = new Mapper(configuration);
+
+            return mapper.Map<List<Core.Models.Profile>, List<ProfileDto>>(profiles);
+        }
+
+        public List<PostDto> MapListPostsDto(List<Post> posts)
+        {
+            MapperConfiguration configuration = new MapperConfiguration(cfg => cfg.CreateMap<Core.Models.Post, PostDto>());
+            Mapper mapper = new Mapper(configuration);
+
+            return mapper.Map<List<Post>, List<PostDto>>(posts);
+
+        }
     }
 }

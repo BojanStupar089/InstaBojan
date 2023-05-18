@@ -2,11 +2,13 @@
 using InstaBojan.Dtos;
 using InstaBojan.Helpers;
 using InstaBojan.Infrastructure.Repository.PostsRepository;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace InstaBojan.Controllers.PostsController
 {
+    [Authorize(Roles ="User")]
     [Route("api/[controller]")]
     [ApiController]
     public class PostsController : ControllerBase
@@ -24,7 +26,10 @@ namespace InstaBojan.Controllers.PostsController
         public IActionResult GetPosts() {
 
            var posts = _postsRepository.GetPosts();
-            return Ok(posts);
+            if (posts == null) return NotFound();
+
+            var listPostsDto=_companyMapper.MapListPostsDto(posts);
+            return Ok(listPostsDto);
         }
 
         [HttpGet("{id}")]
@@ -42,12 +47,12 @@ namespace InstaBojan.Controllers.PostsController
         [HttpPost]
         public IActionResult AddPost([FromBody] PostDto postDto) {
 
-            if (postDto == null) return BadRequest();
+            if (!ModelState.IsValid) return BadRequest();
               
             var post=_companyMapper.MapPost(postDto);
             _postsRepository.AddPost(post);
 
-            return Created(new Uri($"api/posts/{post.Id}"), postDto);
+            return Created("api/posts" + "/" + post.Id, postDto);
         }
 
         [HttpPut("{id}")]

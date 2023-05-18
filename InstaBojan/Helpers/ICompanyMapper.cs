@@ -11,5 +11,7 @@ namespace InstaBojan.Helpers
         public Post MapPost(PostDto postDto);
         public ProfileDto MapProfileDto(Profile profile);
         public Profile MapProfile(ProfileDto profileDto);
+        List<ProfileDto> MapListProfilesDto(List<Profile> profiles);
+        List<PostDto> MapListPostsDto(List<Post> Posts);
     }
 }

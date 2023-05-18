@@ -24,7 +24,9 @@ namespace InstaBojan.Controllers.ProfilesController
         
            var profiles=_profilesRepository.GetProfiles();
             if (profiles == null) return NotFound();
-            return Ok(profiles);
+
+            var listProfilesDto = _companyMapper.MapListProfilesDto(profiles);
+            return Ok(listProfilesDto);
         }
 
         [HttpGet("{id}")]
@@ -36,6 +38,16 @@ namespace InstaBojan.Controllers.ProfilesController
             var profileDto=_companyMapper.MapProfileDto(profile);
             return Ok(profileDto);
 
+        }
+
+        [HttpGet("userId")]
+        public IActionResult GetProfileByUserId(int userId) { 
+        
+           var profile=_profilesRepository.GetProfileByUserId(userId);
+            if( profile == null) return NotFound();
+
+            var profileDto = _companyMapper.MapProfileDto(profile);
+            return Ok(profileDto);
         }
 
         [HttpGet("username")]
@@ -62,13 +74,12 @@ namespace InstaBojan.Controllers.ProfilesController
         [HttpPost]
         public IActionResult PostProfiles([FromBody] ProfileDto profileDto)
         {
-         //  if(profileDto == null) return BadRequest();
+            if (!ModelState.IsValid) return BadRequest();
            
            var profile=_companyMapper.MapProfile(profileDto);
              _profilesRepository.AddProfile(profile);
 
-            //  return Created(new Uri($"api/profiles/{profile.Id}"),profileDto);
-            return Ok();  
+           return Created("api/profiles"+"/"+profile.Id, profileDto);
         }
 
         [HttpDelete("{id}")]
