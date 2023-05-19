@@ -4,12 +4,13 @@ using InstaBojan.Dtos;
 using InstaBojan.Infrastructure.Repository.UsersRepository;
 using InstaBojan.Mappers.UserMapper;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Authorization.Infrastructure;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace InstaBojan.Controllers.UsersController
 {
-   // [Authorize(Roles ="User")]
+  
     [Route("api/[controller]")]
     [ApiController]
     public class UsersController : ControllerBase
@@ -23,7 +24,7 @@ namespace InstaBojan.Controllers.UsersController
             this._mapper = mapper;
         }
 
-
+        [Authorize(Roles="Admin")]
         [HttpGet]
         public IActionResult GetUsers()
         {
@@ -34,7 +35,7 @@ namespace InstaBojan.Controllers.UsersController
             return Ok(usersRepository.GetUsers());
         }
 
-
+        [Authorize(Roles ="Admin")]
         [HttpGet("{id}")]
         public IActionResult GetUserById(int id)
         {
@@ -64,7 +65,7 @@ namespace InstaBojan.Controllers.UsersController
             usersRepository.DeleteUser(id);
             return NoContent();
         }
-
+        [Authorize(Roles ="Admin")]
         [HttpGet("username")]
         public IActionResult GetUsername(string username)
         {

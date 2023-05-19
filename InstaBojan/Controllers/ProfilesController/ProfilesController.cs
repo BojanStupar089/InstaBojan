@@ -1,5 +1,4 @@
 ﻿using InstaBojan.Dtos;
-using InstaBojan.Helpers;
 using InstaBojan.Infrastructure.Repository.ProfilesRepository;
 using InstaBojan.Mappers.ProfileMapper;
 using Microsoft.AspNetCore.Authorization;
@@ -8,7 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace InstaBojan.Controllers.ProfilesController
 {
-    [Authorize(Roles ="User")]
+   // [Authorize(Roles ="User")]
     [Route("api/[controller]")]
     [ApiController]
     public class ProfilesController : ControllerBase

@@ -1,6 +1,5 @@
 ﻿using AutoMapper;
 using InstaBojan.Dtos;
-using InstaBojan.Helpers;
 using InstaBojan.Infrastructure.Repository.PostsRepository;
 using InstaBojan.Mappers.PostMapper;
 using Microsoft.AspNetCore.Authorization;
@@ -9,7 +8,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace InstaBojan.Controllers.PostsController
 {
-   [Authorize(Roles ="User")]
+   //[Authorize(Roles ="User")]
     [Route("api/[controller]")]
     [ApiController]
     public class PostsController : ControllerBase

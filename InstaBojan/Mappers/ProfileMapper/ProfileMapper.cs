@@ -17,18 +17,22 @@ namespace InstaBojan.Mappers.ProfileMapper
 
         public Profile MapProfile(ProfileDto profileDto)
         {
-            MapperConfiguration configuration = new MapperConfiguration(cfg => cfg.CreateMap<ProfileDto, Core.Models.Profile>());
+            MapperConfiguration configuration = new MapperConfiguration(cfg => cfg.CreateMap<ProfileDto, Profile>()
+            .ForMember(source=>source.Followers,opt=>opt.MapFrom(dest=>dest.FollowersId))
+            .ForMember(source=>source.Following,opt=>opt.MapFrom(dest=>dest.FollowingId)));
             Mapper mapper = new Mapper(configuration);
 
-            return mapper.Map<ProfileDto, Core.Models.Profile>(profileDto);
+            return mapper.Map<ProfileDto,Profile>(profileDto);
         }
 
         public ProfileDto MapProfileDto(Profile profile)
         {
-            MapperConfiguration configuration = new MapperConfiguration(cfg => cfg.CreateMap<Core.Models.Profile, ProfileDto>());
+            MapperConfiguration configuration = new MapperConfiguration(cfg => cfg.CreateMap<Profile, ProfileDto>()
+            .ForMember(dest => dest.FollowersId, opt => opt.MapFrom(src => src.Followers.Count))
+            .ForMember(dest=>dest.FollowingId,opt=>opt.MapFrom(src=>src.Following.Count)));
             Mapper mapper = new Mapper(configuration);
 
-            return mapper.Map<Core.Models.Profile, ProfileDto>(profile);
+            return mapper.Map<Profile, ProfileDto>(profile);
         }
     }
 }
