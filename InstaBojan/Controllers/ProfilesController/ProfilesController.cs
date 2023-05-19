@@ -74,7 +74,7 @@ namespace InstaBojan.Controllers.ProfilesController
         }
 
         [HttpPost]
-        public IActionResult PostProfiles([FromBody] ProfileDto profileDto)
+        public IActionResult PostProfiles([FromBody] AddUpdateProfileDto profileDto)
         {
             if (!ModelState.IsValid) return BadRequest();
            
@@ -95,13 +95,17 @@ namespace InstaBojan.Controllers.ProfilesController
         }
 
         [HttpPut("{id}")]
-        public IActionResult UpdateProfiles(int id, [FromBody] ProfileDto profileDto) { 
+        public IActionResult UpdateProfiles(int id,[FromBody] AddUpdateProfileDto addUpdateProfileDto) { 
         
-              var updProfile= _profilesRepository.GetProfileById(id);
-            if(updProfile == null) return NotFound();
+            var updProfile = _profilesRepository.GetProfileById(id);
+            if(updProfile == null) return NotFound("Profile is not found!");
+            
+            updProfile.ProfilePicture = addUpdateProfileDto.ProfilePicture;
+            updProfile.Gender = addUpdateProfileDto.Gender;
+            updProfile.Birthday = addUpdateProfileDto.BirthDay;
+        
 
-            var updateProfil = _profileMapper.MapProfile(profileDto);
-            _profilesRepository.UpdateProfile(id, updateProfil);
+            _profilesRepository.UpdateProfile(id, updProfile);
 
             return NoContent();
         }

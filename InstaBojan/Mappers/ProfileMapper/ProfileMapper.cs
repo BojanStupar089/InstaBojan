@@ -15,24 +15,24 @@ namespace InstaBojan.Mappers.ProfileMapper
             return mapper.Map<List<Profile>, List<ProfileDto>>(profiles);
         }
 
-        public Profile MapProfile(ProfileDto profileDto)
+        public Profile MapProfile(AddUpdateProfileDto profileDto)
         {
-            MapperConfiguration configuration = new MapperConfiguration(cfg => cfg.CreateMap<ProfileDto, Profile>()
-            .ForMember(source=>source.Followers,opt=>opt.MapFrom(dest=>dest.FollowersId))
-            .ForMember(source=>source.Following,opt=>opt.MapFrom(dest=>dest.FollowingId)));
+            MapperConfiguration configuration = new MapperConfiguration(cfg => cfg.CreateMap<AddUpdateProfileDto, Profile>());
             Mapper mapper = new Mapper(configuration);
 
-            return mapper.Map<ProfileDto,Profile>(profileDto);
+            return mapper.Map<Profile>(profileDto);
         }
 
         public ProfileDto MapProfileDto(Profile profile)
         {
             MapperConfiguration configuration = new MapperConfiguration(cfg => cfg.CreateMap<Profile, ProfileDto>()
-            .ForMember(dest => dest.FollowersId, opt => opt.MapFrom(src => src.Followers.Count))
-            .ForMember(dest=>dest.FollowingId,opt=>opt.MapFrom(src=>src.Following.Count)));
+            .ForMember(dest => dest.NumberFollowers, opt => opt.MapFrom(src => src.Followers.Count))
+            .ForMember(dest=>dest.NumberFollowing,opt=>opt.MapFrom(src=>src.Following.Count)));
             Mapper mapper = new Mapper(configuration);
 
-            return mapper.Map<Profile, ProfileDto>(profile);
+            return mapper.Map<ProfileDto>(profile);
         }
+
+       
     }
 }
