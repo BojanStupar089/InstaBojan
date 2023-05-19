@@ -20,6 +20,13 @@ namespace InstaBojan.Infrastructure.Repository.ProfilesRepository
         public bool DeleteProfile(int id);
 
 
+        //moras napraviti metodu Follow i UnFollow
+
+        //public Profile Follow(int id);
+        //public Profile Follow(string username); // ovo sam nasao
+        //
+
+
     
     }
 }
