@@ -88,8 +88,7 @@ namespace InstaBojan.Controllers.ProfilesController
         [HttpDelete("{id}")]
         public IActionResult DeleteProfiles(int id) {
 
-            var username = User.FindFirstValue(ClaimTypes.Name); // NameIdentifier
-          
+            var username = User.FindFirstValue(ClaimTypes.Name);
             var delProfile=_profilesRepository.GetProfileById(id);
             if(delProfile == null) return NotFound();
 
@@ -103,7 +102,7 @@ namespace InstaBojan.Controllers.ProfilesController
         [HttpPut("{id}")]
         public IActionResult UpdateProfiles(int id,[FromBody] UpdateProfileDto updateProfileDto) {
 
-            var username = User.FindFirstValue(ClaimTypes.Name); // NameIdentifier
+            var username = User.FindFirstValue(ClaimTypes.Name); 
             
             
             var profile = _profilesRepository.GetProfileById(id);

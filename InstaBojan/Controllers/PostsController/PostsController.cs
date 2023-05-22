@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using InstaBojan.Dtos;
+using InstaBojan.Dtos.PostsDto;
 using InstaBojan.Infrastructure.Repository.PostsRepository;
 using InstaBojan.Mappers.PostMapper;
 using Microsoft.AspNetCore.Authorization;
@@ -25,11 +26,10 @@ namespace InstaBojan.Controllers.PostsController
         [HttpGet]
         public IActionResult GetPosts() {
 
-           var posts = _postsRepository.GetPosts();
-            if (posts == null) return NotFound();
-
-            var listPostsDto=_postMapper.MapListPostsDto(posts);
-            return Ok(listPostsDto);
+           var posts = _postsRepository.GetPosts().Select(p=>_postMapper.MapPostDto(p));
+            if (posts == null) return NotFound("Posts dont't exist");
+           
+            return Ok(posts);
         }
 
         [HttpGet("{id}")]
@@ -45,7 +45,7 @@ namespace InstaBojan.Controllers.PostsController
 
 
         [HttpPost]
-        public IActionResult AddPost([FromBody] PostDto postDto) {
+        public IActionResult AddPost([FromBody] AddPostDto postDto) {
 
             if (!ModelState.IsValid) return BadRequest();
               
@@ -56,12 +56,12 @@ namespace InstaBojan.Controllers.PostsController
         }
 
         [HttpPut("{id}")]
-        public IActionResult UpdatePost(int id, [FromBody] PostDto postDto) {
+        public IActionResult UpdatePost(int id, [FromBody] UpdatePostDto postDto) {
 
              var updPost=_postsRepository.GetPostById(id);
             if (updPost == null) return NotFound();
 
-            var post=_postMapper.MapPost(postDto);
+            var post=_postMapper.MapUpdatePost(postDto);
             _postsRepository.UpdatePost(id,post);
 
             return NoContent();
