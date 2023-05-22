@@ -99,13 +99,9 @@ namespace InstaBojan.Infrastructure.Repository.ProfilesRepository
 
                 updProfile.ProfileName = profile.ProfileName;
                 updProfile.ProfilePicture = profile.ProfilePicture;
-                updProfile.UserId = profile.UserId;   // Ili updProfile.UserFk=profile.UserFk
-                updProfile.Birthday= profile.Birthday;
-                updProfile.Posts = profile.Posts;
+                updProfile.Birthday = profile.Birthday;                                                     
                 updProfile.Gender = profile.Gender;
-                updProfile.Followers= profile.Followers;
-                updProfile.Following= profile.Following;
-
+              
                 _context.Update(updProfile);
                 _context.SaveChanges();
 

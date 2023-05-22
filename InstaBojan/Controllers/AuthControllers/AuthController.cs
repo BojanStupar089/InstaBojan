@@ -1,6 +1,6 @@
 ﻿using InstaBojan.Core.Models;
 using InstaBojan.Core.Security;
-using InstaBojan.Dtos;
+using InstaBojan.Dtos.UsersDto;
 using InstaBojan.Infrastructure.Repository.UsersRepository;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
@@ -113,7 +113,14 @@ namespace InstaBojan.Controllers.AuthControllers
                 expires: DateTime.Now.AddMinutes(30),
                 signingCredentials: credentials);
 
-            return new JwtSecurityTokenHandler().WriteToken(token);
+            var generatedUser= new JwtSecurityTokenHandler().WriteToken(token);
+
+            if(TokenBlackList.IsTokenBlackListed(generatedUser))
+            {
+                return ("Token is blacklisted");
+            }
+
+            return generatedUser;
 
         }
     }

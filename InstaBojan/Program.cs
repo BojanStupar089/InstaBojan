@@ -34,20 +34,36 @@ builder.Services.AddAuthentication(options =>
    options.SaveToken = true;
    options.RequireHttpsMetadata = false;
 options.TokenValidationParameters = new TokenValidationParameters()
-{
+   {
     ValidateIssuer = false,
     ValidateAudience = false,
     ValidAudience = null,
     ValidIssuer = null,
     IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes("super-long-secret-key"))
    };
+
+    options.Events = new JwtBearerEvents
+    {
+        OnTokenValidated = async context =>
+        {
+
+            string token = context.Principal.Identity.Name;
+            if (TokenBlackList.IsTokenBlackListed(token))
+            {
+
+                context.Fail("Token is blacklisted , is not valid");
+            }
+
+
+        }
+    };
+
 });
 
 
 
 
 //Add AutoMapper
-builder.Services.AddAutoMapper(typeof(Program));
 
 builder.Services.AddScoped<IUserRepository, UsersRepository>();
 builder.Services.AddScoped<IProfilesRepository, ProfilesRepository>();
@@ -55,7 +71,8 @@ builder.Services.AddScoped<IPostsRepository, PostsRepository>();
 builder.Services.AddScoped<IUserMapper, UserMapper>();
 builder.Services.AddScoped<IProfileMapper, ProfileMapper>();
 builder.Services.AddScoped<IPostMapper, PostMapper>();
-builder.Services.AddScoped<IProfileMapper, ProfileMapper>();
+
+builder.Services.AddAutoMapper(typeof(Program));
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();

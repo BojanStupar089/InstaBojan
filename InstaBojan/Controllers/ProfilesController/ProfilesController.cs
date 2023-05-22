@@ -1,13 +1,15 @@
 ﻿using InstaBojan.Dtos;
+using InstaBojan.Dtos.ProfilesDto;
 using InstaBojan.Infrastructure.Repository.ProfilesRepository;
 using InstaBojan.Mappers.ProfileMapper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using System.Security.Claims;
 
 namespace InstaBojan.Controllers.ProfilesController
 {
-   // [Authorize(Roles ="User")]
+    [Authorize(Roles ="User")]
     [Route("api/[controller]")]
     [ApiController]
     public class ProfilesController : ControllerBase
@@ -22,13 +24,12 @@ namespace InstaBojan.Controllers.ProfilesController
         }
 
         [HttpGet]
-        public IActionResult GetProfiles() { 
-        
-           var profiles=_profilesRepository.GetProfiles();
-            if (profiles == null) return NotFound();
+        public IActionResult GetProfiles() {
 
-            var listProfilesDto = _profileMapper.MapListProfilesDto(profiles);
-            return Ok(listProfilesDto);
+            var profiles = _profilesRepository.GetProfiles().ToList().Select(p => _profileMapper.MapGetProfilesDto(p));
+            if (profiles == null) return NotFound("Profiles is not found");
+
+            return Ok(profiles);
         }
 
         [HttpGet("{id}")]
@@ -37,7 +38,7 @@ namespace InstaBojan.Controllers.ProfilesController
             var profile= _profilesRepository.GetProfileById(id);
             if(profile == null) return NotFound();
 
-            var profileDto=_profileMapper.MapProfileDto(profile);
+            var profileDto=_profileMapper.MapGetProfilesDto(profile);
             return Ok(profileDto);
 
         }
@@ -48,7 +49,7 @@ namespace InstaBojan.Controllers.ProfilesController
            var profile=_profilesRepository.GetProfileByUserId(userId);
             if( profile == null) return NotFound();
 
-            var profileDto = _profileMapper.MapProfileDto(profile);
+            var profileDto = _profileMapper.MapGetProfilesDto(profile);
             return Ok(profileDto);
         }
 
@@ -58,7 +59,7 @@ namespace InstaBojan.Controllers.ProfilesController
                var profile=_profilesRepository.GetProfileByUserName(username);
             if(profile == null) return NotFound();
 
-            var profileDto= _profileMapper.MapProfileDto(profile);
+            var profileDto= _profileMapper.MapGetProfilesDto(profile);
             return Ok(profileDto);
         }
 
@@ -68,42 +69,52 @@ namespace InstaBojan.Controllers.ProfilesController
             var profile=_profilesRepository.GetProfileByProfileName(profileName);
             if(profile==null) return NotFound();
 
-            var profileDto = _profileMapper.MapProfileDto(profile);
+            var profileDto = _profileMapper.MapGetProfilesDto(profile);
             return Ok(profileDto);
 
         }
 
         [HttpPost]
-        public IActionResult PostProfiles([FromBody] AddUpdateProfileDto profileDto)
+        public IActionResult PostProfiles([FromBody] AddProfileDto profileDto)
         {
             if (!ModelState.IsValid) return BadRequest();
            
-           var profile=_profileMapper.MapProfile(profileDto);
+           var profile=_profileMapper.MapAddProfile(profileDto);
              _profilesRepository.AddProfile(profile);
 
            return Created("api/profiles"+"/"+profile.Id, profileDto);
         }
 
         [HttpDelete("{id}")]
-        public IActionResult DeleteProfiles(int id) { 
-        
-          var delProfile=_profilesRepository.GetProfileById(id);
+        public IActionResult DeleteProfiles(int id) {
+
+            var username = User.FindFirstValue(ClaimTypes.Name); // NameIdentifier
+          
+            var delProfile=_profilesRepository.GetProfileById(id);
             if(delProfile == null) return NotFound();
 
+            if (delProfile.User.UserName != username) {
+                return Forbid();   
+            }
             _profilesRepository.DeleteProfile(id);
             return NoContent();
         }
 
         [HttpPut("{id}")]
-        public IActionResult UpdateProfiles(int id,[FromBody] AddUpdateProfileDto addUpdateProfileDto) { 
-        
-            var updProfile = _profilesRepository.GetProfileById(id);
-            if(updProfile == null) return NotFound("Profile is not found!");
+        public IActionResult UpdateProfiles(int id,[FromBody] UpdateProfileDto updateProfileDto) {
+
+            var username = User.FindFirstValue(ClaimTypes.Name); // NameIdentifier
             
-            updProfile.ProfilePicture = addUpdateProfileDto.ProfilePicture;
-            updProfile.Gender = addUpdateProfileDto.Gender;
-            updProfile.Birthday = addUpdateProfileDto.BirthDay;
-        
+            
+            var profile = _profilesRepository.GetProfileById(id);
+            if(profile == null) return NotFound("Profile is not found!");
+
+            if (profile.User.UserName != username) {
+
+                return Forbid();
+            }
+
+            var updProfile = _profileMapper.MapUpdateProfile(updateProfileDto);
 
             _profilesRepository.UpdateProfile(id, updProfile);
 

@@ -1,38 +1,40 @@
 ﻿using AutoMapper;
 using InstaBojan.Core.Models;
 using InstaBojan.Dtos;
+using InstaBojan.Dtos.ProfilesDto;
 using Profile = InstaBojan.Core.Models.Profile;
 
 namespace InstaBojan.Mappers.ProfileMapper
 {
     public class ProfileMapper : IProfileMapper
     {
-        public List<ProfileDto> MapListProfilesDto(List<Profile> profiles)
+      
+        public Profile MapAddProfile(AddProfileDto profileDto)
         {
-            MapperConfiguration configuration = new MapperConfiguration(cfg => cfg.CreateMap<Profile, ProfileDto>());
-            Mapper mapper = new Mapper(configuration);
-
-            return mapper.Map<List<Profile>, List<ProfileDto>>(profiles);
-        }
-
-        public Profile MapProfile(AddUpdateProfileDto profileDto)
-        {
-            MapperConfiguration configuration = new MapperConfiguration(cfg => cfg.CreateMap<AddUpdateProfileDto, Profile>());
+            MapperConfiguration configuration = new MapperConfiguration(cfg => cfg.CreateMap<AddProfileDto, Profile>());
             Mapper mapper = new Mapper(configuration);
 
             return mapper.Map<Profile>(profileDto);
         }
 
-        public ProfileDto MapProfileDto(Profile profile)
+      
+
+        public GetProfilesDto MapGetProfilesDto(Profile profile)
         {
-            MapperConfiguration configuration = new MapperConfiguration(cfg => cfg.CreateMap<Profile, ProfileDto>()
+            MapperConfiguration configuration = new MapperConfiguration(cfg => cfg.CreateMap<Profile, GetProfilesDto>()
             .ForMember(dest => dest.NumberFollowers, opt => opt.MapFrom(src => src.Followers.Count))
             .ForMember(dest=>dest.NumberFollowing,opt=>opt.MapFrom(src=>src.Following.Count)));
             Mapper mapper = new Mapper(configuration);
 
-            return mapper.Map<ProfileDto>(profile);
+            return mapper.Map<GetProfilesDto>(profile);
         }
 
-       
+        public Profile MapUpdateProfile(UpdateProfileDto updateProfileDto)
+        {
+            MapperConfiguration configuration = new MapperConfiguration(cfg => cfg.CreateMap<UpdateProfileDto, Profile>());
+            Mapper mapper = new Mapper(configuration);
+
+            return mapper.Map<Profile>(updateProfileDto);
+        }
     }
 }

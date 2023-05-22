@@ -1,18 +1,12 @@
 ﻿using AutoMapper;
 using InstaBojan.Core.Models;
-using InstaBojan.Dtos;
+using InstaBojan.Dtos.UsersDto;
 
 namespace InstaBojan.Mappers.UserMapper
 {
     public class UserMapper:IUserMapper
     {
-        public List<UserDto> MapListUserDto(List<User> users)
-        {
-            MapperConfiguration configuration = new MapperConfiguration(cfg => cfg.CreateMap<User, UserDto>());
-            Mapper mapper = new Mapper(configuration);
-
-            return mapper.Map<List<User>,List<UserDto>>(users);
-        }
+       
 
         public User MapUser(UserDto userDto)
         {
@@ -22,11 +16,11 @@ namespace InstaBojan.Mappers.UserMapper
             return mapper.Map<UserDto, User>(userDto);
         }
 
-        public UserDto MapUserDto(User user)
+        public GetUsersDto MapUserDto(User user)
         {
-            MapperConfiguration configuration = new MapperConfiguration(cfg => cfg.CreateMap<User, UserDto>());
+            MapperConfiguration configuration = new MapperConfiguration(cfg => cfg.CreateMap<User, GetUsersDto>());
             Mapper mapper = new Mapper(configuration);
-            return mapper.Map<User, UserDto>(user);
+            return mapper.Map< GetUsersDto>(user);
         }
 
 
