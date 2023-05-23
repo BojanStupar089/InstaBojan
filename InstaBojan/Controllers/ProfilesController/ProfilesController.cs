@@ -82,8 +82,6 @@ namespace InstaBojan.Controllers.ProfilesController
         {
             if (!ModelState.IsValid) return BadRequest();
 
-           // var username = User.FindFirstValue(ClaimTypes.Name);
-
             var existingProfile = _profilesRepository.GetProfileByProfileName(profileDto.ProfileName);
             if (existingProfile != null) {
 
