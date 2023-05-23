@@ -78,9 +78,23 @@ namespace InstaBojan.Controllers.ProfilesController
         }
 
         [HttpPost]
-        public IActionResult PostProfiles([FromBody] AddProfileDto profileDto)
+        public IActionResult AddProfiles([FromBody] AddProfileDto profileDto)
         {
             if (!ModelState.IsValid) return BadRequest();
+
+           // var username = User.FindFirstValue(ClaimTypes.Name);
+
+            var existingProfile = _profilesRepository.GetProfileByProfileName(profileDto.ProfileName);
+            if (existingProfile != null) {
+
+                return BadRequest("Profile Name already exists");
+            }
+
+            var existingUserProfile = _profilesRepository.GetProfileByUserId(profileDto.UserId);
+            if (existingUserProfile != null) {
+
+                return BadRequest("User already has a profile");
+            }
            
            var profile=_profileMapper.MapAddProfile(profileDto);
              _profilesRepository.AddProfile(profile);
@@ -92,10 +106,13 @@ namespace InstaBojan.Controllers.ProfilesController
         public IActionResult DeleteProfiles(int id) {
 
             var username = User.FindFirstValue(ClaimTypes.Name);
+           
             var delProfile=_profilesRepository.GetProfileById(id);
             if(delProfile == null) return NotFound();
 
-            if (delProfile.User.UserName != username) {
+            var profile=_profilesRepository.GetProfileByUserName(username);
+           
+            if (profile.Id!=id && !User.IsInRole("Admin")) {
                 return Forbid();   
             }
             _profilesRepository.DeleteProfile(id);
@@ -108,21 +125,25 @@ namespace InstaBojan.Controllers.ProfilesController
 
             var username =User.FindFirstValue(ClaimTypes.Name);
           
-
             var profile=_profilesRepository.GetProfileById(id);
 
             if (profile == null) {
                 return NotFound();
             }
 
-            var prUsername=_profilesRepository.GetProfileByUserName(username);
+            var profilByUserName=_profilesRepository.GetProfileByUserName(username);
 
-            if(prUsername.Id !=id) {
+            if(profilByUserName.Id !=id && !User.IsInRole("Admin")) {
                 return Forbid();
+            }
+            var profileByProfileName=_profilesRepository.GetProfileByProfileName(updateProfileDto.ProfileName);
+            if (profileByProfileName !=null  && profileByProfileName.Id != id) {
+
+                return BadRequest("Profile Name already exists;");
             }
            
 
-           var updProfile = _profileMapper.MapUpdateProfile(updateProfileDto);
+            var updProfile = _profileMapper.MapUpdateProfile(updateProfileDto);
 
             _profilesRepository.UpdateProfile(id, updProfile);
 
