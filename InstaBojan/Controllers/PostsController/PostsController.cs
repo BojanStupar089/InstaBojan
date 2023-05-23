@@ -26,7 +26,7 @@ namespace InstaBojan.Controllers.PostsController
         [HttpGet]
         public IActionResult GetPosts() {
 
-           var posts = _postsRepository.GetPosts().Select(p=>_postMapper.MapPostDto(p));
+           var posts = _postsRepository.GetPosts().Select(p=>_postMapper.MapGetPostsDto(p));
             if (posts == null) return NotFound("Posts dont't exist");
            
             return Ok(posts);
@@ -38,7 +38,7 @@ namespace InstaBojan.Controllers.PostsController
            var post= _postsRepository.GetPostById(id);
             if (post == null) return NotFound();
 
-            var postDto = _postMapper.MapPostDto(post);
+            var postDto = _postMapper.MapGetPostsDto(post);
             return Ok(postDto);
 
         }
@@ -49,7 +49,7 @@ namespace InstaBojan.Controllers.PostsController
 
             if (!ModelState.IsValid) return BadRequest();
               
-            var post=_postMapper.MapPost(postDto);
+            var post=_postMapper.MapAddPost(postDto);
             _postsRepository.AddPost(post);
 
             return Created("api/posts" + "/" + post.Id, postDto);

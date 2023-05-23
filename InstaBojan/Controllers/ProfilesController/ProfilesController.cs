@@ -1,9 +1,11 @@
-﻿using InstaBojan.Dtos;
+﻿using InstaBojan.Core.Models;
+using InstaBojan.Dtos;
 using InstaBojan.Dtos.ProfilesDto;
 using InstaBojan.Infrastructure.Repository.ProfilesRepository;
 using InstaBojan.Mappers.ProfileMapper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
 
@@ -16,6 +18,7 @@ namespace InstaBojan.Controllers.ProfilesController
     {
         private readonly IProfilesRepository _profilesRepository;
         private readonly IProfileMapper _profileMapper;
+        private readonly UserManager<User> _userManager;
 
         public ProfilesController(IProfilesRepository profilesRepository, IProfileMapper profileMapper)
         {
@@ -102,18 +105,24 @@ namespace InstaBojan.Controllers.ProfilesController
         [HttpPut("{id}")]
         public IActionResult UpdateProfiles(int id,[FromBody] UpdateProfileDto updateProfileDto) {
 
-            var username = User.FindFirstValue(ClaimTypes.Name); 
-            
-            
-            var profile = _profilesRepository.GetProfileById(id);
-            if(profile == null) return NotFound("Profile is not found!");
 
-            if (profile.User.UserName != username) {
+            var username =User.FindFirstValue(ClaimTypes.Name);
+          
 
-                return Forbid();
+            var profile=_profilesRepository.GetProfileById(id);
+
+            if (profile == null) {
+                return NotFound();
             }
 
-            var updProfile = _profileMapper.MapUpdateProfile(updateProfileDto);
+            var prUsername=_profilesRepository.GetProfileByUserName(username);
+
+            if(prUsername.Id !=id) {
+                return Forbid();
+            }
+           
+
+           var updProfile = _profileMapper.MapUpdateProfile(updateProfileDto);
 
             _profilesRepository.UpdateProfile(id, updProfile);
 

@@ -23,7 +23,6 @@ namespace InstaBojan.Infrastructure.Repository.UsersRepository
 
         public bool DeleteUser(int id);
 
-        //moras napraviti metodu da li je user ulogovan ili nije.
-        //logout
+      
     }
 }

@@ -1,3 +1,4 @@
+using FluentValidation.AspNetCore;
 using InstaBojan.Core.Models;
 
 using InstaBojan.Infrastructure.Data;
@@ -14,6 +15,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 using Microsoft.Identity.Web;
 using Microsoft.IdentityModel.Tokens;
+using System.Reflection;
 using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -73,7 +75,10 @@ builder.Services.AddScoped<IProfileMapper, ProfileMapper>();
 builder.Services.AddScoped<IPostMapper, PostMapper>();
 
 builder.Services.AddAutoMapper(typeof(Program));
-builder.Services.AddControllers();
+builder.Services.AddControllers().AddFluentValidation(config => {
+
+    config.RegisterValidatorsFromAssembly(Assembly.GetExecutingAssembly());
+});
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
