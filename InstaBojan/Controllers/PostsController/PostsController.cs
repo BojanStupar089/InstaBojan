@@ -11,7 +11,7 @@ using System.Security.Claims;
 
 namespace InstaBojan.Controllers.PostsController
 {
-    //[Authorize(Roles ="User")]
+    [Authorize(Roles ="User")]
     [Route("api/[controller]")]
     [ApiController]
     public class PostsController : ControllerBase
