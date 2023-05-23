@@ -98,10 +98,10 @@ namespace InstaBojan.Controllers.PostsController
             var existingPost = _postsRepository.GetPostById(id);
             if (existingPost == null) return NotFound();
 
-            var userName = _profilesRepository.GetProfileByUserName(username);
-            var profUserName = _profilesRepository.GetProfileByPostId(id); // ovde je profil
+            var profileByUserName = _profilesRepository.GetProfileByUserName(username);
+            var profileByPostId = _profilesRepository.GetProfileByPostId(id); // ovde je profil
 
-            if (profUserName.ProfileName != userName.ProfileName  )
+            if (profileByUserName.ProfileName != profileByPostId.ProfileName && !User.IsInRole("Admin"))
             {
 
                 return Forbid();
@@ -120,17 +120,19 @@ namespace InstaBojan.Controllers.PostsController
         public IActionResult DeletePost(int id)
         {
 
-            var username = User.FindFirstValue(ClaimTypes.Name);
-            var profile = _profilesRepository.GetProfileByUserName(username);
+            var username = User.FindFirstValue(ClaimTypes.Name); // ovo je lako
+           
+            var delPost = _postsRepository.GetPostById(id);
+            if (delPost == null) return NotFound();
 
-            if (profile.Id != id && !User.IsInRole("Admin"))
+           
+            var profile = _profilesRepository.GetProfileByUserName(username);
+            var profileByPostId=_profilesRepository.GetProfileByPostId(id);
+
+            if (profile.Id != profileByPostId.Id && !User.IsInRole("Admin"))
             {
                 return Forbid();
             }
-
-
-            var delPost = _postsRepository.GetPostById(id);
-            if (delPost == null) return NotFound();
 
             _postsRepository.DeletePost(id);
             return NoContent();
