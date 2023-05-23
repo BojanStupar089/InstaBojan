@@ -9,7 +9,7 @@ namespace InstaBojan.Validators.PostsDtoValidator
         public GetPostsDtoValidator() {
 
             RuleFor(post => post.Picture).NotNull();
-            RuleFor(post => post.Text).Null();
+            
         }
     }
 }

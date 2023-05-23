@@ -1,4 +1,6 @@
-﻿namespace InstaBojan.Dtos.PostsDto
+﻿using System.Text.Json.Serialization;
+
+namespace InstaBojan.Dtos.PostsDto
 {
     public class UpdatePostDto
     {

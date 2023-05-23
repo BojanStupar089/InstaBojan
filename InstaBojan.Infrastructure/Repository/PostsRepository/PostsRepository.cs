@@ -31,6 +31,14 @@ namespace InstaBojan.Infrastructure.Repository.PostsRepository
             return post;
         }
 
+        public Post GetPostByProfileId(int id)
+        {
+            var post=_context.Posts.FirstOrDefault(p=>p.ProfileId == id);
+            if (post == null) return null;
+
+            return post;
+        }
+
         public bool AddPost(Post post)
         {
             if (post == null) return false;
@@ -66,5 +74,7 @@ namespace InstaBojan.Infrastructure.Repository.PostsRepository
             return true;
 
         }
+
+       
     }
 }

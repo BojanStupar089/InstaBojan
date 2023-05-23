@@ -134,7 +134,9 @@ namespace InstaBojan.Controllers.ProfilesController
             if(profilByUserName.Id !=id && !User.IsInRole("Admin")) {
                 return Forbid();
             }
+            
             var profileByProfileName=_profilesRepository.GetProfileByProfileName(updateProfileDto.ProfileName);
+            
             if (profileByProfileName !=null  && profileByProfileName.Id != id) {
 
                 return BadRequest("Profile Name already exists;");

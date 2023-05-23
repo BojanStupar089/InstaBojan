@@ -2,40 +2,58 @@
 using InstaBojan.Dtos;
 using InstaBojan.Dtos.PostsDto;
 using InstaBojan.Infrastructure.Repository.PostsRepository;
+using InstaBojan.Infrastructure.Repository.ProfilesRepository;
 using InstaBojan.Mappers.PostMapper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using System.Security.Claims;
 
 namespace InstaBojan.Controllers.PostsController
 {
-   //[Authorize(Roles ="User")]
+    //[Authorize(Roles ="User")]
     [Route("api/[controller]")]
     [ApiController]
     public class PostsController : ControllerBase
     {
         private readonly IPostsRepository _postsRepository;
         private readonly IPostMapper _postMapper;
+        private readonly IProfilesRepository _profilesRepository;
 
-        public PostsController(IPostsRepository postsRepository,IPostMapper postMapper)
+        public PostsController(IPostsRepository postsRepository, IPostMapper postMapper, IProfilesRepository profilesRepository)
         {
             _postsRepository = postsRepository;
             _postMapper = postMapper;
+            _profilesRepository = profilesRepository;
         }
 
         [HttpGet]
-        public IActionResult GetPosts() {
+        public IActionResult GetPosts()
+        {
 
-           var posts = _postsRepository.GetPosts().Select(p=>_postMapper.MapGetPostsDto(p));
+            var posts = _postsRepository.GetPosts().Select(p => _postMapper.MapGetPostsDto(p));
             if (posts == null) return NotFound("Posts dont't exist");
-           
+
             return Ok(posts);
         }
 
         [HttpGet("{id}")]
-        public IActionResult GetPostById(int id) { 
-        
-           var post= _postsRepository.GetPostById(id);
+        public IActionResult GetPostById(int id)
+        {
+
+            var post = _postsRepository.GetPostById(id);
+            if (post == null) return NotFound();
+
+            var postDto = _postMapper.MapGetPostsDto(post);
+            return Ok(postDto);
+
+        }
+
+        [HttpGet("userId")]
+        public IActionResult GetPostByProfileId(int userId)
+        {
+
+            var post = _postsRepository.GetPostByProfileId(userId);
             if (post == null) return NotFound();
 
             var postDto = _postMapper.MapGetPostsDto(post);
@@ -45,30 +63,71 @@ namespace InstaBojan.Controllers.PostsController
 
 
         [HttpPost]
-        public IActionResult AddPost([FromBody] AddPostDto postDto) {
+        public IActionResult AddPost([FromBody] AddPostDto postDto)
+        {
 
+
+            var username = User.FindFirstValue(ClaimTypes.Name);
             if (!ModelState.IsValid) return BadRequest();
-              
-            var post=_postMapper.MapAddPost(postDto);
+
+            var userProfile = _profilesRepository.GetProfileByUserName(username);
+            if (userProfile == null)
+            {
+                return BadRequest("Profile doesn't exist");
+            }
+
+            if (postDto.ProfileId != userProfile.Id)
+            {
+
+                return BadRequest("User can't add post to other user");
+            }
+
+            var post = _postMapper.MapAddPost(postDto);
             _postsRepository.AddPost(post);
 
             return Created("api/posts" + "/" + post.Id, postDto);
         }
 
         [HttpPut("{id}")]
-        public IActionResult UpdatePost(int id, [FromBody] UpdatePostDto postDto) {
+        public IActionResult UpdatePost(int id, [FromBody] UpdatePostDto updatePostDto)
+        {
 
-             var updPost=_postsRepository.GetPostById(id);
-            if (updPost == null) return NotFound();
+            var username = User.FindFirstValue(ClaimTypes.Name);
+            if (!ModelState.IsValid) return BadRequest();
 
-            var post=_postMapper.MapUpdatePost(postDto);
-            _postsRepository.UpdatePost(id,post);
+            var existingPost = _postsRepository.GetPostById(id);
+            if (existingPost == null) return NotFound();
+
+            var userName = _profilesRepository.GetProfileByUserName(username);
+            var profUserName = _profilesRepository.GetProfileByPostId(id); // ovde je profil
+
+            if (profUserName.ProfileName != userName.ProfileName  )
+            {
+
+                return Forbid();
+            }
+            //// Check if the logged-in user is the owner of the post
+
+
+
+            var post = _postMapper.MapUpdatePost(updatePostDto);
+            _postsRepository.UpdatePost(id, post);
 
             return NoContent();
         }
 
         [HttpDelete("{id}")]
-        public IActionResult DeletePost(int id) {
+        public IActionResult DeletePost(int id)
+        {
+
+            var username = User.FindFirstValue(ClaimTypes.Name);
+            var profile = _profilesRepository.GetProfileByUserName(username);
+
+            if (profile.Id != id && !User.IsInRole("Admin"))
+            {
+                return Forbid();
+            }
+
 
             var delPost = _postsRepository.GetPostById(id);
             if (delPost == null) return NotFound();

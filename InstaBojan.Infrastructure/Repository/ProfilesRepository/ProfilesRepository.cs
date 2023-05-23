@@ -111,9 +111,17 @@ namespace InstaBojan.Infrastructure.Repository.ProfilesRepository
             return false;
         }
 
+        public Profile GetProfileByPostId(int id)
+        {
+           var profile= _context.Profiles.FirstOrDefault(p=>p.Posts.Any(post=>post.Id==id));
+            if (profile == null) return null;
+
+            return profile;
+        }
+
         #endregion
 
 
-        
+
     }
 }

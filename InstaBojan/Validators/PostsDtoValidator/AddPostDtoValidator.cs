@@ -10,7 +10,7 @@ namespace InstaBojan.Validators.PostsDtoValidator
 
             RuleFor(post => post.Picture).NotNull();
             RuleFor(post=>post.ProfileId).NotNull();
-            RuleFor(post => post.Text).Null();
+           
         }
     }
 }
