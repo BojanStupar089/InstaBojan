@@ -22,7 +22,10 @@ namespace InstaBojan.Infrastructure.Repository.ProfilesRepository
         public Profile GetProfileByPostId(int id);
 
 
-        //moras napraviti metodu Follow i UnFollow
+        public void AddFollowing(int loggedInProfileId,int followingId);
+
+      //  public void AddFollowingBr(int f, int targetProfile);
+       
 
         //public Profile Follow(int id);
         //public Profile Follow(string username); // ovo sam nasao

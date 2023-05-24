@@ -37,6 +37,19 @@ namespace InstaBojan.Controllers.PostsController
             return Ok(posts);
         }
 
+        [HttpGet("profileName")]
+        public IActionResult GetPostsByProfileName(string profileName) {
+
+            var profile = _profilesRepository.GetProfileByProfileName(profileName);
+            if (profile == null) return NotFound();
+
+            var posts = _postsRepository.GetPostsByProfileName(profile.ProfileName).Select(p => _postMapper.MapGetPostsDto(p));
+
+            if (posts == null ) return NotFound();
+
+            return Ok(posts);
+        }
+
         [HttpGet("{id}")]
         public IActionResult GetPostById(int id)
         {

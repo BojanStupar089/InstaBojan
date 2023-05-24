@@ -75,6 +75,14 @@ namespace InstaBojan.Infrastructure.Repository.PostsRepository
 
         }
 
-       
+        public List<Post> GetPostsByProfileName(string profileName)
+        {
+            List<Post> posts = new List<Post>();
+
+            posts = _context.Posts.Where(p => p.Publisher.ProfileName == profileName).ToList();
+            if (posts == null) return null;
+
+            return posts;
+        }
     }
 }

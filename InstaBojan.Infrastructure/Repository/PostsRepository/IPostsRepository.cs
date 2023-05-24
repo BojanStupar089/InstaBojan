@@ -16,7 +16,7 @@ namespace InstaBojan.Infrastructure.Repository.PostsRepository
         public bool UpdatePost(int id, Post post);
         public bool DeletePost(int id);
 
-        //List<Post>GetPostsByProfileName( string profileName);
+       List<Post>GetPostsByProfileName( string profileName);
         // Post GetByPostsByProfileId(int id);
         
     }

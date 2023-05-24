@@ -1,5 +1,6 @@
 ﻿using InstaBojan.Core.Models;
 using InstaBojan.Infrastructure.Data;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -22,12 +23,12 @@ namespace InstaBojan.Infrastructure.Repository.ProfilesRepository
 
         public List<Profile> GetProfiles()
         {
-            return _context.Profiles.ToList();
+            return _context.Profiles.Include(p=>p.Followers).Include(p=>p.Following).ToList();
         }
 
         public Profile GetProfileById(int id)
         {
-            var profile= _context.Profiles.FirstOrDefault(p => p.Id == id);
+            var profile= _context.Profiles.Include(p=>p.Followers).Include(p=>p.Following).FirstOrDefault(p => p.Id == id);
             if (profile == null) { return null; }
 
             return profile;
@@ -35,7 +36,7 @@ namespace InstaBojan.Infrastructure.Repository.ProfilesRepository
 
         public Profile GetProfileByUserName(string username)
         {
-            var profile = _context.Profiles.FirstOrDefault(p => p.User.UserName == username);
+            var profile = _context.Profiles.Include(p=>p.Followers).Include(p=>p.Following).FirstOrDefault(p => p.User.UserName == username);
             if (profile == null) return null;
 
             return profile;
@@ -44,7 +45,7 @@ namespace InstaBojan.Infrastructure.Repository.ProfilesRepository
 
         public Profile GetProfileByProfileName(string name)
         {
-            var profile = _context.Profiles.FirstOrDefault(p => p.ProfileName == name);
+            var profile = _context.Profiles.Include(p => p.Followers).Include(p => p.Following).FirstOrDefault(p => p.ProfileName == name);
             if (profile == null) return null;
 
             return profile;
@@ -52,7 +53,7 @@ namespace InstaBojan.Infrastructure.Repository.ProfilesRepository
 
         public Profile GetProfileByUserId(int userId)
         {
-            var profile = _context.Profiles.FirstOrDefault(p => p.User.Id == userId);
+            var profile = _context.Profiles.Include(p => p.Followers).Include(p => p.Following).FirstOrDefault(p => p.User.Id == userId);
             if (profile == null) return null;
 
             return profile;
@@ -71,6 +72,38 @@ namespace InstaBojan.Infrastructure.Repository.ProfilesRepository
 
 
         }
+
+        /*
+        public void AddFollower(int followerId, int targetProfileId)
+        {
+            var profile = _context.Profiles.FirstOrDefault(p => p.Id == targetProfileId);
+
+            if (profile != null) 
+            {
+                var follower = _context.Profiles.FirstOrDefault(p => p.Id == followerId);
+                profile.Followers.Add(follower);
+                _context.SaveChanges();
+            }
+           
+           
+        }
+
+        public void AddFollowing(int followingId, int targetProfileId)
+        {
+             var profile = _context.Profiles.FirstOrDefault(p=>p.Id== targetProfileId);
+
+            if (profile != null) {
+
+                var following = _context.Profiles.FirstOrDefault(p => p.Id == followingId);
+                profile.Following.Add(following);
+                _context.SaveChanges();
+            }
+        }
+
+        */
+
+
+
 
         #endregion
 
@@ -111,6 +144,10 @@ namespace InstaBojan.Infrastructure.Repository.ProfilesRepository
             return false;
         }
 
+        #endregion
+
+        #region ProfileProfile
+
         public Profile GetProfileByPostId(int id)
         {
            var profile= _context.Profiles.FirstOrDefault(p=>p.Posts.Any(post=>post.Id==id));
@@ -119,9 +156,33 @@ namespace InstaBojan.Infrastructure.Repository.ProfilesRepository
             return profile;
         }
 
+       
+        
+public void AddFollowing(int loggedInProfileId, int followingId) {
+
+            var loggedInProfile = _context.Profiles.Include(p => p.Following).FirstOrDefault(p => p.Id == loggedInProfileId);
+
+            var targetProfile=_context.Profiles.FirstOrDefault(p=>p.Id==followingId);
+
+            if(loggedInProfile!=null && targetProfile!=null) 
+            {
+                loggedInProfile.Following.Add(targetProfile);
+                _context.SaveChanges();
+            }
+        
+        }
+
+        
+
+       
+
+        }
+
+
+
         #endregion
 
 
 
-    }
+    
 }

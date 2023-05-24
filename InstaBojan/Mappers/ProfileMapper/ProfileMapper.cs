@@ -8,7 +8,8 @@ namespace InstaBojan.Mappers.ProfileMapper
 {
     public class ProfileMapper : IProfileMapper
     {
-      
+     
+
         public Profile MapAddProfile(AddProfileDto profileDto)
         {
             MapperConfiguration configuration = new MapperConfiguration(cfg => cfg.CreateMap<AddProfileDto, Profile>());
@@ -28,6 +29,8 @@ namespace InstaBojan.Mappers.ProfileMapper
 
             return mapper.Map<GetProfilesDto>(profile);
         }
+
+       
 
         public Profile MapUpdateProfile(UpdateProfileDto updateProfileDto)
         {

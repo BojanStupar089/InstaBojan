@@ -76,7 +76,7 @@ namespace InstaBojan.Controllers.ProfilesController
             return Ok(profileDto);
 
         }
-
+        #region post
         [HttpPost]
         public IActionResult AddProfiles([FromBody] AddProfileDto profileDto)
         {
@@ -99,6 +99,21 @@ namespace InstaBojan.Controllers.ProfilesController
 
            return Created("api/profiles"+"/"+profile.Id, profileDto);
         }
+
+
+        [HttpPost("{followingId}")]
+        public IActionResult AddFollowing( int followingId) {
+
+            var username = User.FindFirstValue(ClaimTypes.Name);
+            var userProfile = _profilesRepository.GetProfileByUserName(username);
+
+            if (userProfile == null) return NotFound();
+
+            _profilesRepository.AddFollowing(userProfile.Id,followingId);
+            return Ok();
+        }
+
+        #endregion
 
         [HttpDelete("{id}")]
         public IActionResult DeleteProfiles(int id) {
