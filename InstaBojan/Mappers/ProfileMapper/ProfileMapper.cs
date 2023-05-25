@@ -10,7 +10,7 @@ namespace InstaBojan.Mappers.ProfileMapper
     {
      
 
-        public Profile MapAddProfile(ProfileDto profileDto)
+        public Profile MapProfile(ProfileDto profileDto)
         {
             MapperConfiguration configuration = new MapperConfiguration(cfg => cfg.CreateMap<ProfileDto, Profile>());
             Mapper mapper = new Mapper(configuration);

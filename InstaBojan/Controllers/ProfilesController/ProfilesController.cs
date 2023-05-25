@@ -88,13 +88,9 @@ namespace InstaBojan.Controllers.ProfilesController
                 return BadRequest("Profile Name already exists");
             }
 
-            var existingUserProfile = _profilesRepository.GetProfileByUserId(profileDto.UserId);
-            if (existingUserProfile != null) {
-
-                return BadRequest("User already has a profile");
-            }
+          
            
-           var profile=_profileMapper.MapAddProfile(profileDto);
+           var profile=_profileMapper.MapProfile(profileDto);
              _profilesRepository.AddProfile(profile);
 
            return Created("api/profiles"+"/"+profile.Id, profileDto);
@@ -133,7 +129,7 @@ namespace InstaBojan.Controllers.ProfilesController
         }
 
         [HttpPut("{id}")]
-        public IActionResult UpdateProfiles(int id,[FromBody] UpdateProfileDto updateProfileDto) {
+        public IActionResult UpdateProfiles(int id,[FromBody] ProfileDto updateProfileDto) {
 
 
             var username =User.FindFirstValue(ClaimTypes.Name);
@@ -158,7 +154,7 @@ namespace InstaBojan.Controllers.ProfilesController
             }
            
 
-            var updProfile = _profileMapper.MapUpdateProfile(updateProfileDto);
+            var updProfile = _profileMapper.MapProfile(updateProfileDto);
 
             _profilesRepository.UpdateProfile(id, updProfile);
 

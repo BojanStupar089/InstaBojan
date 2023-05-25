@@ -31,7 +31,7 @@ namespace InstaBojan.Controllers.PostsController
         public IActionResult GetPosts()
         {
 
-            var posts = _postsRepository.GetPosts().Select(p => _postMapper.MapGetPostsDto(p));
+            var posts = _postsRepository.GetPosts().Select(p => _postMapper.MapGetPostDto(p));
             if (posts == null) return NotFound("Posts dont't exist");
 
             return Ok(posts);
@@ -43,7 +43,7 @@ namespace InstaBojan.Controllers.PostsController
             var profile = _profilesRepository.GetProfileByProfileName(profileName);
             if (profile == null) return NotFound();
 
-            var posts = _postsRepository.GetPostsByProfileName(profile.ProfileName).Select(p => _postMapper.MapGetPostsDto(p));
+            var posts = _postsRepository.GetPostsByProfileName(profile.ProfileName).Select(p => _postMapper.MapGetPostDto(p));
 
             if (posts == null ) return NotFound();
 
@@ -57,7 +57,7 @@ namespace InstaBojan.Controllers.PostsController
             var post = _postsRepository.GetPostById(id);
             if (post == null) return NotFound();
 
-            var postDto = _postMapper.MapGetPostsDto(post);
+            var postDto = _postMapper.MapGetPostDto(post);
             return Ok(postDto);
 
         }
@@ -69,14 +69,14 @@ namespace InstaBojan.Controllers.PostsController
             var post = _postsRepository.GetPostByProfileId(userId);
             if (post == null) return NotFound();
 
-            var postDto = _postMapper.MapGetPostsDto(post);
+            var postDto = _postMapper.MapGetPostDto(post);
             return Ok(postDto);
 
         }
 
 
         [HttpPost]
-        public IActionResult AddPost([FromBody] AddPostDto postDto)
+        public IActionResult AddPost([FromBody] PostDto postDto)
         {
 
 
@@ -89,20 +89,16 @@ namespace InstaBojan.Controllers.PostsController
                 return BadRequest("Profile doesn't exist");
             }
 
-            if (postDto.ProfileId != userProfile.Id)
-            {
+          
 
-                return BadRequest("User can't add post to other user");
-            }
-
-            var post = _postMapper.MapAddPost(postDto);
+            var post = _postMapper.MapPost(postDto);
             _postsRepository.AddPost(post);
 
             return Created("api/posts" + "/" + post.Id, postDto);
         }
 
         [HttpPut("{id}")]
-        public IActionResult UpdatePost(int id, [FromBody] UpdatePostDto updatePostDto)
+        public IActionResult UpdatePost(int id, [FromBody] PostDto updatePostDto)
         {
 
             var username = User.FindFirstValue(ClaimTypes.Name);
@@ -123,7 +119,7 @@ namespace InstaBojan.Controllers.PostsController
 
 
 
-            var post = _postMapper.MapUpdatePost(updatePostDto);
+            var post = _postMapper.MapPost(updatePostDto);
             _postsRepository.UpdatePost(id, post);
 
             return NoContent();
