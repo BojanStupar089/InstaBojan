@@ -6,8 +6,7 @@ namespace InstaBojan.Mappers.ProfileMapper
 {
     public interface IProfileMapper
     {
-        public Profile MapUpdateProfile(UpdateProfileDto updateProfileDto);
-        public Profile MapAddProfile(AddProfileDto profileDto);
+        public Profile MapAddProfile(ProfileDto profileDto);
         public GetProfilesDto MapGetProfilesDto(Profile profile);
        
       

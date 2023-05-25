@@ -10,9 +10,9 @@ namespace InstaBojan.Mappers.ProfileMapper
     {
      
 
-        public Profile MapAddProfile(AddProfileDto profileDto)
+        public Profile MapAddProfile(ProfileDto profileDto)
         {
-            MapperConfiguration configuration = new MapperConfiguration(cfg => cfg.CreateMap<AddProfileDto, Profile>());
+            MapperConfiguration configuration = new MapperConfiguration(cfg => cfg.CreateMap<ProfileDto, Profile>());
             Mapper mapper = new Mapper(configuration);
 
             return mapper.Map<Profile>(profileDto);
@@ -32,12 +32,6 @@ namespace InstaBojan.Mappers.ProfileMapper
 
        
 
-        public Profile MapUpdateProfile(UpdateProfileDto updateProfileDto)
-        {
-            MapperConfiguration configuration = new MapperConfiguration(cfg => cfg.CreateMap<UpdateProfileDto, Profile>());
-            Mapper mapper = new Mapper(configuration);
-
-            return mapper.Map<Profile>(updateProfileDto);
-        }
+       
     }
 }

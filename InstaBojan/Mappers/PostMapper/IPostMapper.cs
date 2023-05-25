@@ -6,9 +6,9 @@ namespace InstaBojan.Mappers.PostMapper
 {
     public interface IPostMapper
     {
-        public GetPostsDto MapGetPostsDto(Post post);
-        public Post MapAddPost(AddPostDto postDto);
-        public Post MapUpdatePost(UpdatePostDto updatePostDto);
+        public PostDto MapGetPostDto(Post post);
+        public Post MapPost(PostDto postDto);
+      
        
     }
 }

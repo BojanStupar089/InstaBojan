@@ -57,8 +57,7 @@ namespace InstaBojan.Controllers.AuthControllers
             {
                 user = new User
                 {
-                    FirstName = userDto.FirstName,
-                    LastName = userDto.LastName,
+                   
                     Email = userDto.Email,
                     UserName = userDto.UserName,
                     Password = BCrypt.Net.BCrypt.HashPassword(userDto.Password),

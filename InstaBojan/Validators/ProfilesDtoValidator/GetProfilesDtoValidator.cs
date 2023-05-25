@@ -11,10 +11,7 @@ namespace InstaBojan.Validators.ProfilesDtoValidator
 
             RuleFor(profile => profile.ProfilePicture).NotNull();
             RuleFor(profile => profile.ProfileName).NotNull().Length(1, 30);
-            RuleFor(profile => profile.BirthDay).Null();
-            RuleFor(profile => profile.Gender).Null();
-            RuleFor(profile => profile.NumberFollowers).Null();
-            RuleFor(profile => profile.NumberFollowing).Null();
+           
 
         }
     }

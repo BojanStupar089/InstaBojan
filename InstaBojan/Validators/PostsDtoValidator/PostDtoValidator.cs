@@ -3,13 +3,13 @@ using InstaBojan.Dtos.PostsDto;
 
 namespace InstaBojan.Validators.PostsDtoValidator
 {
-    public class AddPostDtoValidator:AbstractValidator<AddPostDto>
+    public class PostDtoValidator:AbstractValidator<PostDto>
     {
 
-        public AddPostDtoValidator() {
+        public PostDtoValidator() {
 
             RuleFor(post => post.Picture).NotNull();
-            RuleFor(post=>post.ProfileId).NotNull();
+            
            
         }
     }

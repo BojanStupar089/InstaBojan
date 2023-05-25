@@ -78,7 +78,7 @@ namespace InstaBojan.Controllers.ProfilesController
         }
         #region post
         [HttpPost]
-        public IActionResult AddProfiles([FromBody] AddProfileDto profileDto)
+        public IActionResult AddProfiles([FromBody] ProfileDto profileDto)
         {
             if (!ModelState.IsValid) return BadRequest();
 

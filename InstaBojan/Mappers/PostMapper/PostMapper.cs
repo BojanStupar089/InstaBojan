@@ -2,34 +2,29 @@
 using InstaBojan.Core.Models;
 using InstaBojan.Dtos;
 using InstaBojan.Dtos.PostsDto;
+using Microsoft.Extensions.Hosting;
 
 namespace InstaBojan.Mappers.PostMapper
 {
     public class PostMapper:IPostMapper
     {
 
-        public Post MapAddPost(AddPostDto postDto)
+         public PostDto MapGetPostDto(Post post)
         {
-            MapperConfiguration configuration = new MapperConfiguration(cfg => cfg.CreateMap<AddPostDto, Post>());
+            MapperConfiguration configuration = new MapperConfiguration(cfg => cfg.CreateMap<Post, PostDto>());
             Mapper mapper = new Mapper(configuration);
 
-            return mapper.Map<AddPostDto, Post>(postDto);
+            return mapper.Map<PostDto>(post);
         }
 
-        public GetPostsDto MapGetPostsDto(Post post)
+       
+
+        public Post MapPost(PostDto postDto)
         {
-            MapperConfiguration configuration = new MapperConfiguration(cfg => cfg.CreateMap<Post, GetPostsDto>());
+            MapperConfiguration configuration = new MapperConfiguration(cfg => cfg.CreateMap<PostDto, Post>());
             Mapper mapper = new Mapper(configuration);
 
-            return mapper.Map<GetPostsDto>(post);
-        }
-
-        public Post MapUpdatePost(UpdatePostDto updatePostDto)
-        {
-            MapperConfiguration configuration = new MapperConfiguration(cfg => cfg.CreateMap<UpdatePostDto, Post>());
-            Mapper mapper = new Mapper(configuration);
-
-            return mapper.Map<Post>(updatePostDto);
+            return mapper.Map<Post>(postDto);
         }
     }
 }
