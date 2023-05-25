@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using InstaBojan.Core.Models;
 using InstaBojan.Dtos;
 using InstaBojan.Dtos.PostsDto;
 using InstaBojan.Infrastructure.Repository.PostsRepository;
@@ -89,9 +90,16 @@ namespace InstaBojan.Controllers.PostsController
                 return BadRequest("Profile doesn't exist");
             }
 
-          
 
-            var post = _postMapper.MapPost(postDto);
+            var post = new Post
+            {
+                Picture=postDto.Picture,
+                Text=postDto.Text,
+                ProfileId=userProfile.Id,
+
+            };
+            
+             
             _postsRepository.AddPost(post);
 
             return Created("api/posts" + "/" + post.Id, postDto);

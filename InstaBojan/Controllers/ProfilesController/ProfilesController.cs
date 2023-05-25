@@ -92,9 +92,7 @@ namespace InstaBojan.Controllers.ProfilesController
             var profile = _profilesRepository.GetProfileByProfileName(profileDto.ProfileName);
             
 
-            if (user.Id ==null) { 
-                 return BadRequest();
-            }
+             
 
             var existingProfile = _profilesRepository.GetProfileByProfileName(profileDto.ProfileName);
             if (existingProfile != null) {
@@ -102,12 +100,23 @@ namespace InstaBojan.Controllers.ProfilesController
                 return BadRequest("Profile Name already exists");
             }
 
-          
-           
-           var profileMap=_profileMapper.MapProfile(profileDto);
-             _profilesRepository.AddProfile(profileMap);
+            var profileaa = new Profile
+            {
 
-           return Created("api/profiles"+"/"+profileMap.Id, profileDto);
+              FirstName=profileDto.FirstName,
+              LastName=profileDto.LastName,
+              ProfileName=profileDto.ProfileName,
+              ProfilePicture=profileDto.ProfilePicture,
+              Gender=profileDto.Gender,
+              Birthday=profileDto.BirthDay,
+              UserId=user.Id,
+
+            };
+           
+              
+             _profilesRepository.AddProfile(profileaa);
+
+           return Created("api/profiles"+"/"+profileaa.Id, profileDto);
         }
 
 
