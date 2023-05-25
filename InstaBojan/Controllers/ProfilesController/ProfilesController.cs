@@ -2,6 +2,7 @@
 using InstaBojan.Dtos;
 using InstaBojan.Dtos.ProfilesDto;
 using InstaBojan.Infrastructure.Repository.ProfilesRepository;
+using InstaBojan.Infrastructure.Repository.UsersRepository;
 using InstaBojan.Mappers.ProfileMapper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
@@ -18,12 +19,13 @@ namespace InstaBojan.Controllers.ProfilesController
     {
         private readonly IProfilesRepository _profilesRepository;
         private readonly IProfileMapper _profileMapper;
-        private readonly UserManager<User> _userManager;
+        private readonly IUserRepository _userRepository;
 
-        public ProfilesController(IProfilesRepository profilesRepository, IProfileMapper profileMapper)
+        public ProfilesController(IProfilesRepository profilesRepository, IProfileMapper profileMapper,IUserRepository userRepository)
         {
             _profilesRepository = profilesRepository;
             _profileMapper = profileMapper;
+            _userRepository = userRepository;
         }
 
         [HttpGet]
@@ -82,6 +84,18 @@ namespace InstaBojan.Controllers.ProfilesController
         {
             if (!ModelState.IsValid) return BadRequest();
 
+            var username = User.FindFirstValue(ClaimTypes.Name); //ulogovani kor
+
+            var user=_userRepository.GetUserByUserName(username);
+            if (user == null) return NotFound();
+
+            var profile = _profilesRepository.GetProfileByProfileName(profileDto.ProfileName);
+            
+
+            if (user.Id ==null) { 
+                 return BadRequest();
+            }
+
             var existingProfile = _profilesRepository.GetProfileByProfileName(profileDto.ProfileName);
             if (existingProfile != null) {
 
@@ -90,10 +104,10 @@ namespace InstaBojan.Controllers.ProfilesController
 
           
            
-           var profile=_profileMapper.MapProfile(profileDto);
-             _profilesRepository.AddProfile(profile);
+           var profileMap=_profileMapper.MapProfile(profileDto);
+             _profilesRepository.AddProfile(profileMap);
 
-           return Created("api/profiles"+"/"+profile.Id, profileDto);
+           return Created("api/profiles"+"/"+profileMap.Id, profileDto);
         }
 
 
