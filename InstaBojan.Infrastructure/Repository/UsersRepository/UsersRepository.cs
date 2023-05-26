@@ -81,7 +81,7 @@ namespace InstaBojan.Infrastructure.Repository.UsersRepository
             var userUpd = _context.Users.FirstOrDefault(u => u.Id == id);
             if (userUpd != null)
             {
-               userUpd.UserName = user.UserName;
+                userUpd.UserName = user.UserName;
                 userUpd.Email = user.Email;
                 userUpd.Password = BCrypt.Net.BCrypt.HashPassword(user.Password);
 

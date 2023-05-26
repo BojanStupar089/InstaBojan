@@ -1,4 +1,5 @@
-﻿using InstaBojan.Core.Models;
+﻿using Google.Api;
+using InstaBojan.Core.Models;
 using InstaBojan.Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -180,9 +181,19 @@ public void AddFollowing(int loggedInProfileId, int followingId) {
 
 
 
-        #endregion
+    #endregion
 
 
 
-    
+/*
+    public List<Profile> GetProfiles()
+    {
+        return _context.Profiles
+            .Include(p => p.Posts)
+            .Include(p => p.Followers)
+            .Include(p => p.Following)
+            .ToList();
+    }
+
+    */
 }

@@ -1,7 +1,9 @@
-﻿using InstaBojan.Core.Models;
+﻿using Google.Api;
+using InstaBojan.Core.Models;
 using InstaBojan.Infrastructure.Data;
 using InstaBojan.Infrastructure.Repository.UsersRepository;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Options;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,78 +14,152 @@ namespace TestBokiInsta.TestUsersRepository
 {
     public class UsersRepositoryTests
     {
-        private readonly UsersRepository _usersRepository;
+
+        private readonly DbContextOptions<InstagramStoreContext> _options;
         private readonly InstagramStoreContext _context;
+        private readonly UsersRepository _userRepository;
 
-        public UsersRepositoryTests(UsersRepository usersRepository,InstagramStoreContext instagramStoreContext) { 
+        public UsersRepositoryTests() {
+
+            _options = new DbContextOptionsBuilder<InstagramStoreContext>().UseInMemoryDatabase(databaseName: "TestDatabase").Options;
+
+            _context = new InstagramStoreContext(_options);
+            _userRepository = new UsersRepository(_context);
         
-             
         }
-
+        
         [Fact]
         public void GetUsers_ReturnsListOfUsers() {
 
+          /*  var options = new DbContextOptionsBuilder<InstagramStoreContext>()
+            .UseInMemoryDatabase(databaseName: "TestDatabase")
+            .Options;
+
+            using var context = new InstagramStoreContext(_options);*/
+
+            _context.Users.AddRange(new List<User>
+    {
+        new User { UserName = "kanu4",Email="kanu4@gmail.com",Password="kanu4" },
+        new User { UserName = "zidane5",Email="zidane5@gmail.com",Password="zidane5" },
+        new User { UserName = "rcarlos3",Email="rcarlos3@gmail.com",Password="rcarlos3" }
+    });
+            _context.SaveChanges();
+
+            var userRepository = new UsersRepository(_context);
+
+            
+            List<User> users = userRepository.GetUsers();
+
           
-
-            //using var context=new InstagramStoreContext(options);
-
-            context.Users.AddRange(new List<User>
-            { 
-            
-              new User { UserName="kanu4"},
-              new User {UserName="zidane5"},
-            
-            });
-
-            context.SaveChanges();
-
-            var UsersRepository = new UsersRepository(context);
-
-            List<User>users=_usersRepository.GetUsers();
-
             Assert.NotNull(users);
-            Assert.Equal(2, users.Count);
+            Assert.Equal(3, users.Count);
+
         }
 
         [Fact]
-        public void GetUserById_ReturnsUserIfExists() {
 
-            int userId = 5;
+        public void AddUser_AddsUserToDatabase() {
 
-            User user= _usersRepository.GetUserById(userId);
 
-            Assert.NotNull(user);
-            Assert.Equal(userId, user.Id);
+         var options = new DbContextOptionsBuilder<InstagramStoreContext>()
+        .UseInMemoryDatabase(databaseName: "TestDatabase")
+        .Options;
+
+         using var context = new InstagramStoreContext(options);
+         var userRepository = new UsersRepository(context);
+
+         var user = new User { UserName = "testuser",Email="testuser@gmail.com",Password="testuser" };
+
+            // Act
+          userRepository.AddUser(user);
+
+            // Assert
+         Assert.Equal(1, context.Users.Count());
+         Assert.Contains(user, context.Users);
+
         }
 
         [Fact]
-        public void GetUserByUserName_ReturnsUserIfExists() {
+        public void GetUserById_ReturnsUserWhenFound() {
 
-            string testUsername = "kanu4";
+            // Arrange
+            var testUser = new User { Id = 1, UserName = "testuser",Email="testuser@gmail.com",Password="testuser" };
+            _context.Users.Add(testUser);
+            _context.SaveChanges();
 
-            User user=_usersRepository.GetUserByUserName(testUsername);
+            // Act
+            var result = _userRepository.GetUserById(1);
 
-            Assert.NotNull(user);
-            Assert.Equal(testUsername, user.UserName);
+            // Assert
+            Assert.NotNull(result);
+            Assert.Equal(testUser.Id, result.Id);
+           
+        }
+
+        [Fact]
+        public void GetUserByUserName_ReturnsUserWhenFound() {
+
+            var testUser = new User { UserName = "testuser",Email ="testuser@gmail.com",Password="testuser"};
+            _context.Users.Add(testUser);
+            _context.SaveChanges();
+
+
+            var result = _userRepository.GetUserByUserName("testuser");
+            Assert.NotNull(result);
+            Assert.Equal(testUser.UserName, result.UserName);
         
         }
 
         [Fact]
-        public void AddUser_ReturnsTrueIfSuccesfullyAdded() {
+        public void DeleteUser_RemovesUserFromContextAndSaveChanges() {
 
-            User testUser = new User
-            {
-              UserName="kanu4",
-              Email="kanu4@gmail.com",
-              Password="kanu4"
-            };
+         
 
-            bool result=_usersRepository.AddUser(testUser);
+            var testUser = new User { Id = 1, UserName = "testuser",Email="testuser@gmail.com",Password="testuser" };
+            _context.Users.Add(testUser);
+            _context.SaveChanges();
 
+            // Act
+            var result = _userRepository.DeleteUser(testUser.Id);
+
+            // Assert
             Assert.True(result);
-         //   Assert.Contains(testUser, context.Users);
-        
+            Assert.DoesNotContain(testUser, _context.Users);
+
         }
+
+        [Fact]
+        public void UpdateUser_UpdateUserInContextAndSaveChanges() {
+
+            var testUser = new User { Id = 4, UserName = "kanu",Email="kanu4@gmail.com", Password="kanu4" };
+            _context.Users.Add(testUser);
+            _context.SaveChanges();
+
+            var updatedUser = new User { Id = 4, UserName = "kanu44",Email="testuser@gmail.com",Password="testuser"};
+
+            // Act
+            var userRepository = new UsersRepository(_context);
+            var result =userRepository.UpdateUser(updatedUser.Id, updatedUser);
+
+            // Assert
+            Assert.True(result);
+            Assert.Equal(updatedUser.UserName, testUser.UserName);
+
+        }
+
+
+       /* public void Dispose()
+        {
+            if(_context!=null)
+            _context.Database.EnsureDeleted();
+            _context.Dispose();
+
+        }
+
+        */
 
     }
+
+
+   
 }
