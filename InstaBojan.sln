@@ -9,6 +9,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "InstaBojan.Core", "InstaBoj
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "InstaBojan.Infrastructure", "InstaBojan.Infrastructure\InstaBojan.Infrastructure.csproj", "{BC5BD697-6C78-49FC-AC24-8A3AB912601E}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestBokiInsta", "TestBokiInsta\TestBokiInsta.csproj", "{4AD0D9F7-9390-48A5-902C-1409BE4C70BE}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -27,6 +29,10 @@ Global
 		{BC5BD697-6C78-49FC-AC24-8A3AB912601E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{BC5BD697-6C78-49FC-AC24-8A3AB912601E}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{BC5BD697-6C78-49FC-AC24-8A3AB912601E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4AD0D9F7-9390-48A5-902C-1409BE4C70BE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4AD0D9F7-9390-48A5-902C-1409BE4C70BE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4AD0D9F7-9390-48A5-902C-1409BE4C70BE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4AD0D9F7-9390-48A5-902C-1409BE4C70BE}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

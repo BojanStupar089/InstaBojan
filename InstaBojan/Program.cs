@@ -67,7 +67,7 @@ options.TokenValidationParameters = new TokenValidationParameters()
 
 //Add AutoMapper
 
-builder.Services.AddScoped<IUserRepository, UsersRepository>();
+builder.Services.AddScoped<IUserRepository, IUsersRepository>();
 builder.Services.AddScoped<IProfilesRepository, ProfilesRepository>();
 builder.Services.AddScoped<IPostsRepository, PostsRepository>();
 builder.Services.AddScoped<IUserMapper, UserMapper>();
