@@ -80,7 +80,6 @@ namespace InstaBojan.Controllers.PostsController
         public IActionResult AddPost([FromBody] PostDto postDto)
         {
 
-
             var username = User.FindFirstValue(ClaimTypes.Name);
             if (!ModelState.IsValid) return BadRequest();
 
@@ -91,15 +90,9 @@ namespace InstaBojan.Controllers.PostsController
             }
 
 
-            var post = new Post
-            {
-                Picture=postDto.Picture,
-                Text=postDto.Text,
-                ProfileId=userProfile.Id,
-
-            };
-            
-             
+             var post=_postMapper.MapPost(postDto);
+            post.ProfileId = userProfile.Id;
+           
             _postsRepository.AddPost(post);
 
             return Created("api/posts" + "/" + post.Id, postDto);

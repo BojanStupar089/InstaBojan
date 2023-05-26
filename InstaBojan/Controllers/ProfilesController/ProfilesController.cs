@@ -84,39 +84,25 @@ namespace InstaBojan.Controllers.ProfilesController
         {
             if (!ModelState.IsValid) return BadRequest();
 
-            var username = User.FindFirstValue(ClaimTypes.Name); //ulogovani kor
+            var username = User.FindFirstValue(ClaimTypes.Name);
 
             var user=_userRepository.GetUserByUserName(username);
             if (user == null) return NotFound();
 
-            var profile = _profilesRepository.GetProfileByProfileName(profileDto.ProfileName);
-            
-
-             
-
+         
             var existingProfile = _profilesRepository.GetProfileByProfileName(profileDto.ProfileName);
             if (existingProfile != null) {
 
                 return BadRequest("Profile Name already exists");
             }
 
-            var profileaa = new Profile
-            {
 
-              FirstName=profileDto.FirstName,
-              LastName=profileDto.LastName,
-              ProfileName=profileDto.ProfileName,
-              ProfilePicture=profileDto.ProfilePicture,
-              Gender=profileDto.Gender,
-              Birthday=profileDto.BirthDay,
-              UserId=user.Id,
+            var profile = _profileMapper.MapProfile(profileDto);
+            profile.UserId = user.Id;
 
-            };
-           
-              
-             _profilesRepository.AddProfile(profileaa);
+             _profilesRepository.AddProfile(profile);
 
-           return Created("api/profiles"+"/"+profileaa.Id, profileDto);
+           return Created("api/profiles"+"/"+profile.Id, profileDto);
         }
 
 
