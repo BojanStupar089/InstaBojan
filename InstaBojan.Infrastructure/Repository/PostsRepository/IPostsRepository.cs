@@ -10,14 +10,16 @@ namespace InstaBojan.Infrastructure.Repository.PostsRepository
     public interface IPostsRepository
     {
         public List<Post> GetPosts();
+
+        List<Post> GetPostsByProfileName(string profileName);
         public Post GetPostById(int id);
         public Post GetPostByProfileId(int id);
         public bool AddPost(Post post);
         public bool UpdatePost(int id, Post post);
         public bool DeletePost(int id);
 
-       List<Post>GetPostsByProfileName( string profileName);
-        // Post GetByPostsByProfileId(int id);
+      
+      
         
     }
 }

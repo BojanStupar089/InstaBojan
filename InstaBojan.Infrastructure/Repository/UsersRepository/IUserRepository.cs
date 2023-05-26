@@ -11,16 +11,10 @@ namespace InstaBojan.Infrastructure.Repository.UsersRepository
     {
 
         public List<User> GetUsers();
-
         public User GetUserById(int id);
-
         public User GetUserByUserName(string name);
         public bool AddUser(User user);
-
         public bool UpdateUser(int id, User user);
-
-       // public bool UpdateUser(User user);
-
         public bool DeleteUser(int id);
 
       

@@ -24,12 +24,7 @@ namespace InstaBojan.Infrastructure.Repository.ProfilesRepository
 
         public void AddFollowing(int loggedInProfileId,int followingId);
 
-      //  public void AddFollowingBr(int f, int targetProfile);
-       
-
-        //public Profile Follow(int id);
-        //public Profile Follow(string username); // ovo sam nasao
-        //
+      
 
 
     
