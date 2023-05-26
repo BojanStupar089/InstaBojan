@@ -41,6 +41,7 @@ namespace TestBokiInsta.TestProfiesRepository
                 Id = 1,
                 FirstName = "profile1",
                 LastName = "profile1",
+                ProfileName="profile",
                 ProfilePicture = "profile1",
                 Birthday =DateTime.Parse("2023-10-04"),
                 Gender = "male",
