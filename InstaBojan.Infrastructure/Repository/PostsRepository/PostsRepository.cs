@@ -1,26 +1,31 @@
 ﻿using InstaBojan.Core.Models;
 using InstaBojan.Infrastructure.Data;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace InstaBojan.Infrastructure.Repository.PostsRepository
 {
     public class PostsRepository : IPostsRepository
     {
         private readonly InstagramStoreContext _context;
-     
+
         public PostsRepository(InstagramStoreContext context)
         {
             _context = context;
         }
-
+        #region get
         public List<Post> GetPosts()
         {
 
-             return _context.Posts.ToList();
+            return _context.Posts.ToList();
+        }
+
+        public List<Post> GetPostsByProfileName(string profileName)
+        {
+            List<Post> posts = new List<Post>();
+
+            posts = _context.Posts.Where(p => p.Publisher.ProfileName == profileName).ToList();
+            if (posts == null) return null;
+
+            return posts;
         }
 
         public Post GetPostById(int id)
@@ -33,11 +38,13 @@ namespace InstaBojan.Infrastructure.Repository.PostsRepository
 
         public Post GetPostByProfileId(int id)
         {
-            var post=_context.Posts.FirstOrDefault(p=>p.ProfileId == id);
+            var post = _context.Posts.FirstOrDefault(p => p.ProfileId == id);
             if (post == null) return null;
 
             return post;
         }
+
+        #endregion
 
         public bool AddPost(Post post)
         {
@@ -58,31 +65,23 @@ namespace InstaBojan.Infrastructure.Repository.PostsRepository
             return true;
         }
 
-       
+
 
         public bool UpdatePost(int id, Post post)
         {
-          var updPost= _context.Posts.FirstOrDefault(p=>p.Id == id);
+            var updPost = _context.Posts.FirstOrDefault(p => p.Id == id);
             if (updPost == null) return false;
 
-            updPost.Picture= post.Picture;
-            updPost.Text= post.Text;
+            updPost.Picture = post.Picture;
+            updPost.Text = post.Text;
 
             _context.Update(updPost);
             _context.SaveChanges();
-            
+
             return true;
 
         }
 
-        public List<Post> GetPostsByProfileName(string profileName)
-        {
-            List<Post> posts = new List<Post>();
 
-            posts = _context.Posts.Where(p => p.Publisher.ProfileName == profileName).ToList();
-            if (posts == null) return null;
-
-            return posts;
-        }
     }
 }

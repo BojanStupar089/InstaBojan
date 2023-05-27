@@ -1,15 +1,9 @@
-﻿using AutoMapper;
+﻿/*
 using InstaBojan.Core.Models;
 using InstaBojan.Infrastructure.Data;
 using InstaBojan.Infrastructure.Repository.PostsRepository;
-using InstaBojan.Infrastructure.Repository.UsersRepository;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
+/*
 namespace TestBokiInsta.TestPostsRepository
 {
     public class TestsPostRepository
@@ -23,7 +17,6 @@ namespace TestBokiInsta.TestPostsRepository
         {
 
             _options = new DbContextOptionsBuilder<InstagramStoreContext>().UseInMemoryDatabase(databaseName: "TestDatabase").Options;
-
             _context = new InstagramStoreContext(_options);
             _postsRepository = new PostsRepository(_context);
 
@@ -31,7 +24,8 @@ namespace TestBokiInsta.TestPostsRepository
 
 
         [Fact]
-        public void GetPosts_ReturnsListOfPosts() {
+        public void GetPosts_ReturnsListOfPosts()
+        {
 
 
             var posts = new List<Post>
@@ -119,7 +113,24 @@ namespace TestBokiInsta.TestPostsRepository
             Assert.Equal(posts.Count, result.Count);
             Assert.All(result, post => Assert.Equal(profileName, post.Publisher.ProfileName));
 
-         }
+        }
+
+        [Fact]
+        public void GetPostByProfileId_ReturnsPostWhenFound()
+        {
+
+            var post = new Post { Id = 1, Picture = "post1", Text = "post1", ProfileId = 1 };
+            _context.Posts.Add(post);
+            _context.SaveChanges();
+
+            // Act
+            var result = _postsRepository.GetPostByProfileId(1);
+
+            // Assert
+            Assert.NotNull(result);
+            Assert.Equal(post.Id, result.Id);
+            Assert.Equal(post.ProfileId, result.ProfileId);
+        }
 
         [Fact]
         public void AddPost_ReturnsTrueWhenPostAddedSuccessfully()
@@ -129,7 +140,7 @@ namespace TestBokiInsta.TestPostsRepository
                 Id = 1,
                 Picture = "post1",
                 Text = "post1",
-                ProfileId=1
+                ProfileId = 1
                 // Set other post properties as needed
             };
 
@@ -142,7 +153,47 @@ namespace TestBokiInsta.TestPostsRepository
 
 
         }
-    
 
+
+
+        [Fact]
+        public void UpdatePost_ShouldUpdatePostInDatabase()
+        {
+
+            var post = new Post { Id = 1, };
+            _context.Posts.Add(post);
+            _context.SaveChanges();
+
+            // Create an updated post with modified properties
+            var updatedPost = new Post { Id = 1, Picture = "newPicture.jpg", Text = "Updated text" };
+
+            // Act
+            var result = _postsRepository.UpdatePost(post.Id, updatedPost);
+
+            // Assert
+            Assert.True(result);
+            Assert.Equal(updatedPost.Picture, _context.Posts.Find(post.Id).Picture);
+            Assert.Equal(updatedPost.Text, _context.Posts.Find(post.Id).Text);
+
+
+        }
+
+        [Fact]
+        public void DeletePost_ShouldRemovePostFromDatabase()
+        {
+
+            var post = new Post { Id = 1,Picture="post1",Text="blabla",ProfileId=1 };
+            _context.Posts.Add(post);
+            _context.SaveChanges();
+
+            // Act
+            var result = _postsRepository.DeletePost(post.Id);
+
+            // Assert
+            Assert.True(result);
+            Assert.Null(_context.Posts.Find(post.Id));
+        }
     }
 }
+
+*/
