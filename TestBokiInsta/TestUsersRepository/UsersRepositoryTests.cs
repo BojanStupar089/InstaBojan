@@ -1,14 +1,7 @@
-﻿using Google.Api;
-using InstaBojan.Core.Models;
+﻿using InstaBojan.Core.Models;
 using InstaBojan.Infrastructure.Data;
 using InstaBojan.Infrastructure.Repository.UsersRepository;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Options;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace TestBokiInsta.TestUsersRepository
 {
@@ -19,71 +12,44 @@ namespace TestBokiInsta.TestUsersRepository
         private readonly InstagramStoreContext _context;
         private readonly UsersRepository _userRepository;
 
-        public UsersRepositoryTests() {
+        public UsersRepositoryTests()
+        {
 
             _options = new DbContextOptionsBuilder<InstagramStoreContext>().UseInMemoryDatabase(databaseName: "TestDatabase").Options;
 
             _context = new InstagramStoreContext(_options);
             _userRepository = new UsersRepository(_context);
-        
+
         }
-        
+
         [Fact]
-        public void GetUsers_ReturnsListOfUsers() {
+        public void GetUsers_ReturnsListOfUsers()
+        {
+            var users = new List<User> {
 
-          /*  var options = new DbContextOptionsBuilder<InstagramStoreContext>()
-            .UseInMemoryDatabase(databaseName: "TestDatabase")
-            .Options;
+              new User { UserName = "kanu4",Email="kanu4@gmail.com",Password="kanu4" },
+              new User { UserName = "zidane5",Email="zidane5@gmail.com",Password="zidane5" },
+              new User { UserName = "rcarlos3",Email="rcarlos3@gmail.com",Password="rcarlos3" }
+            };
 
-            using var context = new InstagramStoreContext(_options);*/
-
-            _context.Users.AddRange(new List<User>
-    {
-        new User { UserName = "kanu4",Email="kanu4@gmail.com",Password="kanu4" },
-        new User { UserName = "zidane5",Email="zidane5@gmail.com",Password="zidane5" },
-        new User { UserName = "rcarlos3",Email="rcarlos3@gmail.com",Password="rcarlos3" }
-    });
+            _context.Users.AddRange(users);
             _context.SaveChanges();
 
-            var userRepository = new UsersRepository(_context);
+            var result = _userRepository.GetUsers();
 
-            
-            List<User> users = userRepository.GetUsers();
-
-          
             Assert.NotNull(users);
-            Assert.Equal(3, users.Count);
+            Assert.Equal(result.Count, users.Count);
 
         }
 
-        [Fact]
 
-        public void AddUser_AddsUserToDatabase() {
-
-
-         var options = new DbContextOptionsBuilder<InstagramStoreContext>()
-        .UseInMemoryDatabase(databaseName: "TestDatabase")
-        .Options;
-
-         using var context = new InstagramStoreContext(options);
-         var userRepository = new UsersRepository(context);
-
-         var user = new User { UserName = "testuser",Email="testuser@gmail.com",Password="testuser" };
-
-            // Act
-          userRepository.AddUser(user);
-
-            // Assert
-         Assert.Equal(1, context.Users.Count());
-         Assert.Contains(user, context.Users);
-
-        }
 
         [Fact]
-        public void GetUserById_ReturnsUserWhenFound() {
+        public void GetUserById_ReturnsUserWhenFound()
+        {
 
             // Arrange
-            var testUser = new User { Id = 1, UserName = "testuser",Email="testuser@gmail.com",Password="testuser" };
+            var testUser = new User { Id = 1, UserName = "testuser", Email = "testuser@gmail.com", Password = "testuser" };
             _context.Users.Add(testUser);
             _context.SaveChanges();
 
@@ -93,13 +59,16 @@ namespace TestBokiInsta.TestUsersRepository
             // Assert
             Assert.NotNull(result);
             Assert.Equal(testUser.Id, result.Id);
-           
+
         }
 
-        [Fact]
-        public void GetUserByUserName_ReturnsUserWhenFound() {
 
-            var testUser = new User { UserName = "testuser",Email ="testuser@gmail.com",Password="testuser"};
+
+        [Fact]
+        public void GetUserByUserName_ReturnsUserWhenFound()
+        {
+
+            var testUser = new User { UserName = "testuser", Email = "testuser@gmail.com", Password = "testuser" };
             _context.Users.Add(testUser);
             _context.SaveChanges();
 
@@ -107,15 +76,72 @@ namespace TestBokiInsta.TestUsersRepository
             var result = _userRepository.GetUserByUserName("testuser");
             Assert.NotNull(result);
             Assert.Equal(testUser.UserName, result.UserName);
-        
+
         }
 
+
+
         [Fact]
-        public void DeleteUser_RemovesUserFromContextAndSaveChanges() {
 
-         
+        public void AddUser_AddsUserToDatabase()
+        {
 
-            var testUser = new User { Id = 1, UserName = "testuser",Email="testuser@gmail.com",Password="testuser" };
+            string password = "testuser";
+            string hashedPassword = BCrypt.Net.BCrypt.HashPassword(password);
+
+            var user = new User { UserName = "testuser", Email = "testuser@gmail.com", Password = hashedPassword };
+
+            // Act
+            _userRepository.AddUser(user);
+
+            // Assert
+            Assert.Equal(1, _context.Users.Count());
+            Assert.Contains(user, _context.Users);
+            Assert.NotNull(hashedPassword);
+            Assert.True(BCrypt.Net.BCrypt.Verify(password, hashedPassword));
+
+        }
+
+
+
+
+        [Fact]
+        public void UpdateUser_UpdateUserToDatabase()
+        {
+
+            string password = "testuser";
+            string hashedPassword = BCrypt.Net.BCrypt.HashPassword(password);
+
+            var testUser = new User { Id = 1, UserName = "testuser", Email = "testuser@gmail.com", Password = hashedPassword };
+            _context.Users.Add(testUser);
+            _context.SaveChanges();
+
+            var updatedUser = new User { Id = 1, UserName = "kanu44", Email = "testuser@gmail.com", Password = hashedPassword };
+
+            // Act
+            var userRepository = new UsersRepository(_context);
+            var result = userRepository.UpdateUser(updatedUser.Id, updatedUser);
+
+            // Assert
+            Assert.True(result);
+            Assert.Equal(updatedUser.UserName, testUser.UserName);
+            Assert.Equal(updatedUser.Email, testUser.Email);
+            /* Assert.NotNull(hashedPassword);
+             Assert.True(BCrypt.Net.BCrypt.Verify(password, hashedPassword));
+             Assert.Equal(updatedUser.Password, testUser.Password);*/
+
+
+
+
+        }
+
+
+
+        [Fact]
+        public void DeleteUser_RemoveUserFromDatabase()
+        {
+
+            var testUser = new User { Id = 1, UserName = "testuser", Email = "testuser@gmail.com", Password = "testuser" };
             _context.Users.Add(testUser);
             _context.SaveChanges();
 
@@ -128,38 +154,24 @@ namespace TestBokiInsta.TestUsersRepository
 
         }
 
-        [Fact]
-        public void UpdateUser_UpdateUserInContextAndSaveChanges() {
-
-            var testUser = new User { Id = 4, UserName = "kanu",Email="kanu4@gmail.com", Password="kanu4" };
-            _context.Users.Add(testUser);
-            _context.SaveChanges();
-
-            var updatedUser = new User { Id = 4, UserName = "kanu44",Email="testuser@gmail.com",Password="testuser"};
-
-            // Act
-            var userRepository = new UsersRepository(_context);
-            var result =userRepository.UpdateUser(updatedUser.Id, updatedUser);
-
-            // Assert
-            Assert.True(result);
-            Assert.Equal(updatedUser.UserName, testUser.UserName);
-
-        }
 
 
-       /* public void Dispose()
+
+
+        public void Dispose()
         {
-            if(_context!=null)
-            _context.Database.EnsureDeleted();
+            if (_context != null)
+                _context.Database.EnsureDeleted();
             _context.Dispose();
 
         }
 
-        */
+
+
+
 
     }
 
 
-   
+
 }

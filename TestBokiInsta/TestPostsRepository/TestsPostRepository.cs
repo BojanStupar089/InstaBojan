@@ -1,9 +1,9 @@
-﻿/*
+﻿
 using InstaBojan.Core.Models;
 using InstaBojan.Infrastructure.Data;
 using InstaBojan.Infrastructure.Repository.PostsRepository;
 using Microsoft.EntityFrameworkCore;
-/*
+
 namespace TestBokiInsta.TestPostsRepository
 {
     public class TestsPostRepository
@@ -55,6 +55,8 @@ namespace TestBokiInsta.TestPostsRepository
 
         }
 
+
+
         [Fact]
         public void GetPostById_ReturnsPostWhenFound()
         {
@@ -86,8 +88,10 @@ namespace TestBokiInsta.TestPostsRepository
 
             var profile = new InstaBojan.Core.Models.Profile
             {
+
                 FirstName = "profile1",
                 LastName = "profile1",
+                ProfileName = profileName,
                 ProfilePicture = "profile1",
                 Birthday = DateTime.Parse("2023-10-04"),
                 Gender = "male",
@@ -96,8 +100,8 @@ namespace TestBokiInsta.TestPostsRepository
 
             var posts = new List<Post>
             {
-                new Post { Id = 1, Picture = "post1", Text = "post1", ProfileId = 1 },
-                new Post { Id = 2, Picture = "post2", Text = "post2", ProfileId = 1 },
+                new Post {  Picture = "post1", Text = "post1", ProfileId = 1 },
+                new Post {  Picture = "post2", Text = "post2", ProfileId = 1 },
 
             };
 
@@ -132,8 +136,10 @@ namespace TestBokiInsta.TestPostsRepository
             Assert.Equal(post.ProfileId, result.ProfileId);
         }
 
+
+
         [Fact]
-        public void AddPost_ReturnsTrueWhenPostAddedSuccessfully()
+        public void AddPost_AddsProfileToDatabase()
         {
             var post = new Post
             {
@@ -157,10 +163,10 @@ namespace TestBokiInsta.TestPostsRepository
 
 
         [Fact]
-        public void UpdatePost_ShouldUpdatePostInDatabase()
+        public void UpdatePost_UpdatePostToDatabase()
         {
 
-            var post = new Post { Id = 1, };
+            var post = new Post { Id = 1, Picture = "post", Text = "post" };
             _context.Posts.Add(post);
             _context.SaveChanges();
 
@@ -179,10 +185,10 @@ namespace TestBokiInsta.TestPostsRepository
         }
 
         [Fact]
-        public void DeletePost_ShouldRemovePostFromDatabase()
+        public void DeletePost_RemovePostFromDatabase()
         {
 
-            var post = new Post { Id = 1,Picture="post1",Text="blabla",ProfileId=1 };
+            var post = new Post { Id = 1, Picture = "post1", Text = "blabla", ProfileId = 1 };
             _context.Posts.Add(post);
             _context.SaveChanges();
 
@@ -193,7 +199,18 @@ namespace TestBokiInsta.TestPostsRepository
             Assert.True(result);
             Assert.Null(_context.Posts.Find(post.Id));
         }
+
+
+        public void Dispose()
+        {
+            if (_context != null)
+                _context.Database.EnsureDeleted();
+            _context.Dispose();
+
+        }
+
+
     }
 }
 
-*/
+

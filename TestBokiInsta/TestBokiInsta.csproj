@@ -10,6 +10,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="BCrypt.Net-Next" Version="4.0.3" />
     <PackageReference Include="Microsoft.AspNetCore.Mvc.Testing" Version="6.0.4" />
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="6.0.4" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.InMemory" Version="6.0.4" />
@@ -30,6 +31,10 @@
     <ProjectReference Include="..\InstaBojan.Core\InstaBojan.Core.csproj" />
     <ProjectReference Include="..\InstaBojan.Infrastructure\InstaBojan.Infrastructure.csproj" />
     <ProjectReference Include="..\InstaBojan\InstaBojan.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="NewFolder\" />
   </ItemGroup>
 
 </Project>
