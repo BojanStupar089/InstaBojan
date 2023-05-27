@@ -386,5 +386,13 @@ namespace TestBokiInsta.TestProfilesRepository
             Assert.DoesNotContain(profile, _context.Profiles);
 
         }
+
+        public void Dispose()
+        {
+            if (_context != null)
+                _context.Database.EnsureDeleted();
+            _context.Dispose();
+
+        }
     }
 }
