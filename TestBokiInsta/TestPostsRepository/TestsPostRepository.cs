@@ -201,6 +201,7 @@ namespace TestBokiInsta.TestPostsRepository
         }
 
 
+        /*
         public void Dispose()
         {
             if (_context != null)
@@ -208,7 +209,7 @@ namespace TestBokiInsta.TestPostsRepository
             _context.Dispose();
 
         }
-
+        */
 
     }
 }

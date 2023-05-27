@@ -387,6 +387,7 @@ namespace TestBokiInsta.TestProfilesRepository
 
         }
 
+        /*
         public void Dispose()
         {
             if (_context != null)
@@ -394,5 +395,7 @@ namespace TestBokiInsta.TestProfilesRepository
             _context.Dispose();
 
         }
+
+        */
     }
 }
