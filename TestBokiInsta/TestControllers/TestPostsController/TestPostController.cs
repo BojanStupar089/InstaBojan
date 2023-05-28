@@ -17,7 +17,6 @@ namespace TestBokiInsta.TestControllers.TestPostsController
     {
 
         private DbContextOptions<InstagramStoreContext> _options;
-        private InstagramStoreContext _context;
         private Mock<IPostsRepository> _postsRepositoryMock;
         private Mock<IPostMapper> _postMapperMock;
         private PostsController _postsControllerMock;
@@ -32,7 +31,7 @@ namespace TestBokiInsta.TestControllers.TestPostsController
            .UseInMemoryDatabase(databaseName: "TestDatabase")
            .Options;
 
-            _context = new InstagramStoreContext(_options);
+
             _postsRepositoryMock = new Mock<IPostsRepository>();
             _postMapperMock = new Mock<IPostMapper>();
             _profilesRepositoryMock = new Mock<IProfilesRepository>();

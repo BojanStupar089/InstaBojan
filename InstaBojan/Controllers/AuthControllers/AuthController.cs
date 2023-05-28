@@ -3,7 +3,6 @@ using InstaBojan.Core.Security;
 using InstaBojan.Dtos.UsersDto;
 using InstaBojan.Infrastructure.Repository.UsersRepository;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
@@ -19,11 +18,11 @@ namespace InstaBojan.Controllers.AuthControllers
 
         private readonly IUserRepository _repository;
 
-      
+
         public AuthController(IUserRepository repository)
         {
             _repository = repository;
-          
+
         }
 
 
@@ -32,12 +31,18 @@ namespace InstaBojan.Controllers.AuthControllers
         {
 
             var user = _repository.GetUserByUserName(loginModel.UserName);
+
+            if (user == null)
+            {
+                return BadRequest("Invalid username");
+            }
+
             bool isValidPassword = BCrypt.Net.BCrypt.Verify(loginModel.Password, user.Password);
 
-            if (user == null || !isValidPassword)
+            if (!isValidPassword)
             {
 
-                return BadRequest("Wrong credentials");
+                return BadRequest("Wrong password");
             }
 
             //Authenticate user and generate JWT token
@@ -49,7 +54,7 @@ namespace InstaBojan.Controllers.AuthControllers
         }
 
         [HttpPost("register")]
-        public IActionResult Register([FromBody]UserDto userDto)
+        public IActionResult Register([FromBody] UserDto userDto)
         {
 
             var user = _repository.GetUserByUserName(userDto.UserName);
@@ -57,7 +62,7 @@ namespace InstaBojan.Controllers.AuthControllers
             {
                 user = new User
                 {
-                   
+
                     Email = userDto.Email,
                     UserName = userDto.UserName,
                     Password = BCrypt.Net.BCrypt.HashPassword(userDto.Password),
@@ -65,11 +70,11 @@ namespace InstaBojan.Controllers.AuthControllers
                 };
                 _repository.AddUser(user);
 
-                return Ok();
+                return Ok("User was created");
             }
             else
-               return BadRequest("Already exists");
-           
+                return BadRequest("Already exists");
+
 
         }
 
@@ -77,7 +82,7 @@ namespace InstaBojan.Controllers.AuthControllers
 
 
 
-       [Authorize(Roles = "Admin")]
+        [Authorize(Roles = "Admin")]
         [HttpGet("test-admin-authorization")]
         public async Task<IActionResult> TestAuth()
         {
@@ -90,15 +95,15 @@ namespace InstaBojan.Controllers.AuthControllers
         {
             return Ok("Success User");
         }
-        
-        
-        
-        
-        
-        
-        
-        
-        private string GenerateToken(User user)
+
+
+
+
+
+
+
+
+        public string GenerateToken(User user)
         {
 
             var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes("super-long-secret-key"));
@@ -112,9 +117,9 @@ namespace InstaBojan.Controllers.AuthControllers
                 expires: DateTime.Now.AddMinutes(30),
                 signingCredentials: credentials);
 
-            var generatedUser= new JwtSecurityTokenHandler().WriteToken(token);
+            var generatedUser = new JwtSecurityTokenHandler().WriteToken(token);
 
-            if(TokenBlackList.IsTokenBlackListed(generatedUser))
+            if (TokenBlackList.IsTokenBlackListed(generatedUser))
             {
                 return ("Token is blacklisted");
             }

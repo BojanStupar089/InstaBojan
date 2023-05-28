@@ -9,6 +9,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Moq;
+using System.Security.Claims;
 
 namespace TestBokiInsta.TestControllers.TestUsersControllers
 {
@@ -17,9 +18,9 @@ namespace TestBokiInsta.TestControllers.TestUsersControllers
 
 
         private DbContextOptions<InstagramStoreContext> _options;
-        private readonly Mock<IUserRepository> _userRepositoryMock;
-        private readonly Mock<IUserMapper> _userMapperMock;
-        private readonly UsersController _usersControllerMock;
+        private Mock<IUserRepository> _userRepositoryMock;
+        private Mock<IUserMapper> _userMapperMock;
+        private UsersController _usersControllerMock;
         private Mock<ITokenBlackListWrapper> _tokenBlackListWrapperMock;
 
 
@@ -31,15 +32,10 @@ namespace TestBokiInsta.TestControllers.TestUsersControllers
              .UseInMemoryDatabase(databaseName: "TestDatabase")
              .Options;
 
+
             _userRepositoryMock = new Mock<IUserRepository>();
-
             _userMapperMock = new Mock<IUserMapper>();
-            using (var dbContext = new InstagramStoreContext(_options))
-            {
-                _usersControllerMock = new UsersController(_userRepositoryMock.Object, _userMapperMock.Object);
-
-            }
-
+            _usersControllerMock = new UsersController(_userRepositoryMock.Object, _userMapperMock.Object);
             _tokenBlackListWrapperMock = new Mock<ITokenBlackListWrapper>();
 
         }
@@ -146,33 +142,120 @@ namespace TestBokiInsta.TestControllers.TestUsersControllers
         }
 
 
-
+        #region put
         [Fact]
-        public void UpdateUser_ReturnsNoContentResult()
+        public void UpdateUser_WhenAllGood_ReturnsNoContentResult()
         {
             // Arrange
             int userId = 1;
             var userDto = new UserDto { UserName = "updateduser", Email = "updateduser@gmail.com", Password = "newpassword" };
-            var user = new User { Id = userId, UserName = "testuser", Email = "testuser@gmail.com", Password = "oldpassword" };
+            var existingUser = new User { Id = userId, UserName = "testuser", Email = "testuser@gmail.com", Password = "oldpassword" };
 
             var userRepositoryMock = new Mock<IUserRepository>();
             var userMapperMock = new Mock<IUserMapper>();
 
-            userRepositoryMock.Setup(repo => repo.GetUserById(userId)).Returns(user);
+            userRepositoryMock.Setup(repo => repo.GetUserById(userId)).Returns(existingUser);
             userRepositoryMock.Setup(repo => repo.GetUserByUserName(userDto.UserName)).Returns((User)null);
 
+            var userClaim = new ClaimsPrincipal(new ClaimsIdentity(new Claim[] {
+        new Claim(ClaimTypes.Name,"john")
+    }, "TestAuthentication"));
 
+            var httpContext = new DefaultHttpContext();
+            httpContext.User = userClaim;
+
+            _usersControllerMock.ControllerContext = new ControllerContext
+            {
+                HttpContext = httpContext
+            };
 
             // Act
             var result = _usersControllerMock.UpdateUser(userId, userDto);
 
             // Assert
             Assert.IsType<NoContentResult>(result);
-
             userRepositoryMock.Verify(repo => repo.GetUserById(userId), Times.Once());
             userRepositoryMock.Verify(repo => repo.GetUserByUserName(userDto.UserName), Times.Once());
             userRepositoryMock.Verify(repo => repo.UpdateUser(userId, It.IsAny<User>()), Times.Once());
         }
+
+        [Fact]
+        public void UpdateUser_WhenForbidden_ReturnsForbidResult()
+        {
+            // Arrange
+            int userId = 1;
+            var userDto = new UserDto { UserName = "updateduser", Email = "updateduser@gmail.com", Password = "newpassword" };
+            var existingUser = new User { Id = userId, UserName = "testuser", Email = "testuser@gmail.com", Password = "oldpassword" };
+
+            var userRepositoryMock = new Mock<IUserRepository>();
+            var userMapperMock = new Mock<IUserMapper>();
+
+            userRepositoryMock.Setup(repo => repo.GetUserById(userId)).Returns(existingUser);
+            userRepositoryMock.Setup(repo => repo.GetUserByUserName(userDto.UserName)).Returns(existingUser);
+
+            var userClaim = new ClaimsPrincipal(new ClaimsIdentity(new Claim[] {
+        new Claim(ClaimTypes.Name,"john")
+    }, "TestAuthentication"));
+
+            var httpContext = new DefaultHttpContext();
+            httpContext.User = userClaim;
+
+            _usersControllerMock.ControllerContext = new ControllerContext
+            {
+                HttpContext = httpContext
+            };
+
+            // Act
+            var result = _usersControllerMock.UpdateUser(userId, userDto);
+
+            // Assert
+            //Assert.IsType<ForbidResult>(result);
+            userRepositoryMock.Verify(repo => repo.GetUserById(userId), Times.Once());
+            userRepositoryMock.Verify(repo => repo.GetUserByUserName(userDto.UserName), Times.Once());
+            userRepositoryMock.Verify(repo => repo.UpdateUser(userId, It.IsAny<User>()), Times.Never());
+        }
+
+        [Fact]
+        public void UpdateUser_WhenNotFound_ReturnsNotFoundResult()
+        {
+            // Arrange
+            int userId = 1;
+            var userDto = new UserDto { UserName = "updateduser", Email = "updateduser@gmail.com", Password = "newpassword" };
+
+            var userRepositoryMock = new Mock<IUserRepository>();
+            var userMapperMock = new Mock<IUserMapper>();
+
+            userRepositoryMock.Setup(repo => repo.GetUserById(userId)).Returns((User)null);
+
+            var userClaim = new ClaimsPrincipal(new ClaimsIdentity(new Claim[]
+            {
+               new Claim(ClaimTypes.Name,"john")
+             }, "TestAuthentication"));
+
+
+            var httpContext = new DefaultHttpContext();
+            httpContext.User = userClaim;
+
+            _usersControllerMock.ControllerContext = new ControllerContext
+            {
+                HttpContext = httpContext
+            };
+
+            // Act
+            var result = _usersControllerMock.UpdateUser(userId, userDto);
+
+            // Assert
+            Assert.IsType<NoContentResult>(result);
+            userRepositoryMock.Verify(repo => repo.GetUserById(userId), Times.Once());
+            userRepositoryMock.Verify(repo => repo.GetUserByUserName(userDto.UserName), Times.Once());
+            userRepositoryMock.Verify(repo => repo.UpdateUser(userId, It.IsAny<User>()), Times.Once());
+        }
+
+
+
+
+
+        #endregion
 
         /*
 

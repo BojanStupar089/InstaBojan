@@ -35,9 +35,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="TestControllers\TestProfilesController\" />
     <Folder Include="NewFolder\" />
-    <Folder Include="TestControllers\TestAuthController\" />
   </ItemGroup>
 
 </Project>
