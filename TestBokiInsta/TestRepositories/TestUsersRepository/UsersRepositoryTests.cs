@@ -157,7 +157,7 @@ namespace TestBokiInsta.TestUsersRepository
 
 
 
-        /*
+
         public void Dispose()
         {
             if (_context != null)
@@ -165,7 +165,7 @@ namespace TestBokiInsta.TestUsersRepository
             _context.Dispose();
 
         }
-        */
+
 
 
 

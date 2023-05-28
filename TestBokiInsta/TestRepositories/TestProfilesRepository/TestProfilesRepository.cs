@@ -3,7 +3,7 @@ using InstaBojan.Infrastructure.Data;
 using InstaBojan.Infrastructure.Repository.ProfilesRepository;
 using Microsoft.EntityFrameworkCore;
 
-namespace TestBokiInsta.TestProfilesRepository
+namespace TestBokiInsta.TestRepositories.TestProfilesRepository
 {
     public class TestProfilesRepository
     {
@@ -387,7 +387,7 @@ namespace TestBokiInsta.TestProfilesRepository
 
         }
 
-        /*
+
         public void Dispose()
         {
             if (_context != null)
@@ -396,6 +396,6 @@ namespace TestBokiInsta.TestProfilesRepository
 
         }
 
-        */
+
     }
 }

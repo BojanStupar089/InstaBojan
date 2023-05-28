@@ -1,18 +1,14 @@
-﻿using AutoMapper;
-using InstaBojan.Core.Models;
-using InstaBojan.Dtos;
-using InstaBojan.Dtos.PostsDto;
+﻿using InstaBojan.Dtos.PostsDto;
 using InstaBojan.Infrastructure.Repository.PostsRepository;
 using InstaBojan.Infrastructure.Repository.ProfilesRepository;
 using InstaBojan.Mappers.PostMapper;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
 
 namespace InstaBojan.Controllers.PostsController
 {
-    [Authorize(Roles ="User")]
+    [Authorize(Roles = "User")]
     [Route("api/[controller]")]
     [ApiController]
     public class PostsController : ControllerBase
@@ -33,20 +29,23 @@ namespace InstaBojan.Controllers.PostsController
         {
 
             var posts = _postsRepository.GetPosts().Select(p => _postMapper.MapGetPostDto(p));
+
+
             if (posts == null) return NotFound("Posts dont't exist");
 
             return Ok(posts);
         }
 
         [HttpGet("profileName")]
-        public IActionResult GetPostsByProfileName(string profileName) {
+        public IActionResult GetPostsByProfileName(string profileName)
+        {
 
             var profile = _profilesRepository.GetProfileByProfileName(profileName);
             if (profile == null) return NotFound();
 
             var posts = _postsRepository.GetPostsByProfileName(profile.ProfileName).Select(p => _postMapper.MapGetPostDto(p));
 
-            if (posts == null ) return NotFound();
+            if (posts == null) return NotFound();
 
             return Ok(posts);
         }
@@ -90,9 +89,9 @@ namespace InstaBojan.Controllers.PostsController
             }
 
 
-             var post=_postMapper.MapPost(postDto);
+            var post = _postMapper.MapPost(postDto);
             post.ProfileId = userProfile.Id;
-           
+
             _postsRepository.AddPost(post);
 
             return Created("api/posts" + "/" + post.Id, postDto);
@@ -131,13 +130,13 @@ namespace InstaBojan.Controllers.PostsController
         {
 
             var username = User.FindFirstValue(ClaimTypes.Name); // ovo je lako
-           
+
             var delPost = _postsRepository.GetPostById(id);
             if (delPost == null) return NotFound();
 
-           
+
             var profile = _profilesRepository.GetProfileByUserName(username);
-            var profileByPostId=_profilesRepository.GetProfileByPostId(id);
+            var profileByPostId = _profilesRepository.GetProfileByPostId(id);
 
             if (profile.Id != profileByPostId.Id && !User.IsInRole("Admin"))
             {
@@ -147,5 +146,12 @@ namespace InstaBojan.Controllers.PostsController
             _postsRepository.DeletePost(id);
             return NoContent();
         }
+
+
+
+
+
+
+
     }
 }

@@ -1,11 +1,8 @@
-﻿using BCrypt.Net;
-using InstaBojan.Core.Models;
+﻿using InstaBojan.Core.Models;
 using InstaBojan.Dtos.UsersDto;
 using InstaBojan.Infrastructure.Repository.UsersRepository;
 using InstaBojan.Mappers.UserMapper;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Authorization.Infrastructure;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
 
@@ -25,8 +22,8 @@ namespace InstaBojan.Controllers.UsersController
             this._mapper = mapper;
         }
 
-        [Authorize(Roles="Admin")]
-       // [Authorize(Roles ="User")]
+        [Authorize(Roles = "Admin")]
+        // [Authorize(Roles ="User")]
         [HttpGet]
         public IActionResult GetUsers()
         {
@@ -36,8 +33,8 @@ namespace InstaBojan.Controllers.UsersController
             return Ok(users);
         }
 
-        [Authorize(Roles ="Admin")]
-       // [Authorize(Roles = "User")]
+        [Authorize(Roles = "Admin")]
+
         [HttpGet("{id}")]
         public IActionResult GetUserById(int id)
         {
@@ -65,25 +62,26 @@ namespace InstaBojan.Controllers.UsersController
                 return NotFound("User doesn't exist");
             }
 
-            _userRepository.GetUserByUserName(user.UserName);
+
             return Ok(user);
 
         }
 
-        [Authorize(Roles ="User,Admin")]
+        [Authorize(Roles = "User,Admin")]
         [HttpDelete("{id}")]
         public IActionResult DeleteUser(int id)
         {
-            
+
             var userDel = _userRepository.GetUserById(id);
-           
+
             if (userDel == null)
             {
                 return NotFound("User doesn't exist");
             }
             var username = User.FindFirstValue(ClaimTypes.Name);
 
-            if (username != userDel.UserName && !User.IsInRole("Admin")) {
+            if (username != userDel.UserName && !User.IsInRole("Admin"))
+            {
 
                 return Forbid();
             }
@@ -93,15 +91,16 @@ namespace InstaBojan.Controllers.UsersController
             return NoContent();
         }
 
-        [Authorize(Roles ="User,Admin")]
+        [Authorize(Roles = "User,Admin")]
         [HttpPut("{id}")]
         public IActionResult UpdateUser(int id, [FromBody] UserDto userDto)
         {
             var username = User.FindFirstValue(ClaimTypes.Name);
+            if (username == null) return NotFound();
 
-           var user = _userRepository.GetUserById(id);
+            var user = _userRepository.GetUserById(id);
 
-            var userNameExist = _userRepository.GetUserByUserName(userDto.UserName);
+
 
             if (user == null)
             {
@@ -109,20 +108,22 @@ namespace InstaBojan.Controllers.UsersController
                 return NotFound("User doesn't exist");
             }
 
-            if (username != user.UserName && !User.IsInRole("Admin")) {
+            if (username != user.UserName && !User.IsInRole("Admin"))
+            {
 
                 return Forbid();
             }
 
-           if (userNameExist != null && userNameExist.Id!=user.Id) {
-                return  BadRequest("Username already exists");
+            var userNameExist = _userRepository.GetUserByUserName(userDto.UserName);
+
+            if (userNameExist != null && userNameExist.Id != user.Id)
+            {
+                return BadRequest("Username already exists");
             }
 
-         
-             var updUser = _mapper.MapUser(userDto);
-            // usersRepository.UpdateUser(updUser);
 
-           _userRepository.UpdateUser(id, updUser);
+            var updUser = _mapper.MapUser(userDto);
+            _userRepository.UpdateUser(id, updUser);
 
             return NoContent();
         }
