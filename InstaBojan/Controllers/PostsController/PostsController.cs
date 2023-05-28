@@ -104,13 +104,13 @@ namespace InstaBojan.Controllers.PostsController
             var username = User.FindFirstValue(ClaimTypes.Name);
             if (!ModelState.IsValid) return BadRequest();
 
-            var existingPost = _postsRepository.GetPostById(id);
-            if (existingPost == null) return NotFound();
+            var updpost = _postsRepository.GetPostById(id); //post
+            if (updpost == null) return NotFound();
 
-            var profileByUserName = _profilesRepository.GetProfileByUserName(username);
-            var profileByPostId = _profilesRepository.GetProfileByPostId(id); // ovde je profil
+            var profile = _profilesRepository.GetProfileByUserName(username); // profil ulogovanog
+                                                                              // var profileByPostId = _profilesRepository.GetProfileByPostId(id); // ovde je profil
 
-            if (profileByUserName.ProfileName != profileByPostId.ProfileName && !User.IsInRole("Admin"))
+            if (updpost.ProfileId != profile.Id && !User.IsInRole("Admin"))
             {
 
                 return Forbid();
@@ -131,14 +131,15 @@ namespace InstaBojan.Controllers.PostsController
 
             var username = User.FindFirstValue(ClaimTypes.Name); // ovo je lako
 
-            var delPost = _postsRepository.GetPostById(id);
+            var delPost = _postsRepository.GetPostById(id); //koji bi post terebao biti obrisan
             if (delPost == null) return NotFound();
 
 
-            var profile = _profilesRepository.GetProfileByUserName(username);
-            var profileByPostId = _profilesRepository.GetProfileByPostId(id);
+            var profile = _profilesRepository.GetProfileByUserName(username); // profil ulogovanog
+            if (profile == null) return NotFound();
+            // var profileByPostId = _profilesRepository.GetProfileByPostId(id); // 
 
-            if (profile.Id != profileByPostId.Id && !User.IsInRole("Admin"))
+            if (delPost.ProfileId != profile.Id && !User.IsInRole("Admin"))
             {
                 return Forbid();
             }
