@@ -22,7 +22,7 @@ namespace TestBokiInsta.TestControllers.TestPostsController
         private Mock<IPostMapper> _postMapperMock;
         private PostsController _postsControllerMock;
         private Mock<IProfilesRepository> _profilesRepositoryMock;
-        // private Mock<ITokenBlackListWrapper> _tokenBlackListWrapperMock;
+
 
 
         public TestPostController()
@@ -244,42 +244,238 @@ namespace TestBokiInsta.TestControllers.TestPostsController
 
 
         [Fact]
-        public void UpdatePost_WhenAllGood_ReturnsNoContent()
+        public void UpdatePost_ValidPostsDto_ReturnsNoContent()
         {
-            // Arrange
             int postId = 1;
-            var updatePostDto = new PostDto { Picture = "newpicture.jpg", Text = "Updated post" };
-            var existingPost = new Post { Id = postId, Picture = "oldpicture.jpg", Text = "Old post" };
-            var profileByUserName = new Profile { ProfileName = "john", ProfilePicture = "bla", FirstName = "bla", LastName = "bla", User = new User { UserName = "john", Email = "john@gmail.com", Password = "john" } };
-
-            var posts = new List<Post>
-            {
-                new Post{ Id=1,Picture="bla",Text="bla"},
-                new Post{ Id=2,Picture="bla",Text="bla"}
-            };
-
-            var profileByPostId = new Profile { ProfileName = "john", ProfilePicture = "bla", FirstName = "bla", LastName = "bla", User = new User { UserName = "john", Email = "john@gmail.com", Password = "john" }, Posts = posts };
+            var updatePostDto = new PostDto { Picture = "updated.jpg", Text = "Updated post" };
+            var username = "john";
+            var existingPost = new Post { Id = postId, Picture = "old.jpg", Text = "Old post", ProfileId = 1 };
+            var userProfile = new Profile { Id = 1, ProfileName = "bla", ProfilePicture = "bla", FirstName = "ole", LastName = "ole", User = new User { UserName = username, Email = "bla", Password = "bla" } };
 
             _postsRepositoryMock.Setup(repo => repo.GetPostById(postId)).Returns(existingPost);
-            _profilesRepositoryMock.Setup(repo => repo.GetProfileByUserName("john")).Returns(profileByUserName);
-            _profilesRepositoryMock.Setup(repo => repo.GetProfileByPostId(postId)).Returns(profileByPostId);
+            _profilesRepositoryMock.Setup(repo => repo.GetProfileByUserName(username)).Returns(userProfile);
             _postMapperMock.Setup(mapper => mapper.MapPost(updatePostDto)).Returns(new Post { Picture = updatePostDto.Picture, Text = updatePostDto.Text });
+
+            var user = new ClaimsPrincipal(new ClaimsIdentity(new Claim[] {
+
+
+                new Claim(ClaimTypes.Name,"john")
+
+
+              }, "TestAuthentication"));
+
+            var httpContext = new DefaultHttpContext();
+            httpContext.User = user;
+
+            _postsControllerMock.ControllerContext = new ControllerContext
+            {
+
+                HttpContext = httpContext
+            };
 
             // Act
             var result = _postsControllerMock.UpdatePost(postId, updatePostDto);
 
             // Assert
-            var actualType = result.GetType();
-            Assert.Equal(typeof(NoContentResult), actualType);
+            Assert.IsType<NoContentResult>(result);
+            _postsRepositoryMock.Verify(repo => repo.UpdatePost(postId, It.IsAny<Post>()), Times.Once);
+
+        }
+
+
+        #region put
+        [Fact]
+        public void UpdatePost_PostNotFound_ReturnsNotFound()
+        {
+            // Arrange
+            int postId = 1;
+            var updatePostDto = new PostDto { Picture = "updated.jpg", Text = "Updated post" };
+
+            _postsRepositoryMock.Setup(repo => repo.GetPostById(postId)).Returns((Post)null);
+
+
+            var user = new ClaimsPrincipal(new ClaimsIdentity(new Claim[] {
+
+
+                new Claim(ClaimTypes.Name,"john")
+
+
+              }, "TestAuthentication"));
+
+            var httpContext = new DefaultHttpContext();
+            httpContext.User = user;
+
+            _postsControllerMock.ControllerContext = new ControllerContext
+            {
+
+                HttpContext = httpContext
+            };
+
+
+            // Act
+            var result = _postsControllerMock.UpdatePost(postId, updatePostDto);
+
+            // Assert
+            Assert.IsType<NotFoundResult>(result);
+            _postsRepositoryMock.Verify(repo => repo.UpdatePost(postId, It.IsAny<Post>()), Times.Never);
         }
 
 
 
+        [Fact]
+        public void UpdatePost_UserForbidden_ReturnsForbid()
+        {
+            // Arrange
+            int postId = 1;
+            var updatePostDto = new PostDto { Picture = "updated.jpg", Text = "Updated post" };
+            var username = "john";
+            var existingPost = new Post { Id = postId, Picture = "old.jpg", Text = "Old post", ProfileId = 2 }; // Different profile ID
+            var userProfile = new Profile { Id = 1, User = new User { UserName = username }, Posts = new List<Post> { existingPost } };
+
+            _postsRepositoryMock.Setup(repo => repo.GetPostById(postId)).Returns(existingPost);
+            _profilesRepositoryMock.Setup(repo => repo.GetProfileByUserName(username)).Returns(userProfile);
+
+
+            var user = new ClaimsPrincipal(new ClaimsIdentity(new Claim[] {
+
+
+                new Claim(ClaimTypes.Name,"john")
+
+
+              }, "TestAuthentication"));
+
+            var httpContext = new DefaultHttpContext();
+            httpContext.User = user;
+
+            _postsControllerMock.ControllerContext = new ControllerContext
+            {
+
+                HttpContext = httpContext
+            };
+
+            // Act
+            var result = _postsControllerMock.UpdatePost(postId, updatePostDto);
+
+            // Assert
+            Assert.IsType<ForbidResult>(result);
+            _postsRepositoryMock.Verify(repo => repo.UpdatePost(postId, It.IsAny<Post>()), Times.Never);
+        }
+
+        #endregion
+
+        #region delete
+        [Fact]
+        public void DeletePost_ExistingPost_ReturnsNoContent()
+        {
+            int postId = 1;
+            var username = "john";
+            var existingPost = new Post { Id = postId, Picture = "old.jpg", Text = "Old post", ProfileId = 1 };
+            var userProfile = new Profile { Id = 1, ProfileName = "bla", ProfilePicture = "bla", FirstName = "ole", LastName = "ole", User = new User { UserName = username, Email = "bla", Password = "bla" } };
+
+            _postsRepositoryMock.Setup(repo => repo.GetPostById(postId)).Returns(existingPost);
+            _profilesRepositoryMock.Setup(repo => repo.GetProfileByUserName(username)).Returns(userProfile);
+
+            var user = new ClaimsPrincipal(new ClaimsIdentity(new Claim[] {
+
+
+                new Claim(ClaimTypes.Name,"john")
+
+
+              }, "TestAuthentication"));
+
+            var httpContext = new DefaultHttpContext();
+            httpContext.User = user;
+
+            _postsControllerMock.ControllerContext = new ControllerContext
+            {
+
+                HttpContext = httpContext
+            };
+
+            // Act
+            var result = _postsControllerMock.DeletePost(postId);
+
+            // Assert
+            Assert.IsType<NoContentResult>(result);
+            _postsRepositoryMock.Verify(repo => repo.DeletePost(postId), Times.Once);
+        }
+
+        [Fact]
+        public void DeletePost_NonExistingPost_ReturnsNotFound()
+        {
+            int postId = 1;
+            var username = "john";
+            var userProfile = new Profile { Id = 1, ProfileName = "bla", ProfilePicture = "bla", FirstName = "ole", LastName = "ole", User = new User { UserName = username, Email = "bla", Password = "bla" } };
+
+            _postsRepositoryMock.Setup(repo => repo.GetPostById(postId)).Returns((Post)null);
+            _profilesRepositoryMock.Setup(repo => repo.GetProfileByUserName(username)).Returns(userProfile);
+
+
+            var user = new ClaimsPrincipal(new ClaimsIdentity(new Claim[] {
+
+
+                new Claim(ClaimTypes.Name,"john")
+
+
+              }, "TestAuthentication"));
+
+            var httpContext = new DefaultHttpContext();
+            httpContext.User = user;
+
+            _postsControllerMock.ControllerContext = new ControllerContext
+            {
+
+                HttpContext = httpContext
+            };
+
+            // Act
+            var result = _postsControllerMock.DeletePost(postId);
+
+            // Assert
+            Assert.IsType<NotFoundResult>(result);
+            _postsRepositoryMock.Verify(repo => repo.DeletePost(postId), Times.Never);
+        }
+
+        [Fact]
+        public void DeletePost_UnauthorizedUser_ReturnsForbid()
+        {
+            int postId = 1;
+            var username = "john";
+            var existingPost = new Post { Id = postId, Picture = "old.jpg", Text = "Old post", ProfileId = 2 };
+            var userProfile = new Profile { Id = 1, ProfileName = "bla", ProfilePicture = "bla", FirstName = "ole", LastName = "ole", User = new User { UserName = username, Email = "bla", Password = "bla" } };
+
+            _postsRepositoryMock.Setup(repo => repo.GetPostById(postId)).Returns(existingPost);
+            _profilesRepositoryMock.Setup(repo => repo.GetProfileByUserName(username)).Returns(userProfile);
+
+
+            var user = new ClaimsPrincipal(new ClaimsIdentity(new Claim[] {
+
+
+                new Claim(ClaimTypes.Name,"john")
+
+
+              }, "TestAuthentication"));
+
+            var httpContext = new DefaultHttpContext();
+            httpContext.User = user;
+
+            _postsControllerMock.ControllerContext = new ControllerContext
+            {
+
+                HttpContext = httpContext
+            };
+
+            // Act
+            var result = _postsControllerMock.DeletePost(postId);
+
+            // Assert
+            Assert.IsType<ForbidResult>(result);
+            _postsRepositoryMock.Verify(repo => repo.DeletePost(postId), Times.Never);
+        }
+
+        #endregion
+
+
+
     }
-
-
-
-
-
-
 }

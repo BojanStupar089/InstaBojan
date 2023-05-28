@@ -100,9 +100,10 @@ namespace InstaBojan.Controllers.PostsController
         [HttpPut("{id}")]
         public IActionResult UpdatePost(int id, [FromBody] PostDto updatePostDto)
         {
+            if (!ModelState.IsValid) return BadRequest();
 
             var username = User.FindFirstValue(ClaimTypes.Name);
-            if (!ModelState.IsValid) return BadRequest();
+            if (username == null) return NotFound();
 
             var updpost = _postsRepository.GetPostById(id); //post
             if (updpost == null) return NotFound();
