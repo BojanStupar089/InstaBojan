@@ -64,7 +64,7 @@ builder.Services.AddAuthentication(options =>
 
 //Add AutoMapper
 
-builder.Services.AddScoped<IUserRepository, IUserRepository>();
+builder.Services.AddScoped<IUserRepository, UsersRepository>();
 builder.Services.AddScoped<IProfilesRepository, ProfilesRepository>();
 builder.Services.AddScoped<IPostsRepository, PostsRepository>();
 builder.Services.AddScoped<IUserMapper, UserMapper>();
