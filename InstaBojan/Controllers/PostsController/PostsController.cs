@@ -97,6 +97,8 @@ namespace InstaBojan.Controllers.PostsController
             return Created("api/posts" + "/" + post.Id, postDto);
         }
 
+       
+
         [HttpPut("{id}")]
         public IActionResult UpdatePost(int id, [FromBody] PostDto updatePostDto)
         {
@@ -116,8 +118,7 @@ namespace InstaBojan.Controllers.PostsController
 
                 return Forbid();
             }
-            //// Check if the logged-in user is the owner of the post
-
+          
 
 
             var post = _postMapper.MapPost(updatePostDto);

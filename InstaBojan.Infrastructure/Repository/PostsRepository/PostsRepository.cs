@@ -1,5 +1,6 @@
 ﻿using InstaBojan.Core.Models;
 using InstaBojan.Infrastructure.Data;
+using Microsoft.AspNetCore.Http;
 
 namespace InstaBojan.Infrastructure.Repository.PostsRepository
 {
@@ -49,6 +50,27 @@ namespace InstaBojan.Infrastructure.Repository.PostsRepository
             _context.Posts.Add(post);
             _context.SaveChanges();
             return true;
+        }
+
+        public string UploadPostPicture(int postId, IFormFile file)
+        {
+
+            var profile = GetPostById(postId);
+            if (profile == null) return null;
+
+
+            var filePath = Path.Combine("C:\\Users\\Panonit\\Desktop\\pictures", file.FileName);
+
+            using (var stream = new FileStream(filePath, FileMode.Create))
+            {
+                file.CopyTo(stream);
+
+            }
+
+            profile.Picture = filePath;
+            _context.SaveChanges();
+
+            return filePath;
         }
 
         public bool DeletePost(int id)

@@ -1,4 +1,5 @@
 ﻿using InstaBojan.Core.Models;
+using Microsoft.AspNetCore.Http;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -18,7 +19,7 @@ namespace InstaBojan.Infrastructure.Repository.PostsRepository
         public bool UpdatePost(int id, Post post);
         public bool DeletePost(int id);
 
-      
+
       
         
     }

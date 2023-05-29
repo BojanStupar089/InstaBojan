@@ -103,7 +103,7 @@ namespace InstaBojan.Controllers.AuthControllers
 
 
 
-        public string GenerateToken(User user)
+        private string GenerateToken(User user)
         {
 
             var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes("super-long-secret-key"));

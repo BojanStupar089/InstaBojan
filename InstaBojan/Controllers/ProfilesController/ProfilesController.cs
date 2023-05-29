@@ -1,6 +1,10 @@
-﻿using InstaBojan.Dtos.ProfilesDto;
+﻿using InstaBojan.Core.Models;
+using InstaBojan.Dtos.PostsDto;
+using InstaBojan.Dtos.ProfilesDto;
+using InstaBojan.Infrastructure.Repository.IFileStorageService;
 using InstaBojan.Infrastructure.Repository.ProfilesRepository;
 using InstaBojan.Infrastructure.Repository.UsersRepository;
+using InstaBojan.Mappers.PostMapper;
 using InstaBojan.Mappers.ProfileMapper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -16,12 +20,16 @@ namespace InstaBojan.Controllers.ProfilesController
         private readonly IProfilesRepository _profilesRepository;
         private readonly IProfileMapper _profileMapper;
         private readonly IUserRepository _userRepository;
+        private readonly IFileStorageRepository _fileStorageRepository;
+        private readonly IPostMapper _postMapper;
 
-        public ProfilesController(IProfilesRepository profilesRepository, IProfileMapper profileMapper, IUserRepository userRepository)
+        public ProfilesController(IProfilesRepository profilesRepository, IProfileMapper profileMapper, IUserRepository userRepository,IFileStorageRepository fileStorageRepository,IPostMapper postMapper)
         {
             _profilesRepository = profilesRepository;
             _profileMapper = profileMapper;
             _userRepository = userRepository;
+            _fileStorageRepository = fileStorageRepository;
+            _postMapper = postMapper;
         }
 
         [HttpGet]
@@ -108,7 +116,7 @@ namespace InstaBojan.Controllers.ProfilesController
         }
 
 
-        [HttpPost("{followingId}")]
+        [HttpPost("followingId")]
         public IActionResult AddFollowing(int followingId)
         {
 
@@ -119,6 +127,71 @@ namespace InstaBojan.Controllers.ProfilesController
 
             _profilesRepository.AddFollowing(userProfile.Id, followingId);
             return Ok();
+        }
+
+        [HttpPost("{profileId}")]
+        public IActionResult UploadProfilePicture(int profileId, IFormFile file) {
+
+
+            if (file == null || file.Length == 0)
+            {
+
+                return BadRequest("Invalid file");
+            }
+
+            try
+            {
+
+                var filePath = _profilesRepository.UploadProfilePicture(profileId, file);
+                return Ok(filePath);
+            }
+            catch (FileNotFoundException ex)
+            {
+                return NotFound(ex.Message);
+            }
+
+            catch(Exception ex) 
+            {
+                return StatusCode(500, ex.Message);
+            }
+        
+        }
+
+        [HttpPost("{profileId}/posts")]
+        public IActionResult AddPostByProfile(int profileId,[FromForm]IFormFile picture,[FromForm]string text) 
+        {
+
+            
+        
+          if (picture == null || picture.Length == 0)
+            {
+
+                return BadRequest("Invalid picture file");
+            }
+
+          
+
+          try
+            {
+                var success = _profilesRepository.AddPostByProfile(profileId,picture,text);
+                if (success)
+                {
+                    return Ok("Post added succesfully");
+
+                }
+                else 
+                {
+                    return BadRequest("Failed to add the post");
+                }
+
+                
+            }
+             catch (Exception ex)
+            {
+                return StatusCode(500, ex.Message);
+            
+            }
+        
         }
 
         #endregion
@@ -145,7 +218,7 @@ namespace InstaBojan.Controllers.ProfilesController
         [HttpPut("{id}")]
         public IActionResult UpdateProfiles(int id, [FromBody] ProfileDto updateProfileDto)
         {
-
+            if(!ModelState.IsValid) return BadRequest(ModelState);
 
             var username = User.FindFirstValue(ClaimTypes.Name);
 
@@ -174,7 +247,9 @@ namespace InstaBojan.Controllers.ProfilesController
 
             var updProfile = _profileMapper.MapProfile(updateProfileDto);
 
-            _profilesRepository.UpdateProfile(id, updProfile);
+             _profilesRepository.UpdateProfile(id, updProfile);
+
+           
 
             return NoContent();
         }

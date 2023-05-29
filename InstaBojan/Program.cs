@@ -2,6 +2,7 @@ using FluentValidation.AspNetCore;
 using InstaBojan.Core.Models;
 
 using InstaBojan.Infrastructure.Data;
+using InstaBojan.Infrastructure.Repository.IFileStorageService;
 using InstaBojan.Infrastructure.Repository.PostsRepository;
 using InstaBojan.Infrastructure.Repository.ProfilesRepository;
 using InstaBojan.Infrastructure.Repository.TokenRepository;
@@ -64,12 +65,13 @@ builder.Services.AddAuthentication(options =>
 
 //Add AutoMapper
 
-builder.Services.AddScoped<IUserRepository, UsersRepository>();
+builder.Services.AddScoped<IUserRepository,UsersRepository>();
 builder.Services.AddScoped<IProfilesRepository, ProfilesRepository>();
 builder.Services.AddScoped<IPostsRepository, PostsRepository>();
 builder.Services.AddScoped<IUserMapper, UserMapper>();
 builder.Services.AddScoped<IProfileMapper, ProfileMapper>();
 builder.Services.AddScoped<IPostMapper, PostMapper>();
+builder.Services.AddScoped<IFileStorageRepository, LocalFileStorageRepository>();
 builder.Services.AddScoped<ITokenBlackListWrapper, TokenBlackListWrapper>();
 
 builder.Services.AddAutoMapper(typeof(Program));
