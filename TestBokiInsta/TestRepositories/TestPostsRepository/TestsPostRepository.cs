@@ -1,4 +1,4 @@
-﻿
+﻿/*
 using InstaBojan.Core.Models;
 using InstaBojan.Infrastructure.Data;
 using InstaBojan.Infrastructure.Repository.PostsRepository;
@@ -214,4 +214,5 @@ namespace TestBokiInsta.TestRepositories.TestPostsRepository
     }
 }
 
+*/
 

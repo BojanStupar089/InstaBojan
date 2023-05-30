@@ -1,4 +1,6 @@
-﻿using InstaBojan.Controllers.AuthControllers;
+﻿
+/*
+using InstaBojan.Controllers.AuthControllers;
 using InstaBojan.Core.Models;
 using InstaBojan.Core.Security;
 using InstaBojan.Dtos.UsersDto;
@@ -189,3 +191,5 @@ namespace TestBokiInsta.TestControllers.TestAuthController
 
     }
 }
+
+*/

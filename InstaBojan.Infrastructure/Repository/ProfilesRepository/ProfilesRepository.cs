@@ -114,8 +114,6 @@ namespace InstaBojan.Infrastructure.Repository.ProfilesRepository
                 updProfile.ProfileName = profile.ProfileName;
                 updProfile.Birthday = profile.Birthday;
                 updProfile.Gender = profile.Gender;
-                updProfile.FirstName = profile.FirstName;
-                updProfile.LastName = profile.LastName;
                 _context.Update(updProfile);
                 _context.SaveChanges();
 

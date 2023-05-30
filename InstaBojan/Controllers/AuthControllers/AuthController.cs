@@ -1,9 +1,13 @@
 ﻿using InstaBojan.Core.Models;
 using InstaBojan.Core.Security;
+using InstaBojan.Dtos;
+using InstaBojan.Dtos.ProfilesDto;
 using InstaBojan.Dtos.UsersDto;
+using InstaBojan.Infrastructure.Repository.ProfilesRepository;
 using InstaBojan.Infrastructure.Repository.UsersRepository;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Razor.TagHelpers;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
@@ -16,12 +20,14 @@ namespace InstaBojan.Controllers.AuthControllers
     public class AuthController : ControllerBase
     {
 
-        private readonly IUserRepository _repository;
+        private readonly IProfilesRepository _profilesRepository;
+        private readonly IUserRepository _userRepository;
 
 
-        public AuthController(IUserRepository repository)
+        public AuthController(IProfilesRepository repository,IUserRepository userRepository)
         {
-            _repository = repository;
+            _profilesRepository = repository;
+            _userRepository = userRepository;
 
         }
 
@@ -30,7 +36,7 @@ namespace InstaBojan.Controllers.AuthControllers
         public IActionResult Login(LoginModel loginModel)
         {
 
-            var user = _repository.GetUserByUserName(loginModel.UserName);
+            var user = _userRepository.GetUserByUserName(loginModel.UserName);
 
             if (user == null)
             {
@@ -54,23 +60,35 @@ namespace InstaBojan.Controllers.AuthControllers
         }
 
         [HttpPost("register")]
-        public IActionResult Register([FromBody] UserDto userDto)
+        public IActionResult Register([FromBody] RegistrationDto registrationDto)
         {
 
-            var user = _repository.GetUserByUserName(userDto.UserName);
-            if (user == null)
+           var profile = _profilesRepository.GetProfileByUserName(registrationDto.ProfileName);
+
+            var user = new User
             {
-                user = new User
+                UserName = registrationDto.UserName,
+                Password = BCrypt.Net.BCrypt.HashPassword(registrationDto.Password),
+                Email = registrationDto.Email,
+                Role =Role.User
+
+            };
+            
+            if (profile == null)
+            {
+                profile = new Profile
                 {
+                    ProfileName =registrationDto.ProfileName,
+                    ProfilePicture=registrationDto.ProfilePicture,
+                    Birthday = registrationDto.BirthDay,
+                    Gender = registrationDto.Gender,
+                    User=user
+                    
+               };
+                 
+                 _profilesRepository.AddProfile(profile);
 
-                    Email = userDto.Email,
-                    UserName = userDto.UserName,
-                    Password = BCrypt.Net.BCrypt.HashPassword(userDto.Password),
-                    Role = Role.User,
-                };
-                _repository.AddUser(user);
-
-                return Ok("User was created");
+                return Ok("Profile  created successfully");
             }
             else
                 return BadRequest("Already exists");

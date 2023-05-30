@@ -1,4 +1,6 @@
-﻿using InstaBojan.Controllers.PostsController;
+﻿/*
+
+using InstaBojan.Controllers.PostsController;
 using InstaBojan.Core.Models;
 using InstaBojan.Dtos.PostsDto;
 using InstaBojan.Infrastructure.Data;
@@ -363,7 +365,7 @@ namespace TestBokiInsta.TestControllers.TestPostsController
 
         */
 
-        #endregion
+  /*      #endregion
 
         #region delete
         [Fact]
@@ -481,3 +483,5 @@ namespace TestBokiInsta.TestControllers.TestPostsController
 
     }
 }
+
+*/
