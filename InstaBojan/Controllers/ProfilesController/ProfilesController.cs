@@ -127,10 +127,10 @@ namespace InstaBojan.Controllers.ProfilesController
         }
 
         [HttpPost("profileId")]
-        public IActionResult UploadProfilePicture(int profileId, IFormFile file) {
+        public IActionResult UploadProfilePicture(int profileId, IFormFile picture) {
 
 
-            if (file == null || file.Length == 0)
+            if (picture == null || picture.Length == 0)
             {
 
                 return BadRequest("Invalid file");
@@ -139,7 +139,7 @@ namespace InstaBojan.Controllers.ProfilesController
             try
             {
 
-                var filePath = _profilesRepository.UploadProfilePicture(profileId, file);
+                var filePath = _profilesRepository.UploadProfilePicture(profileId, picture);
                 return Ok(filePath);
             }
            catch(Exception ex) 
