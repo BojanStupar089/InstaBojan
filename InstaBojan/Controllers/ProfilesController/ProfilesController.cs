@@ -140,7 +140,9 @@ namespace InstaBojan.Controllers.ProfilesController
             {
 
                 var filePath = _profilesRepository.UploadProfilePicture(profileId, picture);
-                return Ok(filePath);
+               
+
+               return Created("api/profiles" + "/" + profileId, filePath);
             }
            catch(Exception ex) 
             {
@@ -174,7 +176,8 @@ namespace InstaBojan.Controllers.ProfilesController
                
                 if (result!=null)
                 {
-                    return Ok("Post added succesfully");
+                    
+                    return Created("api/profiles" + "/" + profileId + "/posts", result);
 
                 }
                 else 

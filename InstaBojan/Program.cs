@@ -84,7 +84,19 @@ builder.Services.AddControllers().AddFluentValidation(config =>
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
+builder.Services.AddCors(options =>
+{
 
+    options.AddDefaultPolicy(builder =>
+    {
+
+        builder.AllowAnyOrigin()
+                 .AllowAnyMethod()
+                 .AllowAnyHeader();
+
+    });
+
+});
 
 var app = builder.Build();
 
@@ -101,5 +113,7 @@ app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();
+
+app.UseCors();
 
 app.Run();

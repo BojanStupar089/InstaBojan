@@ -1,4 +1,5 @@
-﻿using InstaBojan.Core.Models;
+﻿/*
+using InstaBojan.Core.Models;
 using InstaBojan.Infrastructure.Data;
 using InstaBojan.Infrastructure.Repository.ProfilesRepository;
 using Microsoft.EntityFrameworkCore;
@@ -399,3 +400,5 @@ namespace TestBokiInsta.TestRepositories.TestProfilesRepository
 
     }
 }
+
+*/

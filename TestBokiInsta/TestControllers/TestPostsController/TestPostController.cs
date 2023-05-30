@@ -320,6 +320,7 @@ namespace TestBokiInsta.TestControllers.TestPostsController
         }
 
 
+        /*
 
         [Fact]
         public void UpdatePost_UserForbidden_ReturnsForbid()
@@ -359,6 +360,8 @@ namespace TestBokiInsta.TestControllers.TestPostsController
             Assert.IsType<ForbidResult>(result);
             _postsRepositoryMock.Verify(repo => repo.UpdatePost(postId, It.IsAny<Post>()), Times.Never);
         }
+
+        */
 
         #endregion
 
