@@ -9,7 +9,7 @@ namespace InstaBojan.Validators.ProfilesDtoValidator
         public GetProfilesDtoValidator() {
 
 
-            RuleFor(profile => profile.ProfilePicture).NotNull();
+            
             RuleFor(profile => profile.ProfileName).NotNull().Length(1, 30);
            
 

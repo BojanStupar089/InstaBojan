@@ -21,8 +21,8 @@ namespace InstaBojan.Infrastructure.Repository.ProfilesRepository
         public bool DeleteProfile(int id);
         public Profile GetProfileByPostId(int id);
         public void AddFollowing(int loggedInProfileId,int followingId);
-        public string UploadProfilePicture(int profileId, IFormFile pictures);
-        public bool AddPostByProfile(int profileId,IFormFile file,string text);
+        public string UploadProfilePicture(int profileId, IFormFile picture);
+        public string AddPostByProfile(Post post,IFormFile picture);
 
 
 

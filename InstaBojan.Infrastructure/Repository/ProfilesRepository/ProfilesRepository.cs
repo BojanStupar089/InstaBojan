@@ -1,7 +1,7 @@
 ﻿using Google.Api;
 using InstaBojan.Core.Models;
 using InstaBojan.Infrastructure.Data;
-using InstaBojan.Infrastructure.Repository.IFileStorageService;
+using InstaBojan.Infrastructure.Repository.PictureRepository;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -16,11 +16,13 @@ namespace InstaBojan.Infrastructure.Repository.ProfilesRepository
     {
 
         private readonly InstagramStoreContext _context;
-        private readonly IFileStorageRepository _fileStorage;
+        private readonly IPictureRepository _pictureRepository;
+       
 
-        public ProfilesRepository(InstagramStoreContext context)
+        public ProfilesRepository(InstagramStoreContext context,IPictureRepository pictureRepository)
         {
             _context = context;
+            _pictureRepository = pictureRepository;
         }
 
         #region get
@@ -152,47 +154,40 @@ namespace InstaBojan.Infrastructure.Repository.ProfilesRepository
 
         }
 
-        public string UploadProfilePicture(int profileId, IFormFile file)
+        public string UploadProfilePicture(int profileId, IFormFile picture)
         {
 
             var profile = GetProfileById(profileId);
             if (profile == null) return null;
 
+          
+           var picturePath=_pictureRepository.UploadPicture(picture);
 
-            var filePath = Path.Combine("C:\\Users\\Panonit\\Desktop\\pictures", file.FileName);
-
-            using (var stream = new FileStream(filePath, FileMode.Create))
-            {
-                file.CopyTo(stream);
-
-            }
-
-            profile.ProfilePicture = filePath;
+            profile.ProfilePicture = picturePath;
             _context.SaveChanges();
 
-            return filePath;
+            return picturePath;
         }
 
 
 
-        public bool AddPostByProfile(int profileId, IFormFile picture, string text)
+        public string AddPostByProfile(Post addPost, IFormFile picture)
         {
-            var profile = GetProfileById(profileId);
-            if (profile == null) return false;
+            var profile = GetProfileById(addPost.ProfileId);
+            if (profile == null) return null;
 
-            var picturePath = _fileStorage.SaveFile(picture);
+            var picturePath = _pictureRepository.UploadPicture(picture);
 
 
             var post = new Post
             {
-
                 Picture = picturePath,
-                Text = text
+                Text = addPost.Text
             };
 
             profile.Posts.Add(post); // preko liste da dodas. 
             _context.SaveChanges();
-            return true;
+            return picturePath;
         }
 
 

@@ -5,10 +5,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace InstaBojan.Infrastructure.Repository.IFileStorageService
+namespace InstaBojan.Infrastructure.Repository.PictureRepository
 {
-    public interface IFileStorageRepository
+    public interface IPictureRepository
     {
-        string SaveFile(IFormFile file);
+        string UploadPicture(IFormFile picture);
     }
 }

@@ -1,7 +1,6 @@
 ﻿using InstaBojan.Core.Models;
 using InstaBojan.Dtos.PostsDto;
 using InstaBojan.Dtos.ProfilesDto;
-using InstaBojan.Infrastructure.Repository.IFileStorageService;
 using InstaBojan.Infrastructure.Repository.ProfilesRepository;
 using InstaBojan.Infrastructure.Repository.UsersRepository;
 using InstaBojan.Mappers.PostMapper;
@@ -20,16 +19,14 @@ namespace InstaBojan.Controllers.ProfilesController
         private readonly IProfilesRepository _profilesRepository;
         private readonly IProfileMapper _profileMapper;
         private readonly IUserRepository _userRepository;
-        private readonly IFileStorageRepository _fileStorageRepository;
         private readonly IPostMapper _postMapper;
 
-        public ProfilesController(IProfilesRepository profilesRepository, IProfileMapper profileMapper, IUserRepository userRepository,IFileStorageRepository fileStorageRepository,IPostMapper postMapper)
+        public ProfilesController(IProfilesRepository profilesRepository, IProfileMapper profileMapper, IUserRepository userRepository,IPostMapper postMapper)
         {
             _profilesRepository = profilesRepository;
             _profileMapper = profileMapper;
             _userRepository = userRepository;
-            _fileStorageRepository = fileStorageRepository;
-            _postMapper = postMapper;
+           _postMapper = postMapper;
         }
 
         [HttpGet]
@@ -129,7 +126,7 @@ namespace InstaBojan.Controllers.ProfilesController
             return Ok();
         }
 
-        [HttpPost("{profileId}")]
+        [HttpPost("profileId")]
         public IActionResult UploadProfilePicture(int profileId, IFormFile file) {
 
 
@@ -145,12 +142,7 @@ namespace InstaBojan.Controllers.ProfilesController
                 var filePath = _profilesRepository.UploadProfilePicture(profileId, file);
                 return Ok(filePath);
             }
-            catch (FileNotFoundException ex)
-            {
-                return NotFound(ex.Message);
-            }
-
-            catch(Exception ex) 
+           catch(Exception ex) 
             {
                 return StatusCode(500, ex.Message);
             }
@@ -158,10 +150,15 @@ namespace InstaBojan.Controllers.ProfilesController
         }
 
         [HttpPost("{profileId}/posts")]
-        public IActionResult AddPostByProfile(int profileId,[FromForm]IFormFile picture,[FromForm]string text) 
+        public IActionResult AddPostByProfile(int profileId,[FromForm]PostDto dto,[FromForm]IFormFile picture) 
         {
 
-            
+            var addPost = new Post
+            {
+              ProfileId= profileId,
+              Text= dto.Text
+
+            };
         
           if (picture == null || picture.Length == 0)
             {
@@ -173,8 +170,9 @@ namespace InstaBojan.Controllers.ProfilesController
 
           try
             {
-                var success = _profilesRepository.AddPostByProfile(profileId,picture,text);
-                if (success)
+                var result = _profilesRepository.AddPostByProfile(addPost,picture);
+               
+                if (result!=null)
                 {
                     return Ok("Post added succesfully");
 

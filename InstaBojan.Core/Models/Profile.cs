@@ -11,7 +11,7 @@ namespace InstaBojan.Core.Models
     {
         public int Id { get; set; }
         public string ProfileName { get; set; }
-        public string ProfilePicture { get; set; }
+        public string? ProfilePicture { get; set; }
         public int UserId { get; set; }
         public User User { get; set; }
 
@@ -20,7 +20,7 @@ namespace InstaBojan.Core.Models
         public string LastName { get; set; }
 
         public DateTime Birthday { get; set; }
-        public List<Post> Posts { get; set; }
+        public List<Post> Posts { get;}=new List<Post>();
         public string? Gender { get; set; }
         public List<Profile>? Followers { get; set; }
         public List<Profile>? Following { get; set; }
