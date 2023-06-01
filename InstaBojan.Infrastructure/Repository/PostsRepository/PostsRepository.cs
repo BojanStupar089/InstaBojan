@@ -113,7 +113,7 @@ namespace InstaBojan.Infrastructure.Repository.PostsRepository
             if (profile != null)
             {
 
-                List<Profile> profiles = profile.Following;// dobijes listu povezanu sa korisnikom
+                profile.Following.Add(user.Id);// dobijes listu povezanu sa korisnikom
 
                // profiles.Add(profile);// dodas korisnikov profil direktno u listu
 
