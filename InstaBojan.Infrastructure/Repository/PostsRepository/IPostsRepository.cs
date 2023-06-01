@@ -1,10 +1,13 @@
-﻿using InstaBojan.Core.Models;
+﻿
+using InstaBojan.Core.Models;
 using Microsoft.AspNetCore.Http;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Mvc.NewtonsoftJson;
+using Azure;
 
 namespace InstaBojan.Infrastructure.Repository.PostsRepository
 {
@@ -20,7 +23,18 @@ namespace InstaBojan.Infrastructure.Repository.PostsRepository
         public bool DeletePost(int id);
 
 
-      
+
+
+        IEnumerable<Post> GetFeed(string username,int page,int pageSize);
+
+        Page<Post> GetPostByPublisher(Profile profile,IQueryable pageable);
+
+
+        Page<Post> GetExplore(string username, int page, int size);
         
+
+
+
+
     }
 }

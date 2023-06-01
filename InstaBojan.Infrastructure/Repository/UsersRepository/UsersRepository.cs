@@ -38,6 +38,17 @@ namespace InstaBojan.Infrastructure.Repository.UsersRepository
                 return null;
         }
 
+
+        public User GetUserByEmail(string email)
+        {
+            var user= _context.Users.FirstOrDefault(x=>x.Email == email);
+            if (user == null) return null;
+
+            return user;
+        }
+
+
+
         public User GetUserByUserName(string username)
         {
             var user = _context.Users.FirstOrDefault(x => x.UserName == username);
@@ -92,8 +103,16 @@ namespace InstaBojan.Infrastructure.Repository.UsersRepository
 
             return false;
         }
+        #endregion
 
-      
+        #region nisamuradio
+        public List<User> findFirst10ByUserNameContainingIgnoringCase(string query)
+        {
+            throw new NotImplementedException();
+        }
+
+
+
 
 
 

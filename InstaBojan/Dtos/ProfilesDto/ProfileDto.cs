@@ -7,7 +7,7 @@ namespace InstaBojan.Dtos.ProfilesDto
         public string? ProfileName { get; set; }
         public string? ProfilePicture { get; set; }
         public string Name {get; set;}
-        public string Bio { get; set;}
+      
 
         public UserDto UserDto { get; set; }
         

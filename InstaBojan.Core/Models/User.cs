@@ -17,6 +17,8 @@ namespace InstaBojan.Core.Models
         public string Email { get; set; }
         public Role Role { get; set; }
 
+        
+
        
      
 

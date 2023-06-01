@@ -67,6 +67,18 @@ namespace InstaBojan.Controllers.UsersController
 
         }
 
+        [Authorize(Roles ="Admin")]
+        [HttpGet("email")]
+        public IActionResult GetEmail(string email) 
+        { 
+        
+             var user=_userRepository.GetUserByEmail(email);
+            if(user==null) return NotFound("User doesn't exist");
+
+            var userDto= _mapper.MapUserDto(user);
+            return Ok(userDto);
+        }
+
         [Authorize(Roles = "User,Admin")]
         [HttpDelete("{id}")]
         public IActionResult DeleteUser(int id)

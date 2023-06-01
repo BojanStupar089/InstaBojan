@@ -24,6 +24,8 @@ namespace InstaBojan.Infrastructure.Repository.ProfilesRepository
         public string UploadProfilePicture(int profileId, IFormFile picture);
         public string AddPostByProfile(Post post,IFormFile picture);
 
+        List<Profile> findAllByViral(Boolean viral);
+
 
 
 

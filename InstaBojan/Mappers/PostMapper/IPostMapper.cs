@@ -8,6 +8,8 @@ namespace InstaBojan.Mappers.PostMapper
     {
         public PostDto MapGetPostDto(Post post);
         public Post MapPost(PostDto postDto);
+
+        public Post MapNewPost(NewPostDto postDto);
       
        
     }

@@ -59,11 +59,11 @@ namespace InstaBojan.Controllers.AuthControllers
             return Ok(new { token });
         }
 
-        [HttpPost("register")]
+        [HttpPost("registration")]
         public IActionResult Register([FromBody] RegistrationDto registrationDto)
         {
 
-           var profile = _profilesRepository.GetProfileByUserName(registrationDto.ProfileName);
+           var profile = _profilesRepository.GetProfileByUserName(registrationDto.UserName);
 
             var user = new User
             {
@@ -78,7 +78,7 @@ namespace InstaBojan.Controllers.AuthControllers
             {
                 profile = new Profile
                 {
-                    ProfileName =registrationDto.ProfileName,
+                    ProfileName =registrationDto.Name,
                     ProfilePicture=registrationDto.ProfilePicture,
                     Birthday = registrationDto.BirthDay,
                     Gender = registrationDto.Gender,
@@ -87,6 +87,7 @@ namespace InstaBojan.Controllers.AuthControllers
                };
                  
                  _profilesRepository.AddProfile(profile);
+                 
 
                 return Ok("Profile  created successfully");
             }

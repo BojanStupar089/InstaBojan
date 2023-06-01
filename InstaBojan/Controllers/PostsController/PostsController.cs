@@ -1,7 +1,9 @@
 ﻿using InstaBojan.Dtos.PostsDto;
+using InstaBojan.Dtos.ProfilesDto;
 using InstaBojan.Infrastructure.Repository.PostsRepository;
 using InstaBojan.Infrastructure.Repository.ProfilesRepository;
 using InstaBojan.Mappers.PostMapper;
+using InstaBojan.Mappers.ProfileMapper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
@@ -16,6 +18,7 @@ namespace InstaBojan.Controllers.PostsController
         private readonly IPostsRepository _postsRepository;
         private readonly IPostMapper _postMapper;
         private readonly IProfilesRepository _profilesRepository;
+        private readonly IProfileMapper _profileMapper;
 
         public PostsController(IPostsRepository postsRepository, IPostMapper postMapper, IProfilesRepository profilesRepository)
         {
@@ -24,17 +27,21 @@ namespace InstaBojan.Controllers.PostsController
             _profilesRepository = profilesRepository;
         }
 
-        [HttpGet]
+        [HttpGet()]
         public IActionResult GetPosts()
         {
 
             var posts = _postsRepository.GetPosts().Select(p => _postMapper.MapGetPostDto(p));
 
-
-            if (posts == null) return NotFound("Posts dont't exist");
-
+            if (!posts.Any()) 
+            {
+                return NotFound("No posts found");
+            }
+            
             return Ok(posts);
         }
+
+       
 
         [HttpGet("profileName")]
         public IActionResult GetPostsByProfileName(string profileName)
@@ -76,7 +83,7 @@ namespace InstaBojan.Controllers.PostsController
 
 
         [HttpPost]
-        public IActionResult AddPost([FromBody] PostDto postDto)
+        public IActionResult AddPost([FromBody] NewPostDto postDto)
         {
 
             var username = User.FindFirstValue(ClaimTypes.Name);
@@ -89,7 +96,7 @@ namespace InstaBojan.Controllers.PostsController
             }
 
 
-            var post = _postMapper.MapPost(postDto);
+            var post = _postMapper.MapNewPost(postDto);
             post.ProfileId = userProfile.Id;
 
             _postsRepository.AddPost(post);
@@ -127,13 +134,13 @@ namespace InstaBojan.Controllers.PostsController
             return NoContent();
         }
 
-        [HttpDelete("{id}")]
-        public IActionResult DeletePost(int id)
+        [HttpDelete("{postId}")]
+        public IActionResult DeletePost(int postId)
         {
 
             var username = User.FindFirstValue(ClaimTypes.Name); // ovo je lako
 
-            var delPost = _postsRepository.GetPostById(id); //koji bi post terebao biti obrisan
+            var delPost = _postsRepository.GetPostById(postId); //koji bi post terebao biti obrisan
             if (delPost == null) return NotFound();
 
 
@@ -146,12 +153,24 @@ namespace InstaBojan.Controllers.PostsController
                 return Forbid();
             }
 
-            _postsRepository.DeletePost(id);
+            _postsRepository.DeletePost(postId);
             return NoContent();
         }
 
 
 
+        [HttpGet("feed")]
+        public IActionResult GetFeed([FromQuery]int page ,[FromQuery] int pageSize)
+        {
+
+             var username=User.FindFirstValue(ClaimTypes.Name);
+
+            var feeds = _postsRepository.GetFeed(username,page,pageSize);
+
+            return Ok(feeds);
+             
+        
+        }
 
 
 

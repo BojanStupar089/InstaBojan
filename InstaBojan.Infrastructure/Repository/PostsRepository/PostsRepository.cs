@@ -1,6 +1,8 @@
-﻿using InstaBojan.Core.Models;
+﻿using Azure;
+using InstaBojan.Core.Models;
 using InstaBojan.Infrastructure.Data;
 using Microsoft.AspNetCore.Http;
+using Microsoft.EntityFrameworkCore;
 
 namespace InstaBojan.Infrastructure.Repository.PostsRepository
 {
@@ -17,6 +19,7 @@ namespace InstaBojan.Infrastructure.Repository.PostsRepository
         {
 
             return _context.Posts.ToList();
+
         }
 
         public List<Post> GetPostsByProfileName(string profileName)
@@ -100,11 +103,36 @@ namespace InstaBojan.Infrastructure.Repository.PostsRepository
 
         }
 
+        public IEnumerable<Post> GetFeed(string username, int page, int pageSize)
+        {
 
+            var user = _context.Users.SingleOrDefault(u => u.UserName == username);//ovo je user
 
+            var profile = _context.Profiles.SingleOrDefault(p => p.User == user);
 
+            if (profile != null)
+            {
 
+                List<Profile> profiles = profile.Following;// dobijes listu povezanu sa korisnikom
 
+               // profiles.Add(profile);// dodas korisnikov profil direktno u listu
 
+                IEnumerable<Post> posts = profiles.SelectMany(p => p.Posts).
+                    OrderByDescending(p => p.ProfileId).Skip((page - 1) * pageSize).Take(pageSize).ToList();
+            }
+
+            return Enumerable.Empty<Post>();
+
+        }
+
+        public Page<Post> GetPostByPublisher(Profile profile, IQueryable pageable)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Page<Post> GetExplore(string username, int page, int size)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

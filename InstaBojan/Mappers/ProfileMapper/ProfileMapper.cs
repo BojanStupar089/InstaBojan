@@ -23,14 +23,14 @@ namespace InstaBojan.Mappers.ProfileMapper
         public GetProfilesDto MapGetProfilesDto(Profile profile)
         {
             MapperConfiguration configuration = new MapperConfiguration(cfg => cfg.CreateMap<Profile, GetProfilesDto>()
-            .ForMember(dest => dest.NumberFollowers, opt => opt.MapFrom(src => src.Followers.Count))
-            .ForMember(dest=>dest.NumberFollowing,opt=>opt.MapFrom(src=>src.Following.Count)));
+            .ForMember(dest => dest.FollowersNumber, opt => opt.MapFrom(src=>src.Followers.Count))
+            .ForMember(dest=>dest.FollowingNumber,opt=>opt.MapFrom(src=>src.Following.Count))
+            .ForMember(dest=>dest.Name,opt=>opt.MapFrom(src=>src.ProfileName)));
+           
             Mapper mapper = new Mapper(configuration);
 
             return mapper.Map<GetProfilesDto>(profile);
         }
-
-       
 
        
     }

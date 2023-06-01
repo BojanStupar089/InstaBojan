@@ -188,7 +188,13 @@ namespace InstaBojan.Infrastructure.Repository.ProfilesRepository
             return picturePath;
         }
 
+        #endregion
 
+        #region nisamuradio
+        public List<Profile> findAllByViral(bool viral)
+        {
+            throw new NotImplementedException();
+        }
     }
 
 

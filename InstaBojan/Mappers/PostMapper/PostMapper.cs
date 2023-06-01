@@ -2,6 +2,7 @@
 using InstaBojan.Core.Models;
 using InstaBojan.Dtos;
 using InstaBojan.Dtos.PostsDto;
+using Microsoft.AspNetCore.Routing.Constraints;
 using Microsoft.Extensions.Hosting;
 
 namespace InstaBojan.Mappers.PostMapper
@@ -17,7 +18,14 @@ namespace InstaBojan.Mappers.PostMapper
             return mapper.Map<PostDto>(post);
         }
 
-       
+        public Post MapNewPost(NewPostDto postDto)
+        {
+            MapperConfiguration configuration = new MapperConfiguration(cfg => cfg.CreateMap<NewPostDto, Post>());
+            
+            Mapper mapper = new Mapper(configuration);
+
+            return mapper.Map<Post>(postDto);
+        }
 
         public Post MapPost(PostDto postDto)
         {

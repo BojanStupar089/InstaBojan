@@ -11,7 +11,7 @@ namespace InstaBojan.Dtos
         public DateTime BirthDay { get; set; }
         public string Gender { get; set; }
         public string Email { get; set; }
-        public string ProfileName {get; set;}
+        public string Name {get; set;}
        
        
         public  string? ProfilePicture { get; set; }

@@ -8,6 +8,8 @@ namespace InstaBojan.Mappers.ProfileMapper
     {
         public Profile MapProfile(ProfileDto profileDto);
         public GetProfilesDto MapGetProfilesDto(Profile profile);
+
+        
        
       
        
