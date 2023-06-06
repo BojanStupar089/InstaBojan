@@ -3,16 +3,20 @@ using InstaBojan.Core.Models;
 using InstaBojan.Infrastructure.Data;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
+using InstaBojan.Infrastructure.Repository;
+using InstaBojan.Infrastructure.Repository.ProfilesRepository;
 
 namespace InstaBojan.Infrastructure.Repository.PostsRepository
 {
     public class PostsRepository : IPostsRepository
     {
         private readonly InstagramStoreContext _context;
+        private IProfilesRepository _profileRepo;
 
-        public PostsRepository(InstagramStoreContext context)
+        public PostsRepository(InstagramStoreContext context, IProfilesRepository profilesRepo)
         {
             _context = context;
+            _profileRepo = profilesRepo;
         }
         #region get
         public List<Post> GetPosts()
@@ -103,27 +107,39 @@ namespace InstaBojan.Infrastructure.Repository.PostsRepository
 
         }
 
-        public IEnumerable<Post> GetFeed(string username, int page, int pageSize)
+
+        public List<Post> GetFeed(string username, int page, int pageSize)
         {
 
-            var user = _context.Users.SingleOrDefault(u => u.UserName == username);//ovo je user
+        //    User user = _context.Users.SingleOrDefault(u => u.UserName == username);//ovo je user
 
-            var profile = _context.Profiles.SingleOrDefault(p => p.User == user);
-
+            Profile profile =  _profileRepo.GetProfileByUserName(username);
+            List<Post> feedPost = new List<Post>();
             if (profile != null)
             {
+                List<Profile> getFeedFrom = profile.Following;
+               
+                foreach (var prof in getFeedFrom)
+                {
+                    for(int i=0; i<prof.Posts.Count; i++)
+                    {
+                        feedPost.Add(prof.Posts[i]);
+                    }
+                }
 
-                profile.Following.Add(user.Id);// dobijes listu povezanu sa korisnikom
+            //    profile.Following.Add(user.Id);// dobijes listu povezanu sa korisnikom
 
-               // profiles.Add(profile);// dodas korisnikov profil direktno u listu
+                // profiles.Add(profile);// dodas korisnikov profil direktno u listu
 
-                IEnumerable<Post> posts = profiles.SelectMany(p => p.Posts).
-                    OrderByDescending(p => p.ProfileId).Skip((page - 1) * pageSize).Take(pageSize).ToList();
+      //          IEnumerable<Post> posts = profiles.SelectMany(p => p.Posts).
+     //               OrderByDescending(p => p.ProfileId).Skip((page - 1) * pageSize).Take(pageSize).ToList();
             }
 
-            return Enumerable.Empty<Post>();
+            return feedPost ;
 
         }
+
+
 
         public Page<Post> GetPostByPublisher(Profile profile, IQueryable pageable)
         {

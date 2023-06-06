@@ -46,11 +46,7 @@ namespace InstaBojan.Controllers.PostsController
         [HttpGet("profileName")]
         public IActionResult GetPostsByProfileName(string profileName)
         {
-
-            var profile = _profilesRepository.GetProfileByProfileName(profileName);
-            if (profile == null) return NotFound();
-
-            var posts = _postsRepository.GetPostsByProfileName(profile.ProfileName).Select(p => _postMapper.MapGetPostDto(p));
+           var posts = _postsRepository.GetPostsByProfileName(profileName).Select(p => _postMapper.MapGetPostDto(p));
 
             if (posts == null) return NotFound();
 
@@ -69,11 +65,11 @@ namespace InstaBojan.Controllers.PostsController
 
         }
 
-        [HttpGet("userId")]
-        public IActionResult GetPostByProfileId(int userId)
+        [HttpGet("profileId")]
+        public IActionResult GetPostByProfileId(int profileId)
         {
 
-            var post = _postsRepository.GetPostByProfileId(userId);
+            var post = _postsRepository.GetPostByProfileId(profileId);
             if (post == null) return NotFound();
 
             var postDto = _postMapper.MapGetPostDto(post);
@@ -160,17 +156,19 @@ namespace InstaBojan.Controllers.PostsController
 
 
         [HttpGet("feed")]
-        public IActionResult GetFeed([FromQuery]int page ,[FromQuery] int pageSize)
+        public IActionResult GetFeed([FromQuery] int page, [FromQuery] int pageSize)
         {
 
-             var username=User.FindFirstValue(ClaimTypes.Name);
+            var username = User.FindFirstValue(ClaimTypes.Name);
 
-            var feeds = _postsRepository.GetFeed(username,page,pageSize);
+            var feeds = _postsRepository.GetFeed(username, page, pageSize);
 
             return Ok(feeds);
-             
-        
+
+
         }
+
+
 
 
 

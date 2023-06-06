@@ -25,7 +25,7 @@ namespace InstaBojan.Infrastructure.Repository.PostsRepository
 
 
 
-        IEnumerable<Post> GetFeed(string username,int page,int pageSize);
+        List<Post> GetFeed(string username,int page,int pageSize);
 
         Page<Post> GetPostByPublisher(Profile profile,IQueryable pageable);
 

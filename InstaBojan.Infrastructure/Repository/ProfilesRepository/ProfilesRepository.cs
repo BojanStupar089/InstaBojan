@@ -195,6 +195,32 @@ namespace InstaBojan.Infrastructure.Repository.ProfilesRepository
         {
             throw new NotImplementedException();
         }
+
+        public void FollowUnFollow(string userName, string otherUsername)
+        {
+            var profile = _context.Profiles.Include(p => p.Following).FirstOrDefault(p => p.ProfileName == userName);
+            var profileToChangeStatus = GetProfileByProfileName(otherUsername);
+
+            if (profile != null && profileToChangeStatus != null)
+            {
+                profile.Following.Add(profileToChangeStatus);
+                _context.SaveChanges();
+            }
+        }
+
+        public bool checkIfProfileFollowsProfile(string profileName, string followedProfileName)
+        {
+            var profile = _context.Profiles.Include(p => p.Following).FirstOrDefault(p => p.ProfileName == profileName);
+            var profileToChangeStatus = GetProfileByProfileName(followedProfileName);
+
+            if (profile != null && profileToChangeStatus != null)
+            {
+                profile.Following.Contains(profileToChangeStatus);
+                return false;
+            }
+
+            return true;
+        }
     }
 
 

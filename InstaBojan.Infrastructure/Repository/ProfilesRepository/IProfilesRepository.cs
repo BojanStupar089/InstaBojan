@@ -26,6 +26,10 @@ namespace InstaBojan.Infrastructure.Repository.ProfilesRepository
 
         List<Profile> findAllByViral(Boolean viral);
 
+        public void FollowUnFollow(string profileName, string otherProfileName);
+
+        bool checkIfProfileFollowsProfile(string profileName, string followedProfileName);
+
 
 
 

@@ -1,4 +1,5 @@
 ﻿using InstaBojan.Core.Models;
+using InstaBojan.Dtos.ChangeFollowingStatusDto;
 using InstaBojan.Dtos.PostsDto;
 using InstaBojan.Dtos.ProfilesDto;
 using InstaBojan.Infrastructure.Repository.ProfilesRepository;
@@ -29,6 +30,7 @@ namespace InstaBojan.Controllers.ProfilesController
            _postMapper = postMapper;
         }
 
+        #region get
         [HttpGet]
         public IActionResult GetProfiles()
         {
@@ -38,17 +40,17 @@ namespace InstaBojan.Controllers.ProfilesController
             return Ok(profiles);
         }
 
-        [HttpGet("{id}")]
-        public IActionResult GetProfileById(int id)
-        {
+        //[HttpGet("{id}")]
+        //public IActionResult GetProfileById(int id)
+        //{
 
-            var profile = _profilesRepository.GetProfileById(id);
-            if (profile == null) return NotFound();
+        //    var profile = _profilesRepository.GetProfileById(id);
+        //    if (profile == null) return NotFound();
 
-            var profileDto = _profileMapper.MapGetProfilesDto(profile);
-            return Ok(profileDto);
+        //    var profileDto = _profileMapper.MapGetProfilesDto(profile);
+        //    return Ok(profileDto);
 
-        }
+        //}
 
         [HttpGet("userId")]
         public IActionResult GetProfileByUserId(int userId)
@@ -61,7 +63,7 @@ namespace InstaBojan.Controllers.ProfilesController
             return Ok(profileDto);
         }
 
-        [HttpGet("username")]
+        [HttpGet("{username}")]
         public IActionResult GetProfileByUserName(string username)
         {
 
@@ -83,6 +85,16 @@ namespace InstaBojan.Controllers.ProfilesController
             return Ok(profileDto);
 
         }
+
+        [HttpGet("follow-check")]
+        public bool CheckIfUserFollowsUser([FromQuery] string username, [FromQuery] string followedUsername)
+        {
+
+            return _profilesRepository.checkIfProfileFollowsProfile(username, followedUsername);
+        
+        }
+
+        #endregion
         #region post
         [HttpPost]
         public IActionResult AddProfiles([FromBody] ProfileDto profileDto)
@@ -112,18 +124,34 @@ namespace InstaBojan.Controllers.ProfilesController
             return Created("api/profiles" + "/" + profile.Id, profileDto);
         }
 
+        /*
+          [HttpPost("followingId")]
+          public IActionResult AddFollowing(int followingId)
+          {
 
-        [HttpPost("followingId")]
-        public IActionResult AddFollowing(int followingId)
+              var username = User.FindFirstValue(ClaimTypes.Name);
+              var userProfile = _profilesRepository.GetProfileByUserName(username);
+
+              if (userProfile == null) return NotFound();
+
+              _profilesRepository.AddFollowing(userProfile.Id, followingId);
+              return Ok();
+          }
+
+          */
+
+        [HttpPost("follow-unfollow")]
+        public IActionResult FollowUnfollow([FromBody]ChangeFollowingStatusDto dto)
         {
+            var profile = _profilesRepository.GetProfileByUserName(dto.MyUserName);
+            if(profile == null) return NotFound();
 
-            var username = User.FindFirstValue(ClaimTypes.Name);
-            var userProfile = _profilesRepository.GetProfileByUserName(username);
+            var profileChangeStatus = _profilesRepository.GetProfileByUserName(dto.OtherUserName);
+            if (profileChangeStatus == null) return NotFound();
 
-            if (userProfile == null) return NotFound();
-
-            _profilesRepository.AddFollowing(userProfile.Id, followingId);
+            _profilesRepository.FollowUnFollow(profile.ProfileName,profileChangeStatus.ProfileName);
             return Ok();
+        
         }
 
         [HttpPost("profileId")]
