@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
@@ -15,9 +16,13 @@ namespace InstaBojan.Core.Models
         public int UserId { get; set; }
         public User User { get; set; }
         public DateTime Birthday { get; set; }
-        public List<Post> Posts { get;}=new List<Post>();
+
+        [JsonIgnore]
+        public List<Post>? Posts { get; set;}
         public string? Gender { get; set; }
+        [JsonIgnore]
         public List<Profile>? Followers { get; set; }
+        [JsonIgnore]
         public List<Profile>? Following { get; set; }
        
     }

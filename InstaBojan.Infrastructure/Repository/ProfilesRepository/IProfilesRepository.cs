@@ -19,13 +19,6 @@ namespace InstaBojan.Infrastructure.Repository.ProfilesRepository
         public bool AddProfile(Profile profile);
         public bool UpdateProfile(int id,Profile profile);
         public bool DeleteProfile(int id);
-        public Profile GetProfileByPostId(int id);
-        public void AddFollowing(int loggedInProfileId,int followingId);
-        public string UploadProfilePicture(int profileId, IFormFile picture);
-        public string AddPostByProfile(Post post,IFormFile picture);
-
-        List<Profile> findAllByViral(Boolean viral);
-
         public void FollowUnFollow(string profileName, string otherProfileName);
 
         bool checkIfProfileFollowsProfile(string profileName, string followedProfileName);

@@ -1,4 +1,5 @@
-﻿using InstaBojan.Dtos.PostsDto;
+﻿using InstaBojan.Core.Models;
+using InstaBojan.Dtos.PostsDto;
 using InstaBojan.Dtos.ProfilesDto;
 using InstaBojan.Infrastructure.Repository.PostsRepository;
 using InstaBojan.Infrastructure.Repository.ProfilesRepository;
@@ -46,11 +47,16 @@ namespace InstaBojan.Controllers.PostsController
         [HttpGet("profileName")]
         public IActionResult GetPostsByProfileName(string profileName)
         {
-           var posts = _postsRepository.GetPostsByProfileName(profileName).Select(p => _postMapper.MapGetPostDto(p));
+          // var posts = _postsRepository.GetPostsByProfileName(profileName).Select(p => _postMapper.MapGetPostDto(p));
 
+            var posts=_postsRepository.GetPostsByProfileName(profileName);
             if (posts == null) return NotFound();
 
-            return Ok(posts);
+            var postsDto = _postMapper.MapListPostDto(posts);
+
+           
+
+            return Ok(postsDto);
         }
 
         [HttpGet("{id}")]
@@ -69,10 +75,10 @@ namespace InstaBojan.Controllers.PostsController
         public IActionResult GetPostByProfileId(int profileId)
         {
 
-            var post = _postsRepository.GetPostByProfileId(profileId);
+            var post = _postsRepository.GetPostsByProfileId(profileId);
             if (post == null) return NotFound();
 
-            var postDto = _postMapper.MapGetPostDto(post);
+            var postDto = _postMapper.MapListPostDto(post);
             return Ok(postDto);
 
         }

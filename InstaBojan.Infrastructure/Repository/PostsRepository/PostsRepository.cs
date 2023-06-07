@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using InstaBojan.Infrastructure.Repository;
 using InstaBojan.Infrastructure.Repository.ProfilesRepository;
+using InstaBojan.Core.Pagination;
 
 namespace InstaBojan.Infrastructure.Repository.PostsRepository
 {
@@ -40,9 +41,9 @@ namespace InstaBojan.Infrastructure.Repository.PostsRepository
             return post;
         }
 
-        public Post GetPostByProfileId(int id)
+        public List<Post> GetPostsByProfileId(int id)
         {
-            var post = _context.Posts.FirstOrDefault(p => p.ProfileId == id);
+            var post = _context.Posts.Where(p => p.ProfileId == id).ToList();
             if (post == null) return null;
 
             return post;
@@ -108,36 +109,62 @@ namespace InstaBojan.Infrastructure.Repository.PostsRepository
         }
 
 
+
         public List<Post> GetFeed(string username, int page, int pageSize)
         {
 
-        //    User user = _context.Users.SingleOrDefault(u => u.UserName == username);//ovo je user
-
-            Profile profile =  _profileRepo.GetProfileByUserName(username);
-            List<Post> feedPost = new List<Post>();
+            Profile profile = _profileRepo.GetProfileByUserName(username); // profil
+            List<Post> feedPost = new List<Post>(); //lista postova
             if (profile != null)
             {
-                List<Profile> getFeedFrom = profile.Following;
-               
+                List<Profile> getFeedFrom = profile.Following; // profili koje pratim
+
                 foreach (var prof in getFeedFrom)
                 {
-                    for(int i=0; i<prof.Posts.Count; i++)
-                    {
-                        feedPost.Add(prof.Posts[i]);
-                    }
+                    List<Post> posts = GetPostsByProfileId(prof.Id);
+                    feedPost.AddRange(posts);
                 }
 
-            //    profile.Following.Add(user.Id);// dobijes listu povezanu sa korisnikom
 
-                // profiles.Add(profile);// dodas korisnikov profil direktno u listu
+                return feedPost;
 
-      //          IEnumerable<Post> posts = profiles.SelectMany(p => p.Posts).
-     //               OrderByDescending(p => p.ProfileId).Skip((page - 1) * pageSize).Take(pageSize).ToList();
             }
 
-            return feedPost ;
+            return null;
 
         }
+
+
+
+
+        /*
+            public PagedList<Post> GetFeed(string username, int page, int pageSize)
+            {
+            var profile = _profileRepo.GetProfileByUserName(username);
+
+            if (profile == null)
+            {
+                // Profile not found, return an empty paginated list
+                return new PagedList<Post>(new List<Post>(), page, pageSize, 0);
+            }
+
+            var followedProfiles = profile.Following;
+            var postQuery = _context.Posts
+                .Where(p => followedProfiles.Contains(p.Publisher))
+                .OrderByDescending(p => p.Id);
+
+            var totalCount = postQuery.Count();
+
+            var pagedPosts = postQuery
+                .Skip((page - 1) * pageSize)
+                .Take(pageSize)
+                .ToList();
+
+            return new PagedList<Post>(pagedPosts, page, pageSize, totalCount);
+        }
+
+        */
+
 
 
 
@@ -146,9 +173,6 @@ namespace InstaBojan.Infrastructure.Repository.PostsRepository
             throw new NotImplementedException();
         }
 
-        public Page<Post> GetExplore(string username, int page, int size)
-        {
-            throw new NotImplementedException();
-        }
+     
     }
 }

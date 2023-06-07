@@ -10,7 +10,9 @@ namespace InstaBojan.Mappers.PostMapper
         public Post MapPost(PostDto postDto);
 
         public Post MapNewPost(NewPostDto postDto);
-      
-       
+        public List<PostDto> MapListPostDto(List<Post> posts);
+
+
+
     }
 }

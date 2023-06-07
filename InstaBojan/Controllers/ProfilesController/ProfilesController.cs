@@ -2,6 +2,7 @@
 using InstaBojan.Dtos.ChangeFollowingStatusDto;
 using InstaBojan.Dtos.PostsDto;
 using InstaBojan.Dtos.ProfilesDto;
+using InstaBojan.Infrastructure.Repository.PostsRepository;
 using InstaBojan.Infrastructure.Repository.ProfilesRepository;
 using InstaBojan.Infrastructure.Repository.UsersRepository;
 using InstaBojan.Mappers.PostMapper;
@@ -18,16 +19,22 @@ namespace InstaBojan.Controllers.ProfilesController
     public class ProfilesController : ControllerBase
     {
         private readonly IProfilesRepository _profilesRepository;
+        private readonly IPostsRepository _postsRepository;
         private readonly IProfileMapper _profileMapper;
         private readonly IUserRepository _userRepository;
         private readonly IPostMapper _postMapper;
 
-        public ProfilesController(IProfilesRepository profilesRepository, IProfileMapper profileMapper, IUserRepository userRepository,IPostMapper postMapper)
+        public ProfilesController(IProfilesRepository profilesRepository,
+            IProfileMapper profileMapper,
+            IUserRepository userRepository,
+            IPostsRepository postRepository,
+            IPostMapper postMapper)
         {
             _profilesRepository = profilesRepository;
             _profileMapper = profileMapper;
             _userRepository = userRepository;
-           _postMapper = postMapper;
+            _postMapper = postMapper;
+            _postsRepository = postRepository;
         }
 
         #region get
@@ -40,17 +47,17 @@ namespace InstaBojan.Controllers.ProfilesController
             return Ok(profiles);
         }
 
-        //[HttpGet("{id}")]
-        //public IActionResult GetProfileById(int id)
-        //{
+        [HttpGet("{id}")]
+        public IActionResult GetProfileById(int id)
+        {
 
-        //    var profile = _profilesRepository.GetProfileById(id);
-        //    if (profile == null) return NotFound();
+           var profile = _profilesRepository.GetProfileById(id);
+            if (profile == null) return NotFound();
 
-        //    var profileDto = _profileMapper.MapGetProfilesDto(profile);
-        //    return Ok(profileDto);
+          var profileDto = _profileMapper.MapGetProfilesDto(profile);
+           return Ok(profileDto);
 
-        //}
+        }
 
         [HttpGet("userId")]
         public IActionResult GetProfileByUserId(int userId)
@@ -63,7 +70,7 @@ namespace InstaBojan.Controllers.ProfilesController
             return Ok(profileDto);
         }
 
-        [HttpGet("{username}")]
+        [HttpGet("username")]
         public IActionResult GetProfileByUserName(string username)
         {
 
@@ -91,7 +98,7 @@ namespace InstaBojan.Controllers.ProfilesController
         {
 
             return _profilesRepository.checkIfProfileFollowsProfile(username, followedUsername);
-        
+
         }
 
         #endregion
@@ -124,104 +131,24 @@ namespace InstaBojan.Controllers.ProfilesController
             return Created("api/profiles" + "/" + profile.Id, profileDto);
         }
 
-        /*
-          [HttpPost("followingId")]
-          public IActionResult AddFollowing(int followingId)
-          {
-
-              var username = User.FindFirstValue(ClaimTypes.Name);
-              var userProfile = _profilesRepository.GetProfileByUserName(username);
-
-              if (userProfile == null) return NotFound();
-
-              _profilesRepository.AddFollowing(userProfile.Id, followingId);
-              return Ok();
-          }
-
-          */
+       
 
         [HttpPost("follow-unfollow")]
-        public IActionResult FollowUnfollow([FromBody]ChangeFollowingStatusDto dto)
+        public IActionResult FollowUnfollow([FromBody] ChangeFollowingStatusDto dto)
         {
             var profile = _profilesRepository.GetProfileByUserName(dto.MyUserName);
-            if(profile == null) return NotFound();
+            if (profile == null) return NotFound();
 
             var profileChangeStatus = _profilesRepository.GetProfileByUserName(dto.OtherUserName);
             if (profileChangeStatus == null) return NotFound();
 
-            _profilesRepository.FollowUnFollow(profile.ProfileName,profileChangeStatus.ProfileName);
+            _profilesRepository.FollowUnFollow(profile.ProfileName, profileChangeStatus.ProfileName);
             return Ok();
-        
+
         }
 
-        [HttpPost("profileId")]
-        public IActionResult UploadProfilePicture(int profileId, IFormFile picture) {
+       
 
-
-            if (picture == null || picture.Length == 0)
-            {
-
-                return BadRequest("Invalid file");
-            }
-
-            try
-            {
-
-                var filePath = _profilesRepository.UploadProfilePicture(profileId, picture);
-               
-
-               return Created("api/profiles" + "/" + profileId, filePath);
-            }
-           catch(Exception ex) 
-            {
-                return StatusCode(500, ex.Message);
-            }
-        
-        }
-
-        [HttpPost("{profileId}/posts")]
-        public IActionResult AddPostByProfile(int profileId,[FromForm]PostDto dto,[FromForm]IFormFile picture) 
-        {
-
-            var addPost = new Post
-            {
-              ProfileId= profileId,
-              Text= dto.Text
-
-            };
-        
-          if (picture == null || picture.Length == 0)
-            {
-
-                return BadRequest("Invalid picture file");
-            }
-
-          
-
-          try
-            {
-                var result = _profilesRepository.AddPostByProfile(addPost,picture);
-               
-                if (result!=null)
-                {
-                    
-                    return Created("api/profiles" + "/" + profileId + "/posts", result);
-
-                }
-                else 
-                {
-                    return BadRequest("Failed to add the post");
-                }
-
-                
-            }
-             catch (Exception ex)
-            {
-                return StatusCode(500, ex.Message);
-            
-            }
-        
-        }
 
         #endregion
 
@@ -247,7 +174,7 @@ namespace InstaBojan.Controllers.ProfilesController
         [HttpPut("{id}")]
         public IActionResult UpdateProfiles(int id, [FromBody] ProfileDto updateProfileDto)
         {
-            if(!ModelState.IsValid) return BadRequest(ModelState);
+            if (!ModelState.IsValid) return BadRequest(ModelState);
 
             var username = User.FindFirstValue(ClaimTypes.Name);
 
@@ -276,9 +203,9 @@ namespace InstaBojan.Controllers.ProfilesController
 
             var updProfile = _profileMapper.MapProfile(updateProfileDto);
 
-             _profilesRepository.UpdateProfile(id, updProfile);
+            _profilesRepository.UpdateProfile(id, updProfile);
 
-           
+
 
             return NoContent();
         }
