@@ -17,11 +17,11 @@ namespace InstaBojan.Dtos.PostsDto
         public DateTime DateTime { get; set; }//from PostContainer TagRibbon
        
         public int NumOfReactions { get; set; }//from PostContainer reactionsBar
-        private string? Location {get; set;}
-        private List<string>? Categories {get; set;}
+        public string? Location {get; set;}
+        public List<string>? Categories {get; set;}
         
-        private DateTime? Time {get; set;}
-        private int NumOfShares {get; set;}
-        private bool Viral {get; set;}
+        public DateTime? Time {get; set;}
+        public int NumOfShares {get; set;}
+        public bool Viral {get; set;}
     }
 }

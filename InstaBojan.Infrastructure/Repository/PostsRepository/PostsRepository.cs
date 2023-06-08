@@ -41,6 +41,7 @@ namespace InstaBojan.Infrastructure.Repository.PostsRepository
             return post;
         }
 
+        /*
         public List<Post> GetPostsByProfileId(int id)
         {
             var post = _context.Posts.Where(p => p.ProfileId == id).ToList();
@@ -48,6 +49,19 @@ namespace InstaBojan.Infrastructure.Repository.PostsRepository
 
             return post;
         }
+
+        */
+
+        public IEnumerable<Post> GetPostsByProfileId(int id)
+        {
+            var post = _context.Posts.Where(p => p.ProfileId == id).ToList();
+            if (post == null) return null;
+
+            return post;
+        }
+
+
+
 
         #endregion
 
@@ -110,7 +124,9 @@ namespace InstaBojan.Infrastructure.Repository.PostsRepository
 
 
 
-        public List<Post> GetFeed(string username, int page, int pageSize)
+
+        /*
+        public List<Post> GetFeed(string username, int page=1, int pageSize=5)
         {
 
             Profile profile = _profileRepo.GetProfileByUserName(username); // profil
@@ -125,14 +141,74 @@ namespace InstaBojan.Infrastructure.Repository.PostsRepository
                     feedPost.AddRange(posts);
                 }
 
+                
+                
+                int skip = (page - 1) * pageSize;
+                feedPost = feedPost.Skip(skip).Take(pageSize).ToList();
+
+               
 
                 return feedPost;
 
             }
 
+
+
             return null;
 
         }
+
+        */
+
+
+        /*
+        
+         public IEnumerable<Post> GetFeed(string username, int page=1, int pageSize=5)
+         {
+
+             Profile profile = _profileRepo.GetProfileByUserName(username); // profil
+            //lista postova
+             
+            if (profile != null)
+             {
+                 IEnumerable<Profile> getFeedFrom = profile.Following;// profili koje pratim   
+
+                List<Post> feedPosts = new List<Post>();
+
+                 foreach (var prof in getFeedFrom)
+                 {
+                     IEnumerable<Post> posts = GetPostsByProfileId(prof.Id);
+                    feedPosts.AddRange(posts);
+                 }
+
+
+
+                 int skip = page * pageSize;
+                IEnumerable<Post> paginatedPosts = feedPosts.Skip(skip).Take(pageSize);
+
+
+
+                 return paginatedPosts;
+
+             }
+
+
+
+             return Enumerable.Empty<Post>();
+
+         }
+
+        */
+
+
+
+         
+
+
+
+
+
+
 
 
 
@@ -173,6 +249,32 @@ namespace InstaBojan.Infrastructure.Repository.PostsRepository
             throw new NotImplementedException();
         }
 
-     
+        public PagedList<Post> GetFeed(string username, int page = 0, int pageSize=4)
+        {
+            Profile profile = _profileRepo.GetProfileByUserName(username);
+            
+            List<Post> feedPosts = new List<Post>();
+
+            if (profile != null)
+            {
+                IEnumerable<Profile> getFeedFrom = profile.Following;
+
+                foreach (var prof in getFeedFrom)
+                {
+                    IEnumerable<Post> posts = GetPostsByProfileId(prof.Id);
+                    feedPosts.AddRange(posts);
+                }
+
+                int totalCount = feedPosts.Count;
+                int totalPages = (int)Math.Ceiling(totalCount / (double)pageSize);
+                int skip = page  * pageSize; 
+                List<Post> paginatedPosts = feedPosts.Skip(skip).Take(pageSize).ToList();
+
+                return new PagedList<Post>(paginatedPosts, page, totalPages, pageSize, totalCount);
+            }
+
+            return new PagedList<Post>(new List<Post>(), 1, 1, pageSize, 0);
+        
+    }
     }
 }

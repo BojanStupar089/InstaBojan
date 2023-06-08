@@ -6,21 +6,29 @@ using System.Threading.Tasks;
 
 namespace InstaBojan.Core.Pagination
 {
-    public class PagedList<Post>
+    public class PagedList<T>:List<T>
     {
 
-        public List<Post> Items { get; }
-        public int PageNumber { get; }
-        public int PageSize { get; }
-        public int TotalCount { get; }
-        public int TotalPages => (int)Math.Ceiling((double)TotalCount / PageSize);
+       public int CurrentPage { get; set;}
+        public int TotalPages { get; set;}
 
-        public PagedList(List<Post> items, int pageNumber, int pageSize, int totalCount)
+        public int PageSize { get; set;}
+
+        public int TotalCount { get; set;}
+
+        public bool HasPrevious => CurrentPage > 1;
+        public bool HasNext=>CurrentPage < TotalPages;
+
+
+
+        public PagedList(List<T> items, int currentPage, int totalPages, int pageSize, int totalCount)
         {
-            Items = items;
-            PageNumber = pageNumber;
+            AddRange(items);
+            CurrentPage = currentPage;
+            TotalPages = totalPages;
             PageSize = pageSize;
             TotalCount = totalCount;
         }
+
     }
 }

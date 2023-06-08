@@ -78,7 +78,7 @@ namespace InstaBojan.Controllers.PostsController
             var post = _postsRepository.GetPostsByProfileId(profileId);
             if (post == null) return NotFound();
 
-            var postDto = _postMapper.MapListPostDto(post);
+            var postDto = _postMapper.MapEnumPostDto(post);
             return Ok(postDto);
 
         }
@@ -162,16 +162,16 @@ namespace InstaBojan.Controllers.PostsController
 
 
         [HttpGet("feed")]
-        public IActionResult GetFeed([FromQuery] int page, [FromQuery] int pageSize)
+        public IActionResult GetFeed([FromQuery] int page, [FromQuery] int size)
         {
 
             var username = User.FindFirstValue(ClaimTypes.Name);
+            var feeds = _postsRepository.GetFeed(username, page, size);
+            
+            
 
-            var feeds = _postsRepository.GetFeed(username, page, pageSize);
-
-            return Ok(feeds);
-
-
+            var feedsDto=_postMapper.MapEnumPostDto(feeds);
+            return Ok(feedsDto);
         }
 
 

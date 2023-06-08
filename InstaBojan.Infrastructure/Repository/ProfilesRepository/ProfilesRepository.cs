@@ -29,7 +29,7 @@ namespace InstaBojan.Infrastructure.Repository.ProfilesRepository
 
         public List<Profile> GetProfiles()
         {
-            return _context.Profiles.Include(p => p.Followers).Include(p => p.Following).Include(p => p.Posts).ToList();
+            return _context.Profiles.Include(u=>u.User).Include(p => p.Followers).Include(p => p.Following).Include(p => p.Posts).ToList();
         }
 
         public Profile GetProfileById(int id)
@@ -43,7 +43,7 @@ namespace InstaBojan.Infrastructure.Repository.ProfilesRepository
 
         public Profile GetProfileByUserName(string username)
         {
-            var profile = _context.Profiles.Include(p => p.Posts).Include(p => p.Followers).Include(p => p.Following).FirstOrDefault(p => p.User.UserName == username);
+            var profile = _context.Profiles.Include(u=>u.User).Include(p => p.Posts).Include(p => p.Followers).Include(p => p.Following).FirstOrDefault(p => p.User.UserName == username);
             if (profile == null) return null;
 
             return profile;

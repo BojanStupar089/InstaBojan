@@ -17,7 +17,8 @@ namespace InstaBojan.Infrastructure.Repository.PostsRepository
 
         List<Post> GetPostsByProfileName(string profileName);
         public Post GetPostById(int id);
-        public List<Post> GetPostsByProfileId(int id);
+        // public List<Post> GetPostsByProfileId(int id);
+        public IEnumerable<Post> GetPostsByProfileId(int id);
         public bool AddPost(Post post);
         public bool UpdatePost(int id, Post post);
         public bool DeletePost(int id);
@@ -25,8 +26,10 @@ namespace InstaBojan.Infrastructure.Repository.PostsRepository
 
 
 
-        // PagedList<Post> GetFeed(string username,int page,int pageSize);
-        List<Post> GetFeed(string username, int page, int pageSize);
+         PagedList<Post> GetFeed(string username,int page,int pageSize);
+        // List<Post> GetFeed(string username, int page, int pageSize);
+
+        //IEnumerable<Post> GetFeed(string username, int page, int pageSize);
 
         Page<Post> GetPostByPublisher(Profile profile,IQueryable pageable);
 

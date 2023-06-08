@@ -4,6 +4,7 @@ using InstaBojan.Dtos;
 using InstaBojan.Dtos.PostsDto;
 using Microsoft.AspNetCore.Routing.Constraints;
 using Microsoft.Extensions.Hosting;
+using Profile = InstaBojan.Core.Models.Profile;
 
 namespace InstaBojan.Mappers.PostMapper
 {
@@ -44,6 +45,24 @@ namespace InstaBojan.Mappers.PostMapper
             List<PostDto> postDtos = mapper.Map<List<PostDto>>(posts);
             return postDtos;
 
+        }
+
+        public IEnumerable<PostDto> MapEnumPostDto(IEnumerable<Post> posts)
+        {
+            MapperConfiguration configuration = new MapperConfiguration(cfg =>
+            {
+                cfg.CreateMap<Post, PostDto>()
+                .ForMember(dest => dest.UserProfilePicture, opt => opt.MapFrom(src => src.Publisher.ProfilePicture))
+                .ForMember(dest => dest.UserName, opt => opt.MapFrom(src => src.Publisher.User.UserName));
+
+                cfg.CreateMap<Profile, User>()
+                    .ForMember(dest => dest.UserName, opt => opt.MapFrom(src => src.User.UserName));
+            });
+            
+            Mapper mapper = new Mapper(configuration);
+
+            IEnumerable<PostDto> postDtos = mapper.Map<IEnumerable<PostDto>>(posts);
+            return postDtos;
         }
     }
 }
