@@ -23,7 +23,7 @@ namespace InstaBojan.Infrastructure.Repository.PostsRepository
         public List<Post> GetPosts()
         {
 
-            return _context.Posts.ToList();
+            return _context.Posts.Include(p=>p.Publisher).ThenInclude(pr=>pr.User).ToList();
 
         }
 
@@ -54,7 +54,7 @@ namespace InstaBojan.Infrastructure.Repository.PostsRepository
 
         public IEnumerable<Post> GetPostsByProfileId(int id)
         {
-            var post = _context.Posts.Where(p => p.ProfileId == id).ToList();
+            var post = _context.Posts.Include(p=>p.Publisher).ThenInclude(pr=>pr.User).Where(p => p.ProfileId == id).ToList();
             if (post == null) return null;
 
             return post;

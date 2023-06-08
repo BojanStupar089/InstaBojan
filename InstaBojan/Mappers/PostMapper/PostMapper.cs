@@ -39,7 +39,8 @@ namespace InstaBojan.Mappers.PostMapper
         public List<PostDto> MapListPostDto(List<Post> posts)
         {
 
-            MapperConfiguration configuration = new MapperConfiguration(cfg => cfg.CreateMap<Post, PostDto>());
+            MapperConfiguration configuration = new MapperConfiguration(cfg => cfg.CreateMap<Post, PostDto>()
+            .ForMember(dest=>dest.UserProfilePicture,opt=>opt.MapFrom(src=>src.Publisher.ProfilePicture)));
             Mapper mapper = new Mapper(configuration);
 
             List<PostDto> postDtos = mapper.Map<List<PostDto>>(posts);
@@ -55,8 +56,7 @@ namespace InstaBojan.Mappers.PostMapper
                 .ForMember(dest => dest.UserProfilePicture, opt => opt.MapFrom(src => src.Publisher.ProfilePicture))
                 .ForMember(dest => dest.UserName, opt => opt.MapFrom(src => src.Publisher.User.UserName));
 
-                cfg.CreateMap<Profile, User>()
-                    .ForMember(dest => dest.UserName, opt => opt.MapFrom(src => src.User.UserName));
+             
             });
             
             Mapper mapper = new Mapper(configuration);
