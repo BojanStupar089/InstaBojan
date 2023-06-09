@@ -177,7 +177,7 @@ namespace InstaBojan.Infrastructure.Repository.PostsRepository
          {
 
              Profile profile = _profileRepo.GetProfileByUserName(username); // profil
-            //lista postova
+           
              
             if (profile != null)
              {
