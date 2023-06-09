@@ -14,7 +14,9 @@ namespace InstaBojan.Mappers.PostMapper
 
          public PostDto MapGetPostDto(Post post)
         {
-            MapperConfiguration configuration = new MapperConfiguration(cfg => cfg.CreateMap<Post, PostDto>());
+            MapperConfiguration configuration = new MapperConfiguration(cfg => cfg.CreateMap<Post, PostDto>()
+             .ForMember(dest => dest.UserProfilePicture, opt => opt.MapFrom(src => src.Publisher.ProfilePicture))
+                .ForMember(dest => dest.UserName, opt => opt.MapFrom(src => src.Publisher.User.UserName)));
             Mapper mapper = new Mapper(configuration);
 
             return mapper.Map<PostDto>(post);
@@ -67,21 +69,6 @@ namespace InstaBojan.Mappers.PostMapper
             return postDtos;
         }
 
-        public PagedList<PostDto> MapPagedListPostDto(PagedList<Post> posts)
-        {
-            MapperConfiguration configuration = new MapperConfiguration(cfg =>
-            {
-                cfg.CreateMap<Post, PostDto>()
-                .ForMember(dest => dest.UserProfilePicture, opt => opt.MapFrom(src => src.Publisher.ProfilePicture))
-                .ForMember(dest => dest.UserName, opt => opt.MapFrom(src => src.Publisher.User.UserName));
-
-
-            });
-
-            Mapper mapper = new Mapper(configuration);
-
-            PagedList<PostDto> postDtos = mapper.Map<PagedList<PostDto>>(posts);
-            return postDtos;
-        }
+      
     }
 }

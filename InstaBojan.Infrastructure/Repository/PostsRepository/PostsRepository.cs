@@ -35,7 +35,7 @@ namespace InstaBojan.Infrastructure.Repository.PostsRepository
 
         public Post GetPostById(int id)
         {
-            var post = _context.Posts.FirstOrDefault(p => p.Id == id);
+            var post = _context.Posts.Include(p=>p.Publisher).ThenInclude(pr=>pr.User).FirstOrDefault(p => p.Id == id);
             if (post == null) return null;
 
             return post;
@@ -59,6 +59,16 @@ namespace InstaBojan.Infrastructure.Repository.PostsRepository
 
             return post;
         }
+
+        public IEnumerable<Post> GetUserPosts(string username, int page, int pageSize)
+        {
+            var posts = _context.Posts.Include(p => p.Publisher).ThenInclude(pr => pr.User)
+                        .Where(p => p.Publisher.User.UserName == username)
+                        .Skip(page*pageSize).Take(pageSize);
+
+            return posts;
+        }
+
 
 
 
@@ -248,6 +258,8 @@ namespace InstaBojan.Infrastructure.Repository.PostsRepository
         {
             throw new NotImplementedException();
         }
+
+      
 
         /*
         public PagedList<Post> GetFeed(string username, int page = 0, int pageSize=4)

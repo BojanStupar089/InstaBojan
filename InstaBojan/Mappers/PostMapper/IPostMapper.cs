@@ -15,7 +15,7 @@ namespace InstaBojan.Mappers.PostMapper
 
         public IEnumerable<PostDto> MapEnumPostDto(IEnumerable<Post> posts);
 
-        public PagedList<PostDto> MapPagedListPostDto(PagedList<Post> posts);
+       
 
 
 

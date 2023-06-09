@@ -23,6 +23,8 @@ namespace InstaBojan.Infrastructure.Repository.PostsRepository
         public bool UpdatePost(int id, Post post);
         public bool DeletePost(int id);
 
+        IEnumerable<Post> GetUserPosts(string username, int page,int pageSize);
+
 
 
 

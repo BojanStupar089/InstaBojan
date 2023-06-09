@@ -26,7 +26,9 @@ namespace InstaBojan.Mappers.ProfileMapper
             .ForMember(dest => dest.FollowersNumber, opt => opt.MapFrom(src => src.Followers.Count))
             .ForMember(dest => dest.PostsNumber, opt => opt.MapFrom(src => src.Posts.Count))
             .ForMember(dest => dest.FollowingNumber, opt => opt.MapFrom(src => src.Following.Count))
-            .ForMember(dest => dest.Name, opt => opt.MapFrom(src => src.ProfileName)));
+            .ForMember(dest => dest.Name, opt => opt.MapFrom(src => src.ProfileName))
+            .ForMember(dest => dest.UserName, opt => opt.MapFrom(src => src.User.UserName)));
+            
 
             Mapper mapper = new Mapper(configuration);
 
