@@ -1,4 +1,5 @@
 ﻿using InstaBojan.Core.Models;
+using InstaBojan.Core.Pagination;
 using InstaBojan.Dtos;
 using InstaBojan.Dtos.PostsDto;
 
@@ -13,6 +14,8 @@ namespace InstaBojan.Mappers.PostMapper
         public List<PostDto> MapListPostDto(List<Post> posts);
 
         public IEnumerable<PostDto> MapEnumPostDto(IEnumerable<Post> posts);
+
+        public PagedList<PostDto> MapPagedListPostDto(PagedList<Post> posts);
 
 
 

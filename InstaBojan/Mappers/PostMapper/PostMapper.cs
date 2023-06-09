@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using InstaBojan.Core.Models;
+using InstaBojan.Core.Pagination;
 using InstaBojan.Dtos;
 using InstaBojan.Dtos.PostsDto;
 using Microsoft.AspNetCore.Routing.Constraints;
@@ -40,7 +41,8 @@ namespace InstaBojan.Mappers.PostMapper
         {
 
             MapperConfiguration configuration = new MapperConfiguration(cfg => cfg.CreateMap<Post, PostDto>()
-            .ForMember(dest=>dest.UserProfilePicture,opt=>opt.MapFrom(src=>src.Publisher.ProfilePicture)));
+            .ForMember(dest=>dest.UserProfilePicture,opt=>opt.MapFrom(src=>src.Publisher.ProfilePicture))
+             .ForMember(dest => dest.UserName, opt => opt.MapFrom(src => src.Publisher.User.UserName)));
             Mapper mapper = new Mapper(configuration);
 
             List<PostDto> postDtos = mapper.Map<List<PostDto>>(posts);
@@ -62,6 +64,23 @@ namespace InstaBojan.Mappers.PostMapper
             Mapper mapper = new Mapper(configuration);
 
             IEnumerable<PostDto> postDtos = mapper.Map<IEnumerable<PostDto>>(posts);
+            return postDtos;
+        }
+
+        public PagedList<PostDto> MapPagedListPostDto(PagedList<Post> posts)
+        {
+            MapperConfiguration configuration = new MapperConfiguration(cfg =>
+            {
+                cfg.CreateMap<Post, PostDto>()
+                .ForMember(dest => dest.UserProfilePicture, opt => opt.MapFrom(src => src.Publisher.ProfilePicture))
+                .ForMember(dest => dest.UserName, opt => opt.MapFrom(src => src.Publisher.User.UserName));
+
+
+            });
+
+            Mapper mapper = new Mapper(configuration);
+
+            PagedList<PostDto> postDtos = mapper.Map<PagedList<PostDto>>(posts);
             return postDtos;
         }
     }

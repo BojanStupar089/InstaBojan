@@ -161,7 +161,7 @@ namespace InstaBojan.Infrastructure.Repository.PostsRepository
         */
 
 
-        /*
+        
         
          public IEnumerable<Post> GetFeed(string username, int page=1, int pageSize=5)
          {
@@ -198,7 +198,7 @@ namespace InstaBojan.Infrastructure.Repository.PostsRepository
 
          }
 
-        */
+        
 
 
 
@@ -249,6 +249,7 @@ namespace InstaBojan.Infrastructure.Repository.PostsRepository
             throw new NotImplementedException();
         }
 
+        /*
         public PagedList<Post> GetFeed(string username, int page = 0, int pageSize=4)
         {
             Profile profile = _profileRepo.GetProfileByUserName(username);
@@ -276,5 +277,7 @@ namespace InstaBojan.Infrastructure.Repository.PostsRepository
             return new PagedList<Post>(new List<Post>(), 1, 1, pageSize, 0);
         
     }
+
+        */
     }
 }
