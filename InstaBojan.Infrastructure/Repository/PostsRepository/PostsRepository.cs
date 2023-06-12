@@ -64,9 +64,13 @@ namespace InstaBojan.Infrastructure.Repository.PostsRepository
         {
             var posts = _context.Posts.Include(p => p.Publisher).ThenInclude(pr => pr.User)
                         .Where(p => p.Publisher.User.UserName == username)
-                        .Skip(page*pageSize).Take(pageSize);
+                        .Skip((page-1)*pageSize).Take(pageSize);
 
             return posts;
+
+            
+
+          
         }
 
 

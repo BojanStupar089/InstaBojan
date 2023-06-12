@@ -38,13 +38,18 @@ namespace InstaBojan.Controllers.ProfilesController
         }
 
         #region get
-        [HttpGet]
-        public IActionResult GetProfiles()
+        [HttpGet("search")]
+        public IActionResult SearchProfiles([FromQuery] string query)
         {
 
-            var profiles = _profilesRepository.GetProfiles().ToList().Select(p => _profileMapper.MapGetProfilesDto(p));
-            if (profiles == null) return NotFound();
-            return Ok(profiles);
+            var profiles=_profilesRepository.GetProfiles(query);
+            if (profiles == null)
+            {
+                return NotFound();
+            }
+
+            var profilesDto = _profileMapper.MapUserSearchResultDto(profiles);
+            return Ok(profilesDto);
         }
 
         [HttpGet("{id}")]

@@ -9,6 +9,8 @@ namespace InstaBojan.Mappers.ProfileMapper
         public Profile MapProfile(ProfileDto profileDto);
         public GetProfilesDto MapGetProfilesDto(Profile profile);
 
+        public List<UserSearchResultDto> MapUserSearchResultDto(List<Profile> profiles);
+
         
        
       

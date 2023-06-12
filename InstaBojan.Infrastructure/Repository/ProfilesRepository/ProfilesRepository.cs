@@ -27,9 +27,9 @@ namespace InstaBojan.Infrastructure.Repository.ProfilesRepository
 
         #region get
 
-        public List<Profile> GetProfiles()
+        public List<Profile> GetProfiles(string query)
         {
-            return _context.Profiles.Include(u=>u.User).Include(p => p.Followers).Include(p => p.Following).Include(p => p.Posts).ToList();
+            return _context.Profiles.Include(u=>u.User).Include(p => p.Followers).Include(p => p.Following).Include(p => p.Posts).Where(p=>EF.Functions.Like(p.User.UserName,$"%{query}%")).ToList();
         }
 
         public Profile GetProfileById(int id)

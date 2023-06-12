@@ -11,7 +11,7 @@ namespace InstaBojan.Infrastructure.Repository.ProfilesRepository
     public  interface IProfilesRepository
     {
 
-        public List<Profile> GetProfiles();
+        public List<Profile> GetProfiles(string query);
         public Profile GetProfileById(int id);
         public Profile GetProfileByProfileName(string profileName);
         public Profile GetProfileByUserId(int userId);

@@ -84,10 +84,10 @@ namespace InstaBojan.Controllers.PostsController
         }
 
         [HttpGet("user-posts")]
-        public IActionResult GetUserPosts([FromQuery] int page,[FromQuery] int size)
+        public IActionResult GetUserPosts([FromQuery]string username,[FromQuery] int page,[FromQuery] int size)
         {
 
-            var username = User.FindFirstValue(ClaimTypes.Name);
+          // var username = User.FindFirstValue(ClaimTypes.Name);
             
             var posts=_postsRepository.GetUserPosts(username, page, size);
             if (posts == null) return NotFound();

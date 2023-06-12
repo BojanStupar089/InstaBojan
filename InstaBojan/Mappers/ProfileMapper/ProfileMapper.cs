@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using InstaBojan.Core.Models;
 using InstaBojan.Dtos;
+using InstaBojan.Dtos.PostsDto;
 using InstaBojan.Dtos.ProfilesDto;
 using Profile = InstaBojan.Core.Models.Profile;
 
@@ -35,6 +36,17 @@ namespace InstaBojan.Mappers.ProfileMapper
             return mapper.Map<GetProfilesDto>(profile);
         }
 
+        public List<UserSearchResultDto> MapUserSearchResultDto(List<Profile> profiles)
+        {
 
+            MapperConfiguration configuration = new MapperConfiguration(cfg => cfg.CreateMap<Profile, UserSearchResultDto>()
+            .ForMember(dest => dest.UserName, opt => opt.MapFrom(src => src.User.UserName))
+            .ForMember(dest => dest.ProfilePicture, opt => opt.MapFrom(src => src.ProfilePicture))
+            .ForMember(dest => dest.Name, opt => opt.MapFrom(src => src.ProfileName)));
+            Mapper mapper = new Mapper(configuration);
+
+            List<UserSearchResultDto> userSearchResultDtos = mapper.Map<List<UserSearchResultDto>>(profiles);
+            return userSearchResultDtos;
+        }
     }
 }
