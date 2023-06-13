@@ -154,18 +154,18 @@ namespace InstaBojan.Infrastructure.Repository.ProfilesRepository
             }
         }
 
-        public bool checkIfProfileFollowsProfile(string profileName, string followedProfileName)
+        public bool checkIfProfileFollowsProfile(string userName, string followedProfile)
         {
-            var profile = _context.Profiles.Include(p => p.Following).FirstOrDefault(p => p.ProfileName == profileName);
-            var profileToChangeStatus = GetProfileByProfileName(followedProfileName);
+            var profile = GetProfileByUserName(userName);
+            var profileToFollow = GetProfileByUserName(followedProfile);
 
-            if (profile != null && profileToChangeStatus != null)
-            {
-                profile.Following.Contains(profileToChangeStatus);
-                return false;
-            }
+            
 
-            return true;
+                profile.Following.Contains(profileToFollow);
+                return true;
+            
+
+           
         }
     }
 
