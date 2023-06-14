@@ -3,7 +3,7 @@
     public class ChangeFollowingStatusDto
     {
 
-        public string? MyUserName {get; set;}
-        public string? OtherUserName { get; set;}
+        public string? MyUsername {get; set;}
+        public string? OtherUsername { get; set;}
     }
 }

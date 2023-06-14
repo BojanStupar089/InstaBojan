@@ -66,6 +66,14 @@ namespace InstaBojan.Infrastructure.Repository.ProfilesRepository
             return profile;
         }
 
+        public bool checkIfProfileFollowsProfile(string userName, string followedProfile)
+        {
+            var profile = GetProfileByUserName(userName);
+            var profileToFollow = GetProfileByUserName(followedProfile);
+
+            return profile.Following.Contains(profileToFollow);
+        }
+
         #endregion
 
         #region post
@@ -78,6 +86,27 @@ namespace InstaBojan.Infrastructure.Repository.ProfilesRepository
             return true;
 
 
+        }
+
+        public void FollowUnFollow(string userName, string otherUsername)
+        {
+            var profile = _context.Profiles.Include(p => p.Following).FirstOrDefault(p => p.User.UserName == userName);
+            var profileToChangeStatus = GetProfileByUserName(otherUsername);
+
+            if (profile != null && profileToChangeStatus != null)
+            {
+                if (profile.Following.Contains(profileToChangeStatus))
+                {
+                    profile.Following.Remove(profileToChangeStatus);
+                }
+                else
+                {
+                    profile.Following.Add(profileToChangeStatus);
+                }
+
+                _context.SaveChanges();
+
+            }
         }
 
 
@@ -125,55 +154,7 @@ namespace InstaBojan.Infrastructure.Repository.ProfilesRepository
 
         #endregion
 
-        #region ProfileProfile
-
-
-
-
-
        
 
-
-
-       
-
-        #endregion
-
-        #region nisamuradio
-       
-
-        public void FollowUnFollow(string userName, string otherUsername)
-        {
-            var profile = _context.Profiles.Include(p => p.Following).FirstOrDefault(p => p.ProfileName == userName);
-            var profileToChangeStatus = GetProfileByProfileName(otherUsername);
-
-            if (profile != null && profileToChangeStatus != null)
-            {
-                profile.Following.Add(profileToChangeStatus);
-                _context.SaveChanges();
-            }
-        }
-
-        public bool checkIfProfileFollowsProfile(string userName, string followedProfile)
-        {
-            var profile = GetProfileByUserName(userName);
-            var profileToFollow = GetProfileByUserName(followedProfile);
-
-            
-
-                profile.Following.Contains(profileToFollow);
-                return true;
-            
-
-           
-        }
-    }
-
-
-
-    #endregion
-
-
-
-    
+  }
 }

@@ -141,13 +141,13 @@ namespace InstaBojan.Controllers.ProfilesController
         [HttpPost("follow-unfollow")]
         public IActionResult FollowUnfollow([FromBody] ChangeFollowingStatusDto dto)
         {
-            var profile = _profilesRepository.GetProfileByUserName(dto.MyUserName);
+            var profile = _profilesRepository.GetProfileByUserName(dto.MyUsername);
             if (profile == null) return NotFound();
 
-            var profileChangeStatus = _profilesRepository.GetProfileByUserName(dto.OtherUserName);
+            var profileChangeStatus = _profilesRepository.GetProfileByUserName(dto.OtherUsername);
             if (profileChangeStatus == null) return NotFound();
 
-            _profilesRepository.FollowUnFollow(profile.ProfileName, profileChangeStatus.ProfileName);
+            _profilesRepository.FollowUnFollow(profile.User.UserName, profileChangeStatus.User.UserName);
             return Ok();
 
         }
