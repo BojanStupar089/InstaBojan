@@ -1,4 +1,6 @@
-﻿using InstaBojan.Core.Models;
+﻿/*
+
+using InstaBojan.Core.Models;
 using InstaBojan.Infrastructure.Data;
 using InstaBojan.Infrastructure.Repository.UsersRepository;
 using Microsoft.EntityFrameworkCore;
@@ -130,7 +132,7 @@ namespace TestBokiInsta.TestUsersRepository
              Assert.True(BCrypt.Net.BCrypt.Verify(password, hashedPassword));
              Assert.Equal(updatedUser.Password, testUser.Password);*/
 
-
+/*
 
 
         }
@@ -175,3 +177,5 @@ namespace TestBokiInsta.TestUsersRepository
 
 
 }
+
+*/

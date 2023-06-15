@@ -138,10 +138,13 @@ namespace InstaBojan.Controllers.AuthControllers
 
             var generatedUser = new JwtSecurityTokenHandler().WriteToken(token);
 
+            
             if (TokenBlackList.IsTokenBlackListed(generatedUser))
             {
                 return ("Token is blacklisted");
             }
+
+            
 
             return generatedUser;
 

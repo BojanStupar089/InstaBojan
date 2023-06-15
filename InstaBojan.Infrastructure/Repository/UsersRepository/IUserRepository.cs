@@ -19,6 +19,8 @@ namespace InstaBojan.Infrastructure.Repository.UsersRepository
         public bool AddUser(User user);
         public bool UpdateUser(int id, User user);
         public bool DeleteUser(int id);
+       /* public void SendMailForResetPassword(string email);
+        public void SaveResetToken(string email, string token);*/
 
       
     }

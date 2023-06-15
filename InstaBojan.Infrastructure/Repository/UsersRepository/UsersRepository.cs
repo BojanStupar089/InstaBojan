@@ -2,6 +2,7 @@
 using InstaBojan.Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Conventions;
+using NETCore.MailKit.Core;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,12 +13,15 @@ namespace InstaBojan.Infrastructure.Repository.UsersRepository
 {
     public class UsersRepository : IUserRepository
     {
-        readonly InstagramStoreContext _context;
+       private readonly InstagramStoreContext _context;
+       // private readonly IEmailService _emailService; 
+        
 
         public UsersRepository(InstagramStoreContext context)
         {
 
             _context = context;
+           
         }
 
         #region get
@@ -110,6 +114,48 @@ namespace InstaBojan.Infrastructure.Repository.UsersRepository
         {
             throw new NotImplementedException();
         }
+
+        /*
+        public void SendMailForResetPassword(string email)
+        {
+            var user=GetUserByEmail(email);
+
+            if (user != null)
+            {
+                string token = Guid.NewGuid().ToString();
+
+                //treba da napravis metod createPasswordToken......
+
+                SaveResetToken(email, token);
+                _emailService.Send("",email, "Password reset", "Resetujte vasu sifru", "");
+
+            }
+
+            else 
+            {
+                throw new Exception();
+            }
+        }
+
+        public void SaveResetToken(string email, string token)
+        {
+
+            var resetPaswordToken = new PasswordToken
+            {
+
+             Email=email,
+             Token=token,
+             CreatedAt=DateTime.UtcNow
+
+            };
+
+            _context.PasswordTokens.Add(resetPaswordToken);
+            _context.SaveChanges();
+        }
+
+        */
+
+
 
 
 

@@ -13,6 +13,8 @@ using InstaBojan.Mappers.UserMapper;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
+using NETCore.MailKit;
+using NETCore.MailKit.Core;
 using System.Reflection;
 using System.Text;
 
@@ -73,6 +75,8 @@ builder.Services.AddScoped<IProfileMapper, ProfileMapper>();
 builder.Services.AddScoped<IPostMapper, PostMapper>();
 builder.Services.AddScoped<IPictureRepository, PictureRepository>();
 builder.Services.AddScoped<ITokenBlackListWrapper, TokenBlackListWrapper>();
+/*builder.Services.AddScoped<IEmailService, EmailService>();
+builder.Services.AddScoped<IMailKitProvider, MailKitProvider>();*/
 
 builder.Services.AddAutoMapper(typeof(Program));
 builder.Services.AddControllers().AddFluentValidation(config =>

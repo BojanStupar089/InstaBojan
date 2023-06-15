@@ -25,6 +25,8 @@ namespace InstaBojan.Infrastructure.Data
 
         public DbSet<Post> Posts { get; set; }
 
+       // public DbSet<PasswordToken>PasswordTokens { get; set; }
+
        /* public new async Task<int> SaveChanges() { 
         
              return await base.SaveChangesAsync();

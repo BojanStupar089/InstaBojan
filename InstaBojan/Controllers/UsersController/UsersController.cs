@@ -79,6 +79,17 @@ namespace InstaBojan.Controllers.UsersController
             return Ok(userDto);
         }
 
+        /*
+        [Authorize(Roles = "User,Admin")]
+        [HttpPost("reset-password")]
+        public IActionResult SendEmailForResetPasswordToken([FromQuery]string email)
+        {
+            _userRepository.SendMailForResetPassword(email);
+            return Ok("Password reset email sent successfully");
+        }
+
+        */
+
         [Authorize(Roles = "User,Admin")]
         [HttpDelete("{id}")]
         public IActionResult DeleteUser(int id)
