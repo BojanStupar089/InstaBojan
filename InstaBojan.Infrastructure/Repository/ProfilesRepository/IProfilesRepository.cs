@@ -17,7 +17,7 @@ namespace InstaBojan.Infrastructure.Repository.ProfilesRepository
         public Profile GetProfileByUserId(int userId);
         public Profile GetProfileByUserName(string username);
         public bool AddProfile(Profile profile);
-        public bool UpdateProfile(int id,Profile profile);
+        public bool UpdateProfile(string username,Profile profile);
         public bool DeleteProfile(int id);
         public void FollowUnFollow(string profileName, string otherProfileName);
 

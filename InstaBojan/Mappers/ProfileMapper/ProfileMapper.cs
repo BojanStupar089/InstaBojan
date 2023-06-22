@@ -48,5 +48,15 @@ namespace InstaBojan.Mappers.ProfileMapper
             List<UserSearchResultDto> userSearchResultDtos = mapper.Map<List<UserSearchResultDto>>(profiles);
             return userSearchResultDtos;
         }
+
+        public Profile MapUpdateProfile(UpdateProfileDto updateProfileDto)
+        {
+            MapperConfiguration configuration = new MapperConfiguration(cfg => cfg.CreateMap<UpdateProfileDto, Profile>()
+            .ForPath(dest=>dest.User.UserName,opt=>opt.MapFrom(src=>src.UserName))
+            .ForMember(dest=>dest.ProfileName,opt=>opt.MapFrom(src=>src.Name)));
+            Mapper mapper = new Mapper(configuration);
+
+            return mapper.Map<Profile>(updateProfileDto);
+        }
     }
 }

@@ -133,16 +133,18 @@ namespace InstaBojan.Infrastructure.Repository.ProfilesRepository
 
 
         #region put
-        public bool UpdateProfile(int id, Profile profile)
+        public bool UpdateProfile(string username, Profile profile)
         {
-            var updProfile = _context.Profiles.FirstOrDefault(p => p.Id == id);
+            var updProfile = GetProfileByUserName(username);
 
             if (updProfile != null)
             {
 
                 updProfile.ProfileName = profile.ProfileName;
-                updProfile.Birthday = profile.Birthday;
-                updProfile.Gender = profile.Gender;
+                /*updProfile.Birthday = profile.Birthday;
+                updProfile.Gender = profile.Gender;*/
+                updProfile.User.UserName=profile.User.UserName;
+                updProfile.ProfilePicture = profile.ProfilePicture;
                 _context.Update(updProfile);
                 _context.SaveChanges();
 

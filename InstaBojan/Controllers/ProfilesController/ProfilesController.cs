@@ -176,39 +176,40 @@ namespace InstaBojan.Controllers.ProfilesController
             return NoContent();
         }
 
-        [HttpPut("{id}")]
-        public IActionResult UpdateProfiles(int id, [FromBody] ProfileDto updateProfileDto)
+        [HttpPut("{userName}")]
+        public IActionResult UpdateProfiles(string userName, [FromBody] UpdateProfileDto updateProfileDto)
         {
             if (!ModelState.IsValid) return BadRequest(ModelState);
 
-            var username = User.FindFirstValue(ClaimTypes.Name);
+           // var username = User.FindFirstValue(ClaimTypes.Name);
 
-            var profile = _profilesRepository.GetProfileById(id);
+           // var profile = _profilesRepository.GetProfileById(id);
+           var profile=_profilesRepository.GetProfileByUserName(userName);
 
             if (profile == null)
             {
                 return NotFound();
             }
 
-            var profilByUserName = _profilesRepository.GetProfileByUserName(username);
+            var profilByUserName = _profilesRepository.GetProfileByUserName(userName);
 
-            if (profilByUserName.Id != id && !User.IsInRole("Admin"))
+            if (profilByUserName.User.UserName != userName && !User.IsInRole("Admin"))
             {
                 return Forbid();
             }
 
-            var profileByProfileName = _profilesRepository.GetProfileByProfileName(updateProfileDto.ProfileName);
+            var profileByProfileName = _profilesRepository.GetProfileByProfileName(updateProfileDto.Name);
 
-            if (profileByProfileName != null && profileByProfileName.Id != id)
+            if (profileByProfileName != null && profileByProfileName.User.UserName != userName)
             {
 
                 return BadRequest("Profile Name already exists;");
             }
 
 
-            var updProfile = _profileMapper.MapProfile(updateProfileDto);
+            var updProfile = _profileMapper.MapUpdateProfile(updateProfileDto);
 
-            _profilesRepository.UpdateProfile(id, updProfile);
+            _profilesRepository.UpdateProfile(userName, updProfile);
 
 
 
