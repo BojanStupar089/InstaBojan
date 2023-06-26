@@ -69,6 +69,12 @@ namespace InstaBojan.Mappers.PostMapper
             return postDtos;
         }
 
-      
+        public Post MapUpdatePost(UpdatePostDto postDto)
+        {
+            MapperConfiguration configuration = new MapperConfiguration(cfg => cfg.CreateMap<UpdatePostDto, Post>());
+            Mapper mapper = new Mapper(configuration);
+
+            return mapper.Map<Post>(postDto);
+        }
     }
 }

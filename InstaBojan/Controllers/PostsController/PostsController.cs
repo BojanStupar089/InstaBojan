@@ -123,15 +123,15 @@ namespace InstaBojan.Controllers.PostsController
 
        
 
-        [HttpPut("{id}")]
-        public IActionResult UpdatePost(int id, [FromBody] PostDto updatePostDto)
+        [HttpPut("{postId}")]
+        public IActionResult UpdatePost(int postId, [FromBody] UpdatePostDto updatePostDto)
         {
             if (!ModelState.IsValid) return BadRequest();
 
             var username = User.FindFirstValue(ClaimTypes.Name);
             if (username == null) return NotFound();
 
-            var updpost = _postsRepository.GetPostById(id); //post
+            var updpost = _postsRepository.GetPostById(postId); //post
             if (updpost == null) return NotFound();
 
             var profile = _profilesRepository.GetProfileByUserName(username); // profil ulogovanog
@@ -145,8 +145,8 @@ namespace InstaBojan.Controllers.PostsController
           
 
 
-            var post = _postMapper.MapPost(updatePostDto);
-            _postsRepository.UpdatePost(id, post);
+            var post = _postMapper.MapUpdatePost(updatePostDto);
+            _postsRepository.UpdatePost(postId, post);
 
             return NoContent();
         }

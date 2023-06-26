@@ -14,6 +14,7 @@ namespace InstaBojan.Mappers.PostMapper
         public List<PostDto> MapListPostDto(List<Post> posts);
 
         public IEnumerable<PostDto> MapEnumPostDto(IEnumerable<Post> posts);
+        public Post MapUpdatePost(UpdatePostDto postDto);
 
        
 
