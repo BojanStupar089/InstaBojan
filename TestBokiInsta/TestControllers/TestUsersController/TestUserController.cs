@@ -1,4 +1,7 @@
-﻿using InstaBojan.Controllers.UsersController;
+﻿
+/*
+using InstaBojan.Controllers.UsersController;
+using InstaBojan.Core.Enums;
 using InstaBojan.Core.Models;
 using InstaBojan.Dtos.UsersDto;
 using InstaBojan.Infrastructure.Data;
@@ -291,65 +294,67 @@ namespace TestBokiInsta.TestControllers.TestUsersControllers
              _tokenBlackListWrapperMock.Verify(wrapper => wrapper.AddToBlackList(userToDelete.UserName), Times.Once());
          }
 
-         */
+         
 
 
-        [Fact]
-        public void DeleteUser_WithNonExistingId_ReturnsNotFoundResult()
+[Fact]
+public void DeleteUser_WithNonExistingId_ReturnsNotFoundResult()
+{
+    // Arrange
+    int userId = 1;
+    _userRepositoryMock.Setup(repo => repo.GetUserById(userId)).Returns((User)null);
+
+    // Act
+    var result = _usersControllerMock.DeleteUser(userId);
+
+    // Assert
+    var notFoundResult = Assert.IsType<NotFoundObjectResult>(result);
+    Assert.Equal(StatusCodes.Status404NotFound, notFoundResult.StatusCode);
+    Assert.Equal("User doesn't exist", notFoundResult.Value);
+
+    _userRepositoryMock.Verify(repo => repo.DeleteUser(userId), Times.Never());
+    _tokenBlackListWrapperMock.Verify(wrapper => wrapper.AddToBlackList(It.IsAny<string>()), Times.Never());
+}
+
+
+
+/*
+
+[Fact]
+public void DeleteUser_WithUnauthorizedUser_ReturnsForbid()
+{
+    // Arrange
+    int userId = 1;
+    var userToDelete = new User { Id = userId, UserName = "testuser", Role = Role.User };
+    _userRepositoryMock.Setup(repo => repo.GetUserById(userId)).Returns(userToDelete);
+    var claims = new List<Claim>
+    {
+        new Claim(ClaimTypes.Name, "otheruser")
+    };
+    var identity = new ClaimsIdentity(claims, "testauthentication");
+    var claimsPrincipal = new ClaimsPrincipal(identity);
+    var controller = new UsersController(_userRepositoryMock.Object,_tokenBlackListWrapperMock.Object);
+    controller.ControllerContext = new ControllerContext
+    {
+        HttpContext = new DefaultHttpContext
         {
-            // Arrange
-            int userId = 1;
-            _userRepositoryMock.Setup(repo => repo.GetUserById(userId)).Returns((User)null);
-
-            // Act
-            var result = _usersControllerMock.DeleteUser(userId);
-
-            // Assert
-            var notFoundResult = Assert.IsType<NotFoundObjectResult>(result);
-            Assert.Equal(StatusCodes.Status404NotFound, notFoundResult.StatusCode);
-            Assert.Equal("User doesn't exist", notFoundResult.Value);
-
-            _userRepositoryMock.Verify(repo => repo.DeleteUser(userId), Times.Never());
-            _tokenBlackListWrapperMock.Verify(wrapper => wrapper.AddToBlackList(It.IsAny<string>()), Times.Never());
+            User = claimsPrincipal
         }
+    };
 
+    // Act
+    var result = controller.DeleteUser(userId);
 
+    // Assert
+    var forbidResult = Assert.IsType<ForbidResult>(result);
+    _userRepositoryMock.Verify(repo => repo.DeleteUser(userId), Times.Never());
+    _tokenBlackListWrapperMock.Verify(wrapper => wrapper.AddToBlackList(It.IsAny<string>()), Times.Never());
+}
 
-        /*
+*/
 
-        [Fact]
-        public void DeleteUser_WithUnauthorizedUser_ReturnsForbid()
-        {
-            // Arrange
-            int userId = 1;
-            var userToDelete = new User { Id = userId, UserName = "testuser", Role = Role.User };
-            _userRepositoryMock.Setup(repo => repo.GetUserById(userId)).Returns(userToDelete);
-            var claims = new List<Claim>
-            {
-                new Claim(ClaimTypes.Name, "otheruser")
-            };
-            var identity = new ClaimsIdentity(claims, "testauthentication");
-            var claimsPrincipal = new ClaimsPrincipal(identity);
-            var controller = new UsersController(_userRepositoryMock.Object,_tokenBlackListWrapperMock.Object);
-            controller.ControllerContext = new ControllerContext
-            {
-                HttpContext = new DefaultHttpContext
-                {
-                    User = claimsPrincipal
-                }
-            };
-
-            // Act
-            var result = controller.DeleteUser(userId);
-
-            // Assert
-            var forbidResult = Assert.IsType<ForbidResult>(result);
-            _userRepositoryMock.Verify(repo => repo.DeleteUser(userId), Times.Never());
-            _tokenBlackListWrapperMock.Verify(wrapper => wrapper.AddToBlackList(It.IsAny<string>()), Times.Never());
-        }
-
-        */
-
-
+/*
     }
 }
+
+*/

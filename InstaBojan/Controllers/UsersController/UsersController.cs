@@ -1,5 +1,4 @@
-﻿using InstaBojan.Core.Models;
-using InstaBojan.Dtos.UsersDto;
+﻿using InstaBojan.Dtos.UsersDto;
 using InstaBojan.Infrastructure.Repository.UsersRepository;
 using InstaBojan.Mappers.UserMapper;
 using Microsoft.AspNetCore.Authorization;
@@ -67,15 +66,15 @@ namespace InstaBojan.Controllers.UsersController
 
         }
 
-        [Authorize(Roles ="Admin")]
+        [Authorize(Roles = "Admin")]
         [HttpGet("email")]
-        public IActionResult GetEmail(string email) 
-        { 
-        
-             var user=_userRepository.GetUserByEmail(email);
-            if(user==null) return NotFound("User doesn't exist");
+        public IActionResult GetEmail(string email)
+        {
 
-            var userDto= _mapper.MapUserDto(user);
+            var user = _userRepository.GetUserByEmail(email);
+            if (user == null) return NotFound("User doesn't exist");
+
+            var userDto = _mapper.MapUserDto(user);
             return Ok(userDto);
         }
 
@@ -110,7 +109,7 @@ namespace InstaBojan.Controllers.UsersController
             }
 
             _userRepository.DeleteUser(id);
-            TokenBlackList.AddToBlackList(userDel.UserName);
+
             return NoContent();
         }
 

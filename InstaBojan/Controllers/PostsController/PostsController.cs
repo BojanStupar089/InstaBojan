@@ -1,6 +1,4 @@
-﻿using InstaBojan.Core.Models;
-using InstaBojan.Dtos.PostsDto;
-using InstaBojan.Dtos.ProfilesDto;
+﻿using InstaBojan.Dtos.PostsDto;
 using InstaBojan.Infrastructure.Repository.PostsRepository;
 using InstaBojan.Infrastructure.Repository.ProfilesRepository;
 using InstaBojan.Mappers.PostMapper;
@@ -34,27 +32,27 @@ namespace InstaBojan.Controllers.PostsController
 
             var posts = _postsRepository.GetPosts().Select(p => _postMapper.MapGetPostDto(p));
 
-            if (!posts.Any()) 
+            if (!posts.Any())
             {
                 return NotFound("No posts found");
             }
-            
+
             return Ok(posts);
         }
 
-       
+
 
         [HttpGet("profileName")]
         public IActionResult GetPostsByProfileName(string profileName)
         {
-          // var posts = _postsRepository.GetPostsByProfileName(profileName).Select(p => _postMapper.MapGetPostDto(p));
 
-            var posts=_postsRepository.GetPostsByProfileName(profileName);
+
+            var posts = _postsRepository.GetPostsByProfileName(profileName);
             if (posts == null) return NotFound();
 
             var postsDto = _postMapper.MapListPostDto(posts);
 
-           
+
 
             return Ok(postsDto);
         }
@@ -84,18 +82,18 @@ namespace InstaBojan.Controllers.PostsController
         }
 
         [HttpGet("user-posts")]
-        public IActionResult GetUserPosts([FromQuery]string username,[FromQuery] int page,[FromQuery] int size)
+        public IActionResult GetUserPosts([FromQuery] string username, [FromQuery] int page, [FromQuery] int size)
         {
 
-          // var username = User.FindFirstValue(ClaimTypes.Name);
-            
-            var posts=_postsRepository.GetUserPosts(username, page, size);
+            // var username = User.FindFirstValue(ClaimTypes.Name);
+
+            var posts = _postsRepository.GetUserPosts(username, page, size);
             if (posts == null) return NotFound();
 
             var postsDto = _postMapper.MapEnumPostDto(posts);
 
             return Ok(postsDto);
-        
+
         }
 
 
@@ -121,7 +119,7 @@ namespace InstaBojan.Controllers.PostsController
             return Created("api/posts" + "/" + post.Id, postDto);
         }
 
-       
+
 
         [HttpPut("{postId}")]
         public IActionResult UpdatePost(int postId, [FromBody] UpdatePostDto updatePostDto)
@@ -142,7 +140,7 @@ namespace InstaBojan.Controllers.PostsController
 
                 return Forbid();
             }
-          
+
 
 
             var post = _postMapper.MapUpdatePost(updatePostDto);
@@ -182,10 +180,10 @@ namespace InstaBojan.Controllers.PostsController
 
             var username = User.FindFirstValue(ClaimTypes.Name);
             var feeds = _postsRepository.GetFeed(username, page, size);
-            
-            
 
-            var feedsDto=_postMapper.MapEnumPostDto(feeds);
+
+
+            var feedsDto = _postMapper.MapEnumPostDto(feeds);
             return Ok(feedsDto);
         }
 

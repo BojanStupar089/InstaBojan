@@ -1,18 +1,13 @@
 ﻿using AutoMapper;
 using InstaBojan.Core.Models;
-using InstaBojan.Core.Pagination;
-using InstaBojan.Dtos;
 using InstaBojan.Dtos.PostsDto;
-using Microsoft.AspNetCore.Routing.Constraints;
-using Microsoft.Extensions.Hosting;
-using Profile = InstaBojan.Core.Models.Profile;
 
 namespace InstaBojan.Mappers.PostMapper
 {
-    public class PostMapper:IPostMapper
+    public class PostMapper : IPostMapper
     {
 
-         public PostDto MapGetPostDto(Post post)
+        public PostDto MapGetPostDto(Post post)
         {
             MapperConfiguration configuration = new MapperConfiguration(cfg => cfg.CreateMap<Post, PostDto>()
              .ForMember(dest => dest.UserProfilePicture, opt => opt.MapFrom(src => src.Publisher.ProfilePicture))
@@ -25,7 +20,7 @@ namespace InstaBojan.Mappers.PostMapper
         public Post MapNewPost(NewPostDto postDto)
         {
             MapperConfiguration configuration = new MapperConfiguration(cfg => cfg.CreateMap<NewPostDto, Post>());
-            
+
             Mapper mapper = new Mapper(configuration);
 
             return mapper.Map<Post>(postDto);
@@ -43,7 +38,7 @@ namespace InstaBojan.Mappers.PostMapper
         {
 
             MapperConfiguration configuration = new MapperConfiguration(cfg => cfg.CreateMap<Post, PostDto>()
-            .ForMember(dest=>dest.UserProfilePicture,opt=>opt.MapFrom(src=>src.Publisher.ProfilePicture))
+            .ForMember(dest => dest.UserProfilePicture, opt => opt.MapFrom(src => src.Publisher.ProfilePicture))
              .ForMember(dest => dest.UserName, opt => opt.MapFrom(src => src.Publisher.User.UserName)));
             Mapper mapper = new Mapper(configuration);
 
@@ -60,9 +55,9 @@ namespace InstaBojan.Mappers.PostMapper
                 .ForMember(dest => dest.UserProfilePicture, opt => opt.MapFrom(src => src.Publisher.ProfilePicture))
                 .ForMember(dest => dest.UserName, opt => opt.MapFrom(src => src.Publisher.User.UserName));
 
-             
+
             });
-            
+
             Mapper mapper = new Mapper(configuration);
 
             IEnumerable<PostDto> postDtos = mapper.Map<IEnumerable<PostDto>>(posts);
@@ -76,5 +71,8 @@ namespace InstaBojan.Mappers.PostMapper
 
             return mapper.Map<Post>(postDto);
         }
+
+
+
     }
 }

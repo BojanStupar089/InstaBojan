@@ -1,11 +1,10 @@
 using FluentValidation.AspNetCore;
-using InstaBojan.Core.Models;
-
+using InstaBojan.Infrastructure.AuthRepository;
 using InstaBojan.Infrastructure.Data;
-using InstaBojan.Infrastructure.Repository.PictureRepository;
+
 using InstaBojan.Infrastructure.Repository.PostsRepository;
 using InstaBojan.Infrastructure.Repository.ProfilesRepository;
-using InstaBojan.Infrastructure.Repository.TokenRepository;
+
 using InstaBojan.Infrastructure.Repository.UsersRepository;
 using InstaBojan.Mappers.PostMapper;
 using InstaBojan.Mappers.ProfileMapper;
@@ -13,14 +12,13 @@ using InstaBojan.Mappers.UserMapper;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
-using NETCore.MailKit;
-using NETCore.MailKit.Core;
 using System.Reflection;
 using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
 
 
+var token = builder.Configuration.GetSection("JwtToken:SecretKey").Value;
 
 //EntityFrameworkCore
 builder.Services.AddDbContext<InstagramStoreContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("BokiInsta")));
@@ -41,24 +39,10 @@ builder.Services.AddAuthentication(options =>
         ValidateAudience = false,
         ValidAudience = null,
         ValidIssuer = null,
-        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes("super-long-secret-key"))
+        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(token))
     };
 
-    options.Events = new JwtBearerEvents
-    {
-        OnTokenValidated = async context =>
-        {
 
-            string token = context.Principal.Identity.Name;
-            if (TokenBlackList.IsTokenBlackListed(token))
-            {
-
-                context.Fail("Token is blacklisted , is not valid");
-            }
-
-
-        }
-    };
 
 });
 
@@ -67,14 +51,14 @@ builder.Services.AddAuthentication(options =>
 
 //Add AutoMapper
 
-builder.Services.AddScoped<IUserRepository,UsersRepository>();
+builder.Services.AddScoped<IUserRepository, UsersRepository>();
 builder.Services.AddScoped<IProfilesRepository, ProfilesRepository>();
 builder.Services.AddScoped<IPostsRepository, PostsRepository>();
 builder.Services.AddScoped<IUserMapper, UserMapper>();
 builder.Services.AddScoped<IProfileMapper, ProfileMapper>();
 builder.Services.AddScoped<IPostMapper, PostMapper>();
-builder.Services.AddScoped<IPictureRepository, PictureRepository>();
-builder.Services.AddScoped<ITokenBlackListWrapper, TokenBlackListWrapper>();
+builder.Services.AddScoped<IAuthRepository, AuthRepository>();
+
 /*builder.Services.AddScoped<IEmailService, EmailService>();
 builder.Services.AddScoped<IMailKitProvider, MailKitProvider>();*/
 

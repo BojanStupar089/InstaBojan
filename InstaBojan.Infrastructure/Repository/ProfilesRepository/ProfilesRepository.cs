@@ -1,14 +1,6 @@
-﻿using Google.Api;
-using InstaBojan.Core.Models;
+﻿using InstaBojan.Core.Models;
 using InstaBojan.Infrastructure.Data;
-using InstaBojan.Infrastructure.Repository.PictureRepository;
-using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace InstaBojan.Infrastructure.Repository.ProfilesRepository
 {
@@ -16,26 +8,26 @@ namespace InstaBojan.Infrastructure.Repository.ProfilesRepository
     {
 
         private readonly InstagramStoreContext _context;
-        private readonly IPictureRepository _pictureRepository;
-       
 
-        public ProfilesRepository(InstagramStoreContext context,IPictureRepository pictureRepository)
+
+
+        public ProfilesRepository(InstagramStoreContext context)
         {
             _context = context;
-            _pictureRepository = pictureRepository;
+
         }
 
         #region get
 
         public List<Profile> GetProfiles(string query)
         {
-            return _context.Profiles.Include(u=>u.User).Include(p => p.Followers).Include(p => p.Following).Include(p => p.Posts).Where(p=>EF.Functions.Like(p.User.UserName,$"%{query}%")).ToList();
+            return _context.Profiles.Include(u => u.User).Include(p => p.Followers).Include(p => p.Following).Include(p => p.Posts).Where(p => EF.Functions.Like(p.User.UserName, $"%{query}%")).ToList();
         }
 
         public Profile GetProfileById(int id)
         {
-            
-            var profile = _context.Profiles.Include(p=>p.Followers).Include(p=>p.Following).Include(p=>p.Posts).FirstOrDefault(p => p.Id == id);
+
+            var profile = _context.Profiles.Include(p => p.Followers).Include(p => p.Following).Include(p => p.Posts).FirstOrDefault(p => p.Id == id);
             if (profile == null) { throw new Exception("blabla"); }
 
             return profile;
@@ -43,7 +35,7 @@ namespace InstaBojan.Infrastructure.Repository.ProfilesRepository
 
         public Profile GetProfileByUserName(string username)
         {
-            var profile = _context.Profiles.Include(u=>u.User).Include(p => p.Posts).Include(p => p.Followers).Include(p => p.Following).FirstOrDefault(p => p.User.UserName == username);
+            var profile = _context.Profiles.Include(u => u.User).Include(p => p.Posts).Include(p => p.Followers).Include(p => p.Following).FirstOrDefault(p => p.User.UserName == username);
             if (profile == null) return null;
 
             return profile;
@@ -52,7 +44,7 @@ namespace InstaBojan.Infrastructure.Repository.ProfilesRepository
 
         public Profile GetProfileByProfileName(string name)
         {
-            var profile = _context.Profiles.Include(p=>p.Posts).Include(p => p.Followers).Include(p => p.Following).FirstOrDefault(p => p.ProfileName == name);
+            var profile = _context.Profiles.Include(p => p.Posts).Include(p => p.Followers).Include(p => p.Following).FirstOrDefault(p => p.ProfileName == name);
             if (profile == null) return null;
 
             return profile;
@@ -60,13 +52,13 @@ namespace InstaBojan.Infrastructure.Repository.ProfilesRepository
 
         public Profile GetProfileByUserId(int userId)
         {
-            var profile = _context.Profiles.Include(p=>p.Posts).Include(p => p.Followers).Include(p => p.Following).FirstOrDefault(p => p.User.Id == userId);
+            var profile = _context.Profiles.Include(p => p.Posts).Include(p => p.Followers).Include(p => p.Following).FirstOrDefault(p => p.User.Id == userId);
             if (profile == null) return null;
 
             return profile;
         }
 
-        public bool checkIfProfileFollowsProfile(string userName, string followedProfile)
+        public bool CheckIfProfileFollowsProfile(string userName, string followedProfile)
         {
             var profile = GetProfileByUserName(userName);
             var profileToFollow = GetProfileByUserName(followedProfile);
@@ -110,27 +102,7 @@ namespace InstaBojan.Infrastructure.Repository.ProfilesRepository
         }
 
 
-
-
-
         #endregion
-
-        #region delete
-        public bool DeleteProfile(int id)
-        {
-            var delProfile = _context.Profiles.FirstOrDefault(p => p.Id == id);
-            if (delProfile != null)
-            {
-
-                _context.Profiles.Remove(delProfile);
-                _context.SaveChanges();
-                return true;
-            }
-
-            return false;
-        }
-        #endregion
-
 
         #region put
         public bool UpdateProfile(string username, Profile profile)
@@ -141,10 +113,9 @@ namespace InstaBojan.Infrastructure.Repository.ProfilesRepository
             {
 
                 updProfile.ProfileName = profile.ProfileName;
-                /*updProfile.Birthday = profile.Birthday;
-                updProfile.Gender = profile.Gender;*/
-                updProfile.User.UserName=profile.User.UserName;
+                updProfile.User.UserName = profile.User.UserName;
                 updProfile.ProfilePicture = profile.ProfilePicture;
+
                 _context.Update(updProfile);
                 _context.SaveChanges();
 
@@ -156,7 +127,23 @@ namespace InstaBojan.Infrastructure.Repository.ProfilesRepository
 
         #endregion
 
-       
+        #region delete
+        public bool DeleteProfile(int id)
+        {
+            var delProfile = GetProfileById(id);
 
-  }
+            if (delProfile != null)
+            {
+                _context.Profiles.Remove(delProfile);
+                _context.SaveChanges();
+                return true;
+            }
+
+            return false;
+        }
+        #endregion
+
+
+
+    }
 }

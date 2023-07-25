@@ -3,15 +3,16 @@ using InstaBojan.Dtos.ProfilesDto;
 
 namespace InstaBojan.Validators.ProfilesDtoValidator
 {
-    public class GetProfilesDtoValidator:AbstractValidator<GetProfilesDto>
+    public class GetProfilesDtoValidator : AbstractValidator<GetProfilesDto>
     {
 
-        public GetProfilesDtoValidator() {
+        public GetProfilesDtoValidator()
+        {
 
 
-            
-            RuleFor(profile => profile.Name).NotNull().Length(1, 30);
-           
+
+            RuleFor(profile => profile.ProfileName).NotNull().Length(1, 30);
+
 
         }
     }
