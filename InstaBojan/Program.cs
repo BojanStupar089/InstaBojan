@@ -104,6 +104,6 @@ app.MapControllers();
 
 app.UseCors();
 
-app.MapGet("/", () => "Hello,  Azure! API is running.")
+app.MapGet("/", () => "Hello,  Azure! API is running.");
 
 app.Run();
